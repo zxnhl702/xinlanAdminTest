@@ -1,0 +1,12 @@
+/*
+ * 热点事件管理页面
+*/
+.hotNews-comments{
+	display: none;
+}
+.hotNews-comments>h3{
+	font-weight: 300!important;
+}
+.hotNews-comments .messages-title{
+	height: 20px;
+}

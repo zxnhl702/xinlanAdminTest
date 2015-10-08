@@ -1,0 +1,96 @@
+<div id="page-sidebar" class="scrollable-content">
+	<div id="sidebar-menu">
+		<ul>
+			<li>
+				<a href="index.html" title="Dashboard"><i class="glyph-icon icon-dashboard"></i>仪盘表</a>
+			</li>
+			<li>
+				<a href="project.html" title="Tables"><i class="glyph-icon icon-table"></i>项目管理</a>
+			</li>
+			<li>
+				<a href="javascript:;" title="Components"><i class="glyph-icon icon-code"></i>Components</a>
+				<ul>
+					<li>
+						<a href="progress_bars.html" title="Progress"><i class="glyph-icon icon-chevron-right"></i>Progress</a>
+					</li>
+				</ul>
+			</li>
+			<!--<li>
+                            <a href="javascript:;" title="Pages"><i class="glyph-icon icon-folder-open"></i>Pages</a>
+                            <ul>
+                                <li>
+                                    <a href="grid.html" title="Grid Layouts"><i class="glyph-icon icon-chevron-right"></i>Grid Layouts</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;" title="Widgets"><i class="glyph-icon icon-tags"></i>Widgets</a>
+                            <ul>
+                                <li><a href="tabs.html" title="Tabs"><i class="glyph-icon icon-chevron-right"></i>Tabs</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;" title="Elements"><i class="glyph-icon icon-laptop"></i>Elements</a>
+                            <ul>
+                                <li><a href="content_boxes.html" title="Content Boxes"><i class="glyph-icon icon-chevron-right"></i>Content Boxes</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;" title="Charts"><i class="glyph-icon icon-bar-chart"></i>Charts</a>
+                            <ul>
+                                <li><a href="charts_piegauges.html" title="Pie Gauges"><i class="glyph-icon icon-chevron-right"></i>Pie Gauges</a></li>
+                            </ul>
+                        </li>-->
+			<li id="hot">
+				<a href="javascript:;" title="hotNews"><i class="glyph-icon icon-reorder"></i>热点事件</a>
+				<ul>
+					<li><a href="hotSpot-manage.html"><i class="glyph-icon icon-chevron-right"></i>热点管理</a></li>
+					<li><a href="hotNews-add.html"><i class="glyph-icon icon-chevron-right"></i>新增事件</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="javascript:;" title="iPanel"><i class="glyph-icon icon-desktop"></i>华数云电视</a>
+				<ul>
+					<li><a href="earlyWaring-add.html"><i class="glyph-icon icon-chevron-right"></i>新增预警</a></li>
+					<li><a href="earlyWaring-manage.html"><i class="glyph-icon icon-chevron-right"></i>预警管理</a></li>
+				</ul>
+			</li>
+			<!--<li>
+                            <a href="javascript:;" title="Maps"><i class="glyph-icon icon-map-marker"></i>Maps</a>
+                            <ul>
+                                <li><a href="google_maps.html" title="Google Maps"><i class="glyph-icon icon-chevron-right"></i>Google maps</a></li>
+                            </ul>
+                        </li>-->
+			<li>
+				<a href="docs.html" title="Help &amp; Support">
+					<i class="glyph-icon icon-book"></i> 帮助文件
+				</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<script src="assets/middle/ref.js"></script>
+<script src="assets/middle/slider.js"></script>
+<script>
+	if ($(window).width() <= 700) {
+		// alert("rth");
+		$("#page-sidebar").hide();
+		$("#sidebar-menu a").click(function() {
+			setTimeout(function() {
+				var h = $("#sidebar-menu").height();
+				$("#page-sidebar").css("height", h+8);
+			}, 500);
+		});
+		$("#header-logo").click(function() {
+			setTimeout(function() {
+				var h = $("#sidebar-menu").height();
+				$("#page-sidebar").css("height", h+8);
+			}, 500);
+			if ($("#page-sidebar").is(":hidden")) {
+				$("#page-sidebar").show() // .children("#sidebar-menu").show();
+			} else {
+				$("#page-sidebar").hide();
+			}
+		});
+	}
+</script>

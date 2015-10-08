@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>XinLan Tech Admin</title>
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<!-- Favicons -->
+		<link rel="shortcut icon" href="assets/images/icons/favicon.png" />
+		<!--[if lt IE 9]>
+          <script src="assets/js/minified/core/html5shiv.min.js"></script>
+          <script src="assets/js/minified/core/respond.min.js"></script>
+        <![endif]-->
+		<!-- Fides Admin CSS Core -->
+		<link rel="stylesheet" type="text/css" href="assets/css/minified/aui-production.min.css" />
+		<!-- Theme UI -->
+		<link id="layout-theme" rel="stylesheet" type="text/css" href="assets/themes/minified/fides/color-schemes/dark-blue.min.css" />
+		<!-- Fides Admin Responsive -->
+		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/common.min.css" />
+		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/responsive.min.css" />
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script>
+			jQuery(window).load(
+				function() {
+					var wait_loading = window.setTimeout(function() {
+						$('#loading').slideUp('fast');
+						jQuery('body').css('overflow', 'auto');
+					}, 1000);
+				});
+		</script>
+	</head>
+	<body style="overflow: hidden;">
+		<div id="loading" class="ui-front loader ui-widget-overlay bg-white opacity-100">
+            <img src="assets/images/loader-dark.gif" alt="" />
+        </div>
+        <div id="page-wrapper" class="demo-example">
+        	<script>
+        		$.get('head.html',function(data){
+        			$('#page-content-wrapper').before(data)
+        		})
+        		$.get('slider.html',function(data){
+        			$('#page-content-wrapper').before(data)
+        		})
+        		$.getScript('assets/js/minified/aui-production.min.js')
+        	</script>
+            <div id="page-content-wrapper">
+            	<div id="page-title">
+					<h3>项目管理</h3>
+				</div>
+            	<!-- #page-title -->
+	            <div id="page-content">
+					<div class="example-box">
+						<div class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+				            <div class="button-block-justified">
+				                <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
+				                    <li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active" role="tab" tabindex="0" aria-controls="justified-tabs-1" aria-labelledby="ui-id-19" aria-selected="true">
+				                        <a href="#justified-tabs-1" title="Tab 1" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-19">
+				                            <i class="glyph-icon icon-archive float-left opacity-80"></i>
+				                            APP投票模块
+				                        </a>
+				                    </li>
+				                    <li class="ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="justified-tabs-2" aria-labelledby="ui-id-20" aria-selected="false">
+				                        <a href="#justified-tabs-2" title="Tab 2" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-20">
+				                            <i class="glyph-icon icon-beaker float-left opacity-80"></i>
+				                            Tab 2
+				                        </a>
+				                    </li>
+				                    <li class="mobile-hidden ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="justified-tabs-3" aria-labelledby="ui-id-21" aria-selected="false">
+				                        <a href="#justified-tabs-3" title="Tab 3" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-21">
+				                            <i class="glyph-icon icon-cogs float-left opacity-80"></i>
+				                            Tab 3
+				                        </a>
+				                    </li>
+				                    <li class="mobile-hidden ui-state-default ui-corner-top" role="tab" tabindex="-1" aria-controls="justified-tabs-4" aria-labelledby="ui-id-22" aria-selected="false">
+				                        <a href="#justified-tabs-4" title="Tab 4" class="ui-tabs-anchor" role="presentation" tabindex="-1" id="ui-id-22">
+				                            <i class="glyph-icon icon-cogs float-left opacity-80"></i>
+				                            Tab 4
+				                        </a>
+				                    </li>
+				                </ul>
+				            </div>
+				            <div id="justified-tabs-1" aria-labelledby="ui-id-19" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="true" aria-hidden="false" style="display: block;">
+						        <table class="table table-hover text-center">
+						            <thead>
+						                <tr>
+						                    <th class="text-center"></th>
+						                    <th>项目名</th>
+						                    <th>备注</th>
+						                    <th class="text-center">点击量</th>
+						                    <th class="text-center">Actions</th>
+						                </tr>
+						            </thead>
+						            <tbody>
+						                <tr>
+						                    <td>1</td>
+						                    <td class="font-bold text-left">中华魂</td>
+						                    <td></td>
+						                    <td><div class="label bg-orange">+152</div></td>
+						                    <td>
+						                        <div class="dropdown">
+						                            <a href="javascript:;" title="" class="btn medium bg-blue" data-toggle="dropdown">
+						                                <span class="button-content">
+						                                    <i class="glyph-icon font-size-11 icon-cog"></i>
+						                                    <i class="glyph-icon font-size-11 icon-chevron-down"></i>
+						                                </span>
+						                            </a>
+						                            <ul class="dropdown-menu float-right">
+														<li>
+						                                    <a href="javascript:;" title="">
+						                                        <i class="glyph-icon icon-edit mrg5R"></i>
+						                                        	编辑
+						                                    </a>
+						                                </li>
+						                                <li>
+						                                    <a href="javascript:;" title="">
+						                                        <i class="glyph-icon icon-download mrg5R"></i>
+						                                        	下载
+						                                    </a>
+						                                </li>
+						                                <li class="divider"></li>
+						                                <li>
+						                                    <a href="javascript:;" class="font-red" title="">
+						                                        <i class="glyph-icon icon-remove mrg5R"></i>
+						                                        	删除
+						                                    </a>
+						                                </li>
+						                            </ul>
+						                        </div>
+						                    </td>
+						                </tr>
+						                <tr>
+						                    <td>2</td>
+						                    <td class="font-bold text-left">文明随手拍</td>
+						                    <td></td>
+						                    <td><div class="label bg-orange">+152</div></td>
+						                    <td>
+						                        <div class="dropdown">
+						                            <a href="javascript:;" title="" class="btn medium bg-blue" data-toggle="dropdown">
+						                                <span class="button-content">
+						                                    <i class="glyph-icon font-size-11 icon-cog"></i>
+						                                    <i class="glyph-icon font-size-11 icon-chevron-down"></i>
+						                                </span>
+						                            </a>
+						                            <ul class="dropdown-menu float-right">
+						                                <li>
+						                                    <a href="javascript:;" title="">
+						                                        <i class="glyph-icon icon-edit mrg5R"></i>
+						                                        	编辑
+						                                    </a>
+						                                </li>
+						                                <li>
+						                                    <a href="javascript:;" title="">
+						                                        <i class="glyph-icon icon-download mrg5R"></i>
+						                                        	下载
+						                                    </a>
+						                                </li>
+						                                <li class="divider"></li>
+						                                <li>
+						                                    <a href="javascript:;" class="font-red" title="">
+						                                        <i class="glyph-icon icon-remove mrg5R"></i>
+						                                        	删除
+						                                    </a>
+						                                </li>
+						                            </ul>
+						                        </div>
+						                    </td>
+						                </tr>
+						            </tbody>
+						        </table>
+						        <div class="button-group center-div">
+				                    <a href="javascript:;" class="btn large ui-state-default"><i class="glyph-icon icon-chevron-left"></i></a>
+				                    <a href="javascript:;" class="btn large disabled ui-state-default">1</a>
+				                    <a href="javascript:;" class="btn large  ui-state-default">2</a>
+				                    <a href="javascript:;" class="btn large ui-state-default">3</a>
+				                    <a href="javascript:;" class="btn large ui-state-default">4</a>
+				                    <a href="javascript:;" class="btn large ui-state-default"><i class="glyph-icon icon-chevron-right"></i></a>
+				                </div>
+				            </div>
+				            <div id="justified-tabs-2" aria-labelledby="ui-id-20" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
+				                tab 2 content
+				            </div>
+				            <div id="justified-tabs-3" aria-labelledby="ui-id-21" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
+				                tab 3 content
+				            </div>
+				            <div id="justified-tabs-4" aria-labelledby="ui-id-22" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-expanded="false" aria-hidden="true" style="display: none;">
+				                tab 4 content
+				            </div>
+				        </div>
+					</div>
+	            </div>
+            </div>
+            <!-- #page-content -->
+        </div>
+	</body>
+</html>

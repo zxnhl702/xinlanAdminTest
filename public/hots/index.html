@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta name="MobileOptimized" content="320">
+		<meta name="format-detection" content="telephone=no">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<link rel="stylesheet" type="text/css" href="css/reset.min.css" />
+		<title>热点</title>
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/damoo.min.js"></script>
+		<script src="js/print.js"></script>
+		<script src="js/viewPC.js"></script>
+		<script src="js/h5app.js"></script>
+		<script src="js/spin.min.js"></script>
+		<script src="js/toast.min.js"></script>
+		<script src="js/ref.js"></script>
+		<script src="js/iscroll.js"></script>
+		<script src="js/index.js"></script>
+	</head>
+
+	<body class="bgf0">
+		<div id="wrapper">
+			<div id="scroller">
+				<div id="scroller-pullDown" class="pt10 pb10 tc abs pct100">
+					<span id="down-icon" class="fa fa-angle-double-down trans"></span>
+					<span id="pullDown-msg" class="pull-down-msg">下拉刷新</span>
+				</div>
+				<div class="top-img rel">
+					<img src="img/top_img.jpg" width="100%" class="db" />
+					<div id="dm-main" class="abs pct100">
+						<div id="dm-screen"></div>
+					</div>
+				</div>
+				<div class="pct90 m0 auto" id="events">
+					<header class="pct100">
+						<h2 id="hot-title">  </h2>
+						<div class="clearfix f14 g9 small-title rel">
+							<span class="l" id="events-count">报道数:  </span>
+							<span class="r" id="clicks-count"> 人浏览过</span>
+							<!-- <span class="r mr10" id="share">分享</span> -->
+						</div>
+					</header>
+					<!-- main content -->
+				</div>
+				<div id="scroller-pullUp" class="pt10 pb10 tc abs pct100">
+					<span id="up-icon" class="fa fa-angle-double-up trans"></span>
+					<span id="pullUp-msg" class="pull-up-msg">上拉加载</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="fix bg_light pct100 pt10 pb10 comment-win clearfix bte zx2 dn" id="comment-input">
+			<input type="text" class="l pb5 bbc pt10 ml10 pct75 f14 lh14" placeholder="请输入您的评论" />
+			<span class="btn r mr10 bg_positive">发布</span>
+		</div>
+		<!-- layer -->
+		<div class="layer pct100 dn">
+			<div class="layer-content tc pct100">
+				<p>
+					<img src="https://ss0.baidu.com/-Po3dSag_xI4khGko9WTAnF6hhy/super/whfpf%3D425%2C260%2C50/sign=f94cd4b828738bd4c474e171c7b6b3e4/bba1cd11728b47109aea56a9c5cec3fdfd032389.jpg" width="100%">
+				</p>
+			</div>
+		</div>
+	</body>
+
+</html>
+<script>
+//iScroll
+//下拉刷新
+
+var myScroll, downIcon = $("#down-icon"),upIcon = $("#up-icon");
+myScroll = new IScroll('#wrapper', {
+	probeType: 3,
+	mouseWheel: true,
+	tap:true
+});
+myScroll.on('scroll', function() {
+	//scroll事件，可以用来控制上拉和下拉之后显示的模块中，
+	//样式和内容展示的部分的改变。
+	var y = this.y;
+	if (y < 40 && y > 0) {
+		$("#pullDown-msg").text('下拉刷新');
+		return "";
+	}else if (y >= 40) {
+		$("#pullDown-msg").text('放开以刷新...');
+		return "";
+	}
+});
+myScroll.on("slideDown", function() {
+	if (this.y > 40) {
+		location.reload();
+	}
+});
+document.addEventListener('touchmove', function(e) {
+	e.preventDefault();
+}, false);
+</script>

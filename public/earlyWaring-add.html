@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>XinLan Tech Admin</title>
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<!-- Favicons -->
+		<link rel="shortcut icon" href="assets/images/icons/favicon.png" />
+		<!--[if lt IE 9]>
+          <script src="assets/js/minified/core/html5shiv.min.js"></script>
+          <script src="assets/js/minified/core/respond.min.js"></script>
+        <![endif]-->
+		<!-- Fides Admin CSS Core -->
+		<link rel="stylesheet" type="text/css" href="assets/css/minified/aui-production.min.css" />
+		<!-- Theme UI -->
+		<link id="layout-theme" rel="stylesheet" type="text/css" href="assets/themes/minified/fides/color-schemes/dark-blue.min.css" />
+		<!-- Fides Admin Responsive -->
+		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/common.min.css" />
+		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/responsive.min.css" />
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script type="text/javascript" src="assets/ckeditor/ckeditor.js"></script>
+		<script>
+			jQuery(window).load(
+				function() {
+					var wait_loading = window.setTimeout(function() {
+						$('#loading').slideUp('fast');
+						jQuery('body').css('overflow', 'auto');
+					}, 1000);
+				});
+		</script>
+	</head>
+	<body style="overflow: hidden;">
+		<div id="loading" class="ui-front loader ui-widget-overlay bg-white opacity-100">
+            <img src="assets/images/loader-dark.gif" alt="" />
+        </div>
+        <div id="page-wrapper" class="demo-example">
+        	<script>
+        		$.get('head.html',function(data){
+        			$('#page-content-wrapper').before(data)
+        		})
+        		$.get('slider.html',function(data){
+        			$('#page-content-wrapper').before(data)
+        		})
+        		$.getScript('assets/js/minified/aui-production.min.js')
+        	</script>
+            <div id="page-content-wrapper">
+            	<div id="page-title">
+					<h3>新增预警</h3>
+				</div>
+	            <div id="page-content">
+	            	<h3>发布预警</h3>
+			        <form action="" class="col-md-12 center-margin" method="">
+			            <div class="form-row">
+			                <div class="form-label col-md-2">
+			                    <label for="">
+			                        标题:
+			                    </label>
+			                </div>
+			                <div class="form-input col-md-10">
+			                    <input type="text" id="email" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+			                </div>
+			            </div>
+			            <div class="form-row">
+			                <div class="form-label col-md-2">
+			                    <label for="">
+			                        副标题:
+			                    </label>
+			                </div>
+			                <div class="form-input col-md-10">
+			                    <input type="text" id="email" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+			                </div>
+			            </div>
+			            <div class="form-row">
+			                <div class="form-label col-md-2">
+			                    <label for="" class="label-description">
+			                        内容:
+			                        <span>20 chars min, 500 max</span>
+			                    </label>
+			                </div>
+			                <div class="form-input col-md-10">
+			                	 <form>
+						            <textarea name="editor1" id="editor1" rows="10" cols="80">
+						            </textarea>
+						            <script>
+						                // Replace the <textarea id="editor1"> with a CKEditor
+						                // instance, using default configuration.
+						                CKEDITOR.replace( 'editor1' );
+						            </script>
+						        </form>
+			                </div>
+			            </div>
+			            <div class="form-row">
+			                <input type="hidden" name="superhidden" id="superhidden">
+			                <div class="form-input col-md-10 col-md-offset-2">
+			                    <a href="javascript:;" class="btn medium primary-bg radius-all-4" id="demo-form-2-valid" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
+			                        <span class="button-content">
+			                            发布
+			                        </span>
+			                    </a>
+			                </div>
+			            </div>
+			        </form>
+	            </div>
+            </div>
+            <!-- #page-content -->
+        </div>
+	</body>
+</html>
