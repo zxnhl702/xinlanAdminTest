@@ -67,34 +67,3 @@
 	</body>
 
 </html>
-<script>
-//iScroll
-//下拉刷新
-
-var myScroll, downIcon = $("#down-icon"),upIcon = $("#up-icon");
-myScroll = new IScroll('#wrapper', {
-	probeType: 3,
-	mouseWheel: true,
-	tap:true
-});
-myScroll.on('scroll', function() {
-	//scroll事件，可以用来控制上拉和下拉之后显示的模块中，
-	//样式和内容展示的部分的改变。
-	var y = this.y;
-	if (y < 40 && y > 0) {
-		$("#pullDown-msg").text('下拉刷新');
-		return "";
-	}else if (y >= 40) {
-		$("#pullDown-msg").text('放开以刷新...');
-		return "";
-	}
-});
-myScroll.on("slideDown", function() {
-	if (this.y > 40) {
-		location.reload();
-	}
-});
-document.addEventListener('touchmove', function(e) {
-	e.preventDefault();
-}, false);
-</script>

@@ -33,6 +33,7 @@ $(function() {
         };
 
         var updateEvents = function(d) {
+        	if(d.data == null) return _toast.show("全部加载完成，没有更多数据！");
             d.data.forEach(function(r) {
 							// _tell(users);
 							// _tell(parseInt(_get("xinlan_id"))-1);
@@ -88,10 +89,10 @@ $(function() {
                     });
                 });
                 // 分享
-               e.find("#share").bind('touchstart',function() {
-            	   var content = encodeURI(r.content);
-            	   var hot_title = encodeURI(r.hot_title);
-            	   var event_title = encodeURI(r.title)
+              e.find(".assertive").bind('tap',function() {
+            	   var content = encodeURIComponent(r.content);
+            	   var hot_title = encodeURIComponent(r.hot_title);
+            	   var event_title = encodeURIComponent(r.title)
 //            	   console.log("content: "+content);
 //            	   console.log("hot_title: "+hot_title);
 //            	   console.log("title: "+event_title);
@@ -100,10 +101,10 @@ $(function() {
   					"content":r.title,
   					"content_url":"http://127.0.0.1:11006/hots/share.html?hot_title="+hot_title+
   					                                                    "&event_title="+event_title+
-  					                                                    "&content="+content,
+  					                                                    "&share_content="+content,
   					"pic":"http://127.0.0.1:11006/hots/top_bg.jpg"
-              	});
-              });
+  					});
+            	});
             });
 
         	// show big image
@@ -142,20 +143,51 @@ $(function() {
             updateEvents(d);
         });
 
-        myScroll.on("slideUp",function(){
-        	if(this.y < 40){
-        		var eLast = $("#events > div:last");
-                if (!eLast) return;
-                var from = eLast.attr("data-id");
-                _callAjax({
-                    "cmd":"getTop5Events",
-                    "hot_id":hot_id,
-                    "from":from
-                }, function(d) {
-                    updateEvents(d);
-                });
-        	}
-        })
+
+      //下拉刷新
+
+        var myScroll, downIcon = $("#down-icon"),upIcon = $("#up-icon");
+
+        	myScroll = new IScroll('#wrapper', {
+        		probeType: 3,
+        		mouseWheel: true,
+        		tap:true
+        	});
+        	myScroll.on('scroll', function() {
+        		//scroll事件，可以用来控制上拉和下拉之后显示的模块中，
+        		//样式和内容展示的部分的改变。
+        		var y = this.y;
+        		if (y < 40 && y > 0) {
+        			$("#pullDown-msg").text('下拉刷新');
+        			return "";
+        		}else if (y >= 40) {
+        			$("#pullDown-msg").text('放开以刷新...');
+        			return "";
+        		}
+        	});
+        	myScroll.on("slideDown", function() {
+        		if (this.y > 40) {
+        			location.reload();
+        		}
+        	});
+        	myScroll.on("slideUp",function(){
+            	if(this.y < 40){
+            		var eLast = $("#events > div:last");
+                    if (!eLast) return;
+                    var from = eLast.attr("data-id");
+                    _callAjax({
+                        "cmd":"getTop5Events",
+                        "hot_id":hot_id,
+                        "from":from
+                    }, function(d) {
+                        updateEvents(d);
+                        myScroll.refresh()
+                    });
+            	}
+            })
+        	document.addEventListener('touchmove', function(e) {
+        		e.preventDefault();
+        	}, false);
 
         $("#comment-input span").bind('touchstart',function() {
             // e.stopPropagation();
@@ -241,11 +273,15 @@ $(function() {
           getRandomComments(10);
         }, 6000);
 
-        // refresh iscroll every 1.5 seconds
-       setInterval(function(){
-    	   myScroll.refresh();
-        }, 1500);
-
+       // refresh iscroll every 1.5 seconds
+//       for(i=0;i<6;i++){
+//
+//    		 myScroll.refresh()
+//
+//       }
+       setInterval(function() {
+    	   myScroll.refresh()
+         }, 1500);
     };
 
 
@@ -253,7 +289,7 @@ $(function() {
 			  img = _getToken(d, "picurl"),
 			userid = _getToken(d, "userid");
 		if (name == "") name = "";//name = "app用户";
-		if (img == "") img = "http://60.190.176.70:11001/images/xinlanUser/2.jpg";
+		if (img == "") img = "http://127.0.0.1:11001/images/xinlanUser/2.jpg";
 		if (userid == "") userid = "18";
 
 		/*

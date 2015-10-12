@@ -7,7 +7,7 @@ var _loading = function() {
 	$('<section id="mask" style="position:fixed; top:0; left:0; height:100%; width:100%; z-index:10000"></section>').appendTo("body");
 	spinner.spin(document.getElementById("mask"));
 	/*
-	$(".load").animate({marginTop:"0px",opacity:"1"},400,'linear'); 
+	$(".load").animate({marginTop:"0px",opacity:"1"},400,'linear');
 	*/
 }
 
@@ -115,7 +115,7 @@ var _callApi = function(cmd) {
 	} else if (dvc == 'Android') {
 		window.android[cmd]();
 	}
-} 
+}
 
 var _share = function(params) {
 	dvc = _getDev();
@@ -155,12 +155,12 @@ var _getToken = function (d, token) {
 }
 
 var _getPar = function (par){
-	var local_url = document.location.href; 
+	var local_url = document.location.href;
 	var get = local_url.indexOf(par +"=");
 	if(get == -1){
-		return false;   
-	}   
-	var get_par = local_url.slice(par.length + get + 1);    
+		return false;
+	}
+	var get_par = local_url.slice(par.length + get + 1);
 	var nextPar = get_par.indexOf("&");
 	if(nextPar != -1){
 		get_par = get_par.slice(0, nextPar);
@@ -236,7 +236,7 @@ var _wxzs = function(kv, only_user) {
 		});
 		return;
 	}
-	
+
 	var os = _getDev();
 	if (os == 'iOS') {
 		$.hg_h5app({
