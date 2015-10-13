@@ -57,20 +57,38 @@ type RandomComment struct {
 	RowId   int    `json:"id"`
 	Comment string `json:"comment"`
 }
+// 分享页面内容的结构体
+type SharedContent struct {
+	HotTitle   string `json:"hotTitle"`
+	EventTitle string `json:"eventTitle"`
+	Content    string `json:"content"`
+}
 
 func Dispatch(db *sql.DB) Dlm {
 	return Dlm{
 
 		"zan": func(r *http.Request) (string, interface{}) {
+			var cnt int
 			// 事件id
 			event_id := GetParameter(r, "event_id")
 			// 用户名
 			user_id := GetParameter(r, "user_id")
-
-			stmt, _ := db.Prepare("insert into zans (event_id, user_id) values(?, ?)")
-			_, err := stmt.Exec(event_id, user_id)
+			// 查重
+			stmt, err := db.Prepare("select count(*) from zans where event_id= ? and user_id= ?")
+			stmt.QueryRow(event_id, user_id).Scan(&cnt)
 			defer stmt.Close()
 			if err != nil {
+				panic("插入赞失败")
+			}
+			if cnt > 0 {
+				panic("不能重复插入赞")
+			}
+			
+			stmt, _ = db.Prepare("insert into zans (event_id, user_id) values(?, ?)")
+			_, err = stmt.Exec(event_id, user_id)
+			defer stmt.Close()
+			if err != nil {
+				log.Println(err)
 				panic("插入赞失败")
 			}
 			return "插入赞成功", nil
@@ -356,6 +374,19 @@ func Dispatch(db *sql.DB) Dlm {
 				log.Println("rth3")
 				return "验证失败", "none"
 			}
+		},
+		
+		// 获取分享页数据
+		"getSharedContent": func(r *http.Request) (string, interface{}) {
+			hot_id := GetParameter(r, "hot_id")
+			event_id := GetParameter(r, "event_id")
+			var sc SharedContent
+			err := db.QueryRow("select h.title as hot_title, e.title as event_title, e.content from events e, hots h where h.id = ? and e.id = ? and h.id = e.hot_id", hot_id, event_id).Scan(&sc.HotTitle, &sc.EventTitle, &sc.Content)
+			if nil != err {
+				log.Println(err)
+				panic("获取分享页失败")
+			}
+			return "获取分享页成功", sc
 		},
 	}
 }

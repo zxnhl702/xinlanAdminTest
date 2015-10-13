@@ -90,19 +90,15 @@ $(function() {
                 });
                 // 分享
               e.find(".assertive").bind('tap',function() {
-            	   var content = encodeURIComponent(r.content);
-            	   var hot_title = encodeURIComponent(r.hot_title);
-            	   var event_title = encodeURIComponent(r.title)
-//            	   console.log("content: "+content);
-//            	   console.log("hot_title: "+hot_title);
-//            	   console.log("title: "+event_title);
-//            	   console.log("http://127.0.0.1:11006/hots/share.html?hot_title="+hot_title+"&event_title="+event_title+"&content="+content);
+
+				   var event_id = r.id;
               	_share({
   					"content":r.title,
-  					"content_url":"http://127.0.0.1:11006/hots/share.html?hot_title="+hot_title+
-  					                                                    "&event_title="+event_title+
-  					                                                    "&share_content="+content,
-  					"pic":"http://127.0.0.1:11006/hots/top_bg.jpg"
+  					"content_url":"http://127.0.0.1:11006/hots/share.html?"+hot_id+","+event_id+",",
+//  					"content_url":"http://127.0.0.1:11006/hots/share.html?hotTitle="+hot_title+
+//  					                                                    "&eventTitle="+event_title+
+//  					                                                    "&shareContent="+content,
+  					"pic":"http://127.0.0.1:11006/hots/img/top_img.jpg"
   					});
             	});
             });

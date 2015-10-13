@@ -127,7 +127,7 @@ var _share = function(params) {
 		window.location.hash = '';
 		window.location.hash = '#func=sharePlatsAction'+str;
 	} else if (dvc == 'Android') {
-		window.android.sharePlatsAction(params.content, params.content_url, params.pic);
+		window.android.sharePlatsAction(params.content, encodeURI(params.content_url), params.pic);
 	}
 }
 

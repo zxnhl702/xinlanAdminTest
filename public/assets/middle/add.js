@@ -33,7 +33,7 @@ $(function() {
 	$("#publish-event").click(function() {
 		var title = $("#event-title").val().replace(/\s/g, ""),
 //				sts = $("#status").val().replace(/\s/g, ""),
-				sts="",
+				sts = "",
 				content = CKEDITOR.instances.editor1.getData();
 		if (title == '') return _toast.show("请输入标题");
 		if (event_id == '') {
