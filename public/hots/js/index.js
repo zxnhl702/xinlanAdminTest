@@ -48,7 +48,11 @@ $(function() {
                     }, function(d) {
                         var zans = parseInt(e.find(".zan").text());
                         // var zans = parseInt($(this).text());// 这里的$(this)是window
-                        if (d.success) e.find(".zan").text(zans+1);
+                        if (d.success) {
+                        		e.find(".zan").text(zans+1);
+                        } else {
+                        		_toast.show("无法重复点赞！");
+                        	}
                     });
                 });
                 e.find(".comment-count").bind('touchstart',function(){
