@@ -265,3 +265,12 @@ var _weixin = function(kv) {
 		if (d.success) kv["auth"](kv["_callAjax"], weixin, d);
 	});
 }
+
+var _isWeixin = function() {
+	var ua = navigator.userAgent.toLowerCase();
+	if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		return true;
+ 	} else {
+		return false;
+	}
+}

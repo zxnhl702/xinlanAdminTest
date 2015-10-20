@@ -7,6 +7,18 @@ $(function() {
 	var array = document.location.search.substring(1).split(',');
 	var hot_id = array[0];
 	var event_id = array[1];
+    
+    $('#downLink').click(function(){
+    	 // weixin&ios
+        var dvc = _getDev();
+        if('iOS' == dvc && _isWeixin()) {
+        	$('body').append('<div class="share-layer"><img src="img/downLink.png" width="100%" /></div>');
+        	$('.share-layer').click(function(){
+        		$(this).remove();
+        	})
+        	return false;
+    	 }
+    });
 	
 	// ajax取分享页数据
     _callAjax({
