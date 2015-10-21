@@ -162,3 +162,15 @@ var _howLongAgo= function(d) {
 		return d;
 	}
 }
+
+var _checkImgType = function(filename) {
+	if ("" == filename) {
+		return false;
+	} else {
+		if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(filename)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+}
