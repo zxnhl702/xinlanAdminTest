@@ -1,6 +1,9 @@
 $(function() {
 	var _callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/");
 
+	var user_id = _getPar("user_id");
+	var privilege = _getPar("privilege");
+	
 	var ifMobile = $(window).width() < 640;
 
 	var updateEvent = function(e, ifNew) {
@@ -84,10 +87,13 @@ $(function() {
 				"status":sts,
 				"content":content,
 				"hot_id": hot_id,
-				"userid": _get("xinlan_id")
+//				"userid": _get("xinlan_id")
+				"userid": user_id
 			}, function(d){
 				_toast.show(d.errMsg);
-				if (d.success) location.href = "hotNews-manage.html?hot_id="+hot_id;
+				if (d.success) location.href = "hotNews-manage.html?hot_id="+hot_id+
+																			"&user_id="+user_id+
+																			"&privilege="+privilege;
 			});
 		} else {
 			_callAjax({

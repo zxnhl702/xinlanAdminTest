@@ -162,3 +162,12 @@ var _howLongAgo= function(d) {
 		return d;
 	}
 }
+
+var _isWeixin = function() {
+	var ua = navigator.userAgent.toLowerCase();
+	if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		return true;
+ 	} else {
+		return false;
+	}
+}

@@ -212,3 +212,12 @@ var _at = function(arr, id) {
 	if (id < 0) id = arr.length+id;
 	return arr[id];
 }
+
+var _isWeixin = function() {
+	var ua = navigator.userAgent.toLowerCase();
+	if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		return true;
+ 	} else {
+		return false;
+	}
+}

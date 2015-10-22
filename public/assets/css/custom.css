@@ -10,12 +10,23 @@
 .hotNews-comments .messages-title{
 	height: 20px;
 }
+
+/*
+ * 热点事件新增页面
+ */
+#attachment-btns-wrapper>div {
+	float: left;
+	margin: 0 10px;
+	height: 28px;
+	line-height: 28px;
+}
+#attachment-btns-wrapper a {
+	float: left;
+}
+
 /*
  * index
 */
-#sidebar-menu ul>li.hot{
-	display:block!important
-}
 @media screen and (max-width:650px){
 	#siderbagr-menu{
 		z-index:56

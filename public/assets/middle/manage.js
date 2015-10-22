@@ -2,6 +2,8 @@ $(function() {
 	var _callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/"),
 			hot_id = _getPar("hot_id");
 	if (hot_id == '') return;
+	var user_id = _getPar("user_id");
+	var privilege = _getPar("privilege");
 
 	var pageEvent = _pageBar([], ".pages", "#page-left", "#page-right", function(ids) {
 		$("#events").empty();
@@ -28,7 +30,9 @@ $(function() {
 			var str = '<tr data-logdate="'+r.logdate+'"><td>'+r.id+'</td><td class="font-bold text-left">'+r.title+'</td><td><div class="label bg-orange">+'+r.commentsCount+'</div></td><td><div class="dropdown"><a href="javascript:;" title="" class="btn medium bg-blue" data-toggle="dropdown"><span class="button-content"><i class="glyph-icon font-size-11 icon-cog"></i><i class="glyph-icon font-size-11 icon-chevron-down"></i></span></a><ul class="dropdown-menu float-right"><li><a href="javascript:;" title=""><i class="glyph-icon icon-edit mrg5R"></i> 编辑</a></li><li><a href="javascript:;" title=""><i class="glyph-icon icon-comment-alt mrg5R"></i> 查看评论</a></li><li class="divider"></li><li><a href="javascript:;" class="font-red" title=""><i class="glyph-icon icon-remove mrg5R"></i> 删除</a></li></ul></div></td></tr>';
 			var e = $(str).appendTo("#events");
 			e.find("a:has(.icon-edit)").click(function() {
-				location.href = "hotNews-add.html?event_id="+r.id;
+				location.href = "hotNews-add.html?event_id="+r.id+
+														"&user_id="+user_id+
+														"&privilege="+privilege;
 			});
 			e.find("a:has(.icon-comment-alt)").click(function() {
 				$(".hotNews-comments").show();
