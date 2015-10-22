@@ -56,11 +56,11 @@
 				</ul>
 			</li>
 			<!--<li>
-                            <a href="javascript:;" title="Maps"><i class="glyph-icon icon-map-marker"></i>Maps</a>
-                            <ul>
-                                <li><a href="google_maps.html" title="Google Maps"><i class="glyph-icon icon-chevron-right"></i>Google maps</a></li>
-                            </ul>
-                        </li>-->
+				<a href="javascript:;" title="Maps"><i class="glyph-icon icon-map-marker"></i>Maps</a>
+					<ul>
+						<li><a href="google_maps.html" title="Google Maps"><i class="glyph-icon icon-chevron-right"></i>Google maps</a></li>
+					</ul>
+			</li>-->
 			<li>
 				<a href="docs.html" title="Help &amp; Support">
 					<i class="glyph-icon icon-book"></i> 帮助文件
@@ -69,28 +69,34 @@
 		</ul>
 	</div>
 </div>
-<script src="assets/middle/ref.js"></script>
 <script src="assets/middle/slider.js"></script>
 <script>
 	if ($(window).width() <= 700) {
 		// alert("rth");
 		$("#page-sidebar").hide();
+/*
 		$("#sidebar-menu a").click(function() {
 			setTimeout(function() {
 				var h = $("#sidebar-menu").height();
 				$("#page-sidebar").css("height", h+8);
 			}, 500);
 		});
+
+*/
 		$("#header-logo").click(function() {
+/*
 			setTimeout(function() {
 				var h = $("#sidebar-menu").height();
 				$("#page-sidebar").css("height", h+8);
 			}, 500);
+*/
 			if ($("#page-sidebar").is(":hidden")) {
-				$("#page-sidebar").show() // .children("#sidebar-menu").show();
+				$("#page-sidebar").show().children("#sidebar-menu").show();
 			} else {
 				$("#page-sidebar").hide();
 			}
 		});
+
 	}
+
 </script>

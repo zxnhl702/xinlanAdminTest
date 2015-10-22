@@ -20,6 +20,8 @@
 		<!-- Fides Admin Responsive -->
 		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/common.min.css" />
 		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/responsive.min.css" />
+		<!--  custom -->
+		<link rel="stylesheet" type="text/css" href="assets/css/custom.css" />
 		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 		<script>
 			jQuery(window).load(
@@ -39,9 +41,9 @@
 			<script>
         		$.get('head.html',function(data){
         			$('#page-content-wrapper').before(data)
-        		})
-        		$.get('slider.html',function(data){
-        			$('#page-content-wrapper').before(data)
+				$.get('slider.html',function(data){
+					$('#page-content-wrapper').before(data)
+				})
         		})
         		$.getScript('assets/js/minified/aui-production.min.js')
         	</script>

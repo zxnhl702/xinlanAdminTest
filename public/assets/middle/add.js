@@ -3,9 +3,11 @@ $(function() {
 
 	var ifMobile = $(window).width() < 640;
 
-	var updateEvent = function(e) {
-		$("#hot-banner").hide();
-		$("#hot-options").hide();
+	var updateEvent = function(e, ifNew) {
+		if (!ifNew) {
+			$("#hot-banner").hide();
+			$("#hot-options").hide();
+		}
 
 		$("#event-title").val(e.title);
 		$("#status").val(e["status"]);
@@ -19,7 +21,7 @@ $(function() {
 			_upload({
 				"fileElement": $("#file-sel-btn"),
 				"fileSelectCallback": function(fn) {
-					$("#file-sel-show").html(fn);
+					$("#file-sel-show").html(_at(fn.split('\\'), -1));
 				},
 				"submitElement": $("#upload-btn"),
 				"uploadCallback": function(d) {
@@ -46,14 +48,14 @@ $(function() {
 				var str = '<option data-hotid='+r.id+'>'+r.title+'</option>';
 				$(str).appendTo("#hots");
 			});
-			if (d.success) updateEvent(d.data[0]);
+			if (d.success) updateEvent(d.data[0], true);
 		});
 	} else {
 		_callAjax({
 			"cmd":"getEventsByIds",
 			"ids": event_id
 		}, function(d){
-			if (d.success) updateEvent(d.data[0]);
+			if (d.success) updateEvent(d.data[0], false);
 		});
 	};
 

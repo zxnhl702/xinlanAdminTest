@@ -20,7 +20,9 @@
 		<!-- Fides Admin Responsive -->
 		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/common.min.css" />
 		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/custom.css" />
 		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="assets/middle/jquery.form.js"></script>
 		<script type="text/javascript" src="assets/ckeditor/ckeditor.js"></script>
 		<script src="assets/middle/spin.min.js"></script>
 		<script src="assets/middle/toast.min.js"></script>
@@ -45,9 +47,9 @@
         	<script>
         		$.get('head.html',function(data){
         			$('#page-content-wrapper').before(data)
-        		})
-        		$.get('slider.html',function(data){
-        			$('#page-content-wrapper').before(data)
+				$.get('slider.html',function(data){
+					$('#page-content-wrapper').before(data)
+				})
         		})
         		$.getScript('assets/js/minified/aui-production.min.js')
         	</script>
@@ -96,7 +98,7 @@
 			            </div>
 -->
 			            <div class="form-row">
-			                <div class="form-label col-md-2">
+			                <div class="form-label col-md-2 bottom-margin" id="event-content-wrapper">
 			                    <label for="" class="label-description">
 			                        内容:
 			                        <span id="text-info">20 chars min, 500 max</span>
@@ -112,7 +114,7 @@
 												if($(window).width() >= 640) {
 													CKEDITOR.replace( 'editor1' );
 												} else {
-													$("#text-info").after('<input type="file" accept="image/*"/><a class="btn medium primary-bg"><span class="button-content">上传并添加</span></a>');
+													// $("#text-info").after('<input type="file" accept="image/*"/><a class="btn medium primary-bg"><span class="button-content">上传并添加</span></a>');
 												}
 						            </script>
 						        </form>

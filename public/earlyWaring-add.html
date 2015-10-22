@@ -40,9 +40,9 @@
         	<script>
         		$.get('head.html',function(data){
         			$('#page-content-wrapper').before(data)
-        		})
-        		$.get('slider.html',function(data){
-        			$('#page-content-wrapper').before(data)
+				$.get('slider.html',function(data){
+					$('#page-content-wrapper').before(data)
+				})
         		})
         		$.getScript('assets/js/minified/aui-production.min.js')
         	</script>

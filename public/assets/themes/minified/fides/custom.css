@@ -1,0 +1,10 @@
+#attachment-btns-wrapper>div {
+	float: left;
+	margin: 0 10px;
+	height: 28px;
+	line-height: 28px;
+}
+#attachment-btns-wrapper a {
+	float: left;
+}
+

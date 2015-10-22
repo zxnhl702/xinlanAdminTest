@@ -10,3 +10,14 @@
 .hotNews-comments .messages-title{
 	height: 20px;
 }
+/*
+ * index
+*/
+#sidebar-menu ul>li.hot{
+	display:block!important
+}
+@media screen and (max-width:650px){
+	#siderbagr-menu{
+		z-index:56
+	}
+}
