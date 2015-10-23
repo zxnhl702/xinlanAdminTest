@@ -24,31 +24,51 @@ func UploadHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params)
 	defer func() {
 		err := recover()
 		if err != nil {
+			// log.Println(err)
 			rw.Write(formJson(&Ret{false, err.(string), nil}))
 		}
 	}()
 
-	r.ParseMultipartForm(32 << 20)
-	file, handle, err := r.FormFile("tupian")
+	/*
+		r.ParseMultipartForm(32 << 20)
+		file, handle, err := r.FormFile("tupian")
+		if err != nil {
+			log.Println(err)
+			panic("上传失败")
+		}
+		defer file.Close()
+
+		// filename
+		filename := handle.Filename
+		log.Println(filename)
+		filename = GetGuid() + path.Ext(filename)
+
+		// save file
+		data, err := ioutil.ReadAll(file)
+		if err != nil {
+			panic("读取文件数据失败")
+		}
+		err = ioutil.WriteFile("./public/hots/img/"+filename, data, 0666)
+		if err != nil {
+			panic("保存文件失败")
+		}
+	*/
+
+	// r.ParseMultipartForm(32 << 20)
+	r.ParseForm()
+	// log.Println("rth1")
+	// imgData := r.MultipartForm.Value["data"]
+	imgStr := r.PostForm["data"][0]
+	ext := path.Ext(r.PostForm["ext"][0])
+	// log.Println("rth2")
+	imgData, err := base64.StdEncoding.DecodeString(imgStr)
 	if err != nil {
 		log.Println(err)
-		panic("上传失败")
 	}
-	defer file.Close()
-
-	// filename
-	filename := handle.Filename
-	log.Println(filename)
-	filename = GetGuid() + path.Ext(filename)
-
-	// save file
-	data, err := ioutil.ReadAll(file)
+	filename := GetGuid() + ext
+	err = ioutil.WriteFile("./public/hots/img/"+filename, imgData, 0666)
 	if err != nil {
-		panic("读取文件数据失败")
-	}
-	err = ioutil.WriteFile("./public/hots/img/"+filename, data, 0666)
-	if err != nil {
-		panic("保存文件失败")
+		log.Println(err)
 	}
 
 	rw.Write(formJson(&Ret{true, "上传成功", filename}))

@@ -28,8 +28,8 @@ $(function() {
 				},
 				"submitElement": $("#upload-btn"),
 				"uploadCallback": function(d) {
-					d = JSON.parse(d);
-					_tell(d);
+					// d = JSON.parse(d);
+					_tell(d.errMsg);
 					_toast.show(d.errMsg);
 					var pos = $("#editor1")[0].selectionStart,
 							content = $("#editor1").val(),

@@ -23,7 +23,7 @@ var _stopLoading = function() {
 
 var _genCallAjax = function(url) {
 	return function(data, cb) {
-		_loading();
+		// _loading();
 		cb = cb?cb:function(){};
 		$.ajax({
 			type:"GET",
@@ -175,6 +175,25 @@ var _checkImgType = function(filename) {
 	}
 }
 
+var _genPostAjax = function(url) {
+  return function(data, cb) {
+    cb = cb?cb:function(){};
+    $.ajax({
+      type:"POST",
+      async:true,
+      url:url,
+      dataType:"json",
+      jsonp:"callback",
+      data:data,
+      // contentType:"multipart/form-data; charset=UTF-8",
+      success: function(d) {
+        console.log(d);
+        cb(d);
+      },
+    });
+  }
+}; 
+
 var _upload = function(options) {
 	/*
 	 * options = {
@@ -193,19 +212,26 @@ var _upload = function(options) {
 	vfile.change(function() {
 		options.fileSelectCallback(vfile.val());
 	});
-	var vsubmit = vform.find(".upload-file");
-	options.submitElement.click(function() {
-		_loading();
-		vform.ajaxSubmit({
-			"url": options.uploadUrl,
-			"type": "post",
-			"success": function(d) {
-				options.uploadCallback(d);
-				_stopLoading();
-				vform.remove();
-			}
-		});
-	});
+
+  vfile.localResizeIMG({
+    "width": 500,
+    "quality": 0.5,
+    "success": function(d) {
+      var vsubmit = vform.find(".upload-file");
+      options.submitElement.unbind().click(function() {
+        _loading();
+        if (!vfile.val()) return _toast.show("请选择文件");
+        _genPostAjax(options.uploadUrl)({
+          "data":d.clearBase64,
+          "ext":vfile.val()
+        }, function(d) {
+          options.uploadCallback(d);
+          _stopLoading();
+          vform.remove();
+        });
+      });
+    }
+  });
 }
 
 var _at = function(arr, id) {

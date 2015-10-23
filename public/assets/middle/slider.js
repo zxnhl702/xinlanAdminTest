@@ -6,7 +6,6 @@ $("#sidebar-menu > ul > li").hide();
 //var t = _get("xinlan_privilege");
 var t = _getPar("privilege");
 if (t != '') {
-//  $("#"+t).show();
 	$("."+t).show();
 }
 $("#hotSpot-manage").attr("href", "hotSpot-manage.html?user_id="+user_id+"&privilege="+t);
