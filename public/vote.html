@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>XinLan Tech Admin</title>
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<!-- Favicons -->
+		<link rel="shortcut icon" href="assets/images/icons/favicon.png" />
+		<!--[if lt IE 9]>
+          <script src="assets/js/minified/core/html5shiv.min.js"></script>
+          <script src="assets/js/minified/core/respond.min.js"></script>
+        <![endif]-->
+		<!-- Fides Admin CSS Core -->
+		<link rel="stylesheet" type="text/css" href="assets/css/minified/aui-production.min.css" />
+		<!-- Theme UI -->
+		<link id="layout-theme" rel="stylesheet" type="text/css" href="assets/themes/minified/fides/color-schemes/dark-blue.min.css" />
+		<!-- Fides Admin Responsive -->
+		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/common.min.css" />
+		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="assets/css/custom.css"/>
+		<script src="assets/middle/jquery-1.11.1.min.js"></script>
+		<script src="assets/middle/jquery.form.js"></script>
+		<script>
+			// jquery for jquery.form.js only
+			var jq =  jQuery.noConflict();
+		</script>
+		<script src="assets/middle/jquery-1.11.1.min.js"></script>
+		<script src="assets/middle/spin.min.js"></script>
+		<script src="assets/middle/toast.min.js"></script>
+		<script src="assets/middle/ref.js"></script>
+		<script src="assets/middle/page.js"></script>
+		<script src="assets/middle/voteAdd.js"></script>
+		<script>
+			jQuery(window).load(
+				function() {
+					var wait_loading = window.setTimeout(function() {
+						$('#loading').slideUp('fast');
+						jQuery('body').css('overflow', 'auto');
+					}, 1000);
+				});
+		</script>
+	</head>
+
+	<body style="overflow: hidden;">
+		<div id="loading" class="ui-front loader ui-widget-overlay bg-white opacity-100">
+			<img src="assets/images/loader-dark.gif" alt="" />
+		</div>
+		<div id="page-wrapper" class="demo-example">
+			<script>
+				$.get('head.html', function(data) {
+					$('#page-content-wrapper').before(data)
+				})
+				$.get('slider.html', function(data) {
+					$('#page-header').after(data)
+				})
+				$.getScript('assets/js/minified/aui-production.min.js')
+			</script>
+
+			<div id="page-content-wrapper">
+				<div id="page-title">
+					<h3>新增投票</h3>
+				</div>
+				<div id="page-content">
+					<h3>新增投票</h3>
+	            	<form action="" id="new-vote" class="col-md-12" method="POST" enctype="multipart/form-data">
+	            		<div class="form-row">
+	            			<div class="form-label col-md-2">
+			                    <label for="">
+			                        	<span style="color:red">(必须)</span>投票标题:
+			                    </label>
+			                </div>
+			                <div class="form-input col-md-10">
+			                	<div class="col-md-12">
+			                    	<input type="text" id="new-title" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+		                    	</div>
+			                </div>
+	            		</div>
+						<div class="form-row">
+	            			<div class="form-label col-md-2">
+			                    <label for="">
+			                        	<span style="color:red">(必须)</span>投票头图:
+			                    </label>
+			                </div>
+			                <div class="form-input col-md-10">
+			                	<div class="col-md-12">
+			                    	<input type="file" id="new-banner" name="banner-img" accept="image/*">
+			                    	<!-- <input type="file" id="new-banner" name="banner-img" accept="image/*"> -->
+		                    	</div>
+			                </div>
+	            		</div>
+						<div class="form-row">
+	            			<div class="form-label col-md-2">
+			                    <label for="">
+			                        	<span style="color:red">(必须)</span>投票简介图:
+			                    </label>
+			                </div>
+			                <div class="form-input col-md-10">
+			                	<div class="col-md-12">
+			                    	<input type="file" id="new-profile" name="profile-img" accept="image/*"/>
+		                    	</div>
+			                </div>
+	            		</div>
+						<div class="form-row">
+							<div class="form-input float-right">
+								<input type="hidden" name="superhidden" id="superhidden">
+								<div class="form-input col-md-12 clearfix">
+									<a href="javascript:;" class="btn float-right medium primary-bg radius-all-4" id="demo-form-2-valid" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
+										<span class="button-content" id="append-vote">
+											上传并添加
+										</span>
+									</a>
+								</div>
+							</div>
+						</div>
+	            	</form>
+	            	<div class="divider"></div>
+					<h3 class="bottom-margin">
+	            		投票列表
+	            	</h3>
+					<div class="col-md-12">
+						<table class="table table-striped text-center">
+							<thead>
+								<tr>
+									<th class="text-center"></th>
+									<th>投票标题</th>
+									<th class="text-center">参赛人数</th>
+									<th class="text-center">投票人次</th>
+									<th class="text-center">访问量</th>
+									<th class="text-center">操作</th>
+								</tr>
+							</thead>
+							<tbody id="votes-list">
+								<!-- 
+								<tr>
+									<td>1</td>
+									<td class="font-bold text-left">John Clark</td>
+									<td>
+										<div class="label bg-orange">152</div>
+									</td>
+									<td>
+										<div class="label bg-orange">152</div>
+									</td>
+									<td>
+										<div class="label bg-orange">152</div>
+									</td>
+									<td>
+										<div class="dropdown">
+											<a href="javascript:;" title="" class="btn medium bg-blue" data-toggle="dropdown">
+												<span class="button-content">
+				                                    <i class="glyph-icon font-size-11 icon-cog"></i>
+				                                    <i class="glyph-icon font-size-11 icon-chevron-down"></i>
+				                                </span>
+											</a>
+											<ul class="dropdown-menu float-right">
+												<li>
+													<a href="javascript:;" title="">
+														<i class="glyph-icon icon-gear mrg5R"></i> 管理
+													</a>
+												</li>
+												<li class="divider"></li>
+												<li>
+													<a href="javascript:;" class="font-red" title="">
+														<i class="glyph-icon icon-remove mrg5R"></i> 删除
+													</a>
+												</li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+								 -->
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-4 center-margin">
+						<div class="button-group center-div">
+							<a href="javascript:;" class="btn large ui-state-default" id="vote-left">
+								<i class="glyph-icon icon-chevron-left"></i>
+							</a>
+							<a href="javascript:;" class="btn large ui-state-default votes">
+		                        1
+		                    </a>
+							<a href="javascript:;" class="btn large disabled ui-state-default votes">
+		                        2
+		                    </a>
+							<a href="javascript:;" class="btn large ui-state-default votes">
+		                        3
+		                    </a>
+							<a href="javascript:;" class="btn large ui-state-default votes">
+		                        4
+		                    </a>
+							<a href="javascript:;" class="btn large ui-state-default votes">
+		                        5
+		                    </a>
+							<a href="javascript:;" class="btn large ui-state-default" id="vote-right">
+								<i class="glyph-icon icon-chevron-right"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- #page-content -->
+		</div>
+	</body>
+</html>
