@@ -35,6 +35,8 @@ $(function() {
 		if('' != d.data.hotTitle) {
 			// 填充热点标题  只文字
 			$("#hot_title").text(d.data.hotTitle);
+			// 修改网页title
+			document.title = d.data.hotTitle+"直播中";
 		}
 		// 有事件标题
 		if('' != d.data.eventTitle) {

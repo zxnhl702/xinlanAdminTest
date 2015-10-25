@@ -32,7 +32,8 @@ $(function() {
 			e.find("a:has(.icon-edit)").click(function() {
 				location.href = "hotNews-add.html?event_id="+r.id+
 														"&user_id="+user_id+
-														"&privilege="+privilege;
+														"&privilege="+privilege+
+														"&hot_id="+hot_id;
 			});
 			e.find("a:has(.icon-comment-alt)").click(function() {
 				$(".hotNews-comments").show();

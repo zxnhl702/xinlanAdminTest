@@ -3,8 +3,17 @@ $(function() {
 
 	var user_id = _getPar("user_id");
 	var privilege = _getPar("privilege");
+	var hot_id = _getPar("hot_id");
+	var event_id = _getPar("event_id");
 	
 	var ifMobile = $(window).width() < 640;
+
+	if (ifMobile) {
+		var url = "/mobile/new/index.html?user_id="+user_id+"&privilege="+privilege; // MOBILE UPLOAD
+		if (hot_id != '') url += "&hot_id="+hot_id;
+		if (event_id != '') url += "&event_id="+event_id;
+		location.href = url;
+	}
 
 	var updateEvent = function(e, ifNew) {
 		if (!ifNew) {
@@ -42,7 +51,7 @@ $(function() {
 		}
 	};
 
-	var event_id = _getPar("event_id");
+	// var event_id = _getPar("event_id");
 	if (event_id == '') {
 		_callAjax({
 			"cmd": "getHotsInfo",
