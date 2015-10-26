@@ -89,7 +89,7 @@ var _callApi = function(cmd) {
 	} else if (dvc == 'Android') {
 		window.android[cmd]();
 	}
-} 
+}
 
 var _goBack = function() {
 	_callApi("goBack");
@@ -115,12 +115,12 @@ var _getToken = function (d, token) {
 }
 
 var _getPar = function (par){
-	var local_url = document.location.href; 
+	var local_url = document.location.href;
 	var get = local_url.indexOf(par +"=");
 	if(get == -1){
-		return false;   
-	}   
-	var get_par = local_url.slice(par.length + get + 1);    
+		return false;
+	}
+	var get_par = local_url.slice(par.length + get + 1);
 	var nextPar = get_par.indexOf("&");
 	if(nextPar != -1){
 		get_par = get_par.slice(0, nextPar);
@@ -176,23 +176,23 @@ var _checkImgType = function(filename) {
 }
 
 var _genPostAjax = function(url) {
-  return function(data, cb) {
-    cb = cb?cb:function(){};
-    $.ajax({
-      type:"POST",
-      async:true,
-      url:url,
-      dataType:"json",
-      jsonp:"callback",
-      data:data,
-      // contentType:"multipart/form-data; charset=UTF-8",
-      success: function(d) {
-        console.log(d);
-        cb(d);
-      },
-    });
-  }
-}; 
+	return function(data, cb) {
+		cb = cb?cb:function(){};
+		$.ajax({
+			type:"POST",
+			async:true,
+			url:url,
+			dataType:"json",
+			jsonp:"callback",
+			data:data,
+			// contentType:"multipart/form-data; charset=UTF-8",
+			success: function(d) {
+				console.log(d);
+				cb(d);
+			},
+		});
+	}
+};
 
 var _upload = function(options) {
 	/*
@@ -213,25 +213,25 @@ var _upload = function(options) {
 		options.fileSelectCallback(vfile.val());
 	});
 
-  vfile.localResizeIMG({
-    "width": 500,
-    "quality": 0.5,
-    "success": function(d) {
-      var vsubmit = vform.find(".upload-file");
-      options.submitElement.unbind().click(function() {
-        _loading();
-        if (!vfile.val()) return _toast.show("请选择文件");
-        _genPostAjax(options.uploadUrl)({
-          "data":d.clearBase64,
-          "ext":vfile.val()
-        }, function(d) {
-          options.uploadCallback(d);
-          _stopLoading();
-          vform.remove();
-        });
-      });
-    }
-  });
+	vfile.localResizeIMG({
+		"width": 500,
+		"quality": 0.5,
+		"success": function(d) {
+			var vsubmit = vform.find(".upload-file");
+			options.submitElement.unbind().click(function() {
+				_loading();
+				if (!vfile.val()) return _toast.show("请选择文件");
+				_genPostAjax(options.uploadUrl)({
+					"data":d.clearBase64,
+					"ext":vfile.val()
+				}, function(d) {
+					options.uploadCallback(d);
+					_stopLoading();
+					vform.remove();
+				});
+			});
+		}
+	});
 }
 
 var _at = function(arr, id) {
@@ -243,7 +243,7 @@ var _isWeixin = function() {
 	var ua = navigator.userAgent.toLowerCase();
 	if(ua.match(/MicroMessenger/i)=="micromessenger") {
 		return true;
- 	} else {
+	} else {
 		return false;
 	}
 }

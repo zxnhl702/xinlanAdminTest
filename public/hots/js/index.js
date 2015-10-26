@@ -97,7 +97,7 @@ $(function() {
 
 						var event_id = r.id;
 						_share({
-							"content":r.title,
+							"content":"直播！"+r.title,
 							"content_url":"http://127.0.0.1:11006/hots/share.html?"+hot_id+","+event_id+",",
 							"pic":"http://127.0.0.1:11006/hots/img/top_img.jpg"
 						});
