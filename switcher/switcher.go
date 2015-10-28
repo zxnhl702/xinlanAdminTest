@@ -202,6 +202,13 @@ func Dispatch(db *sql.DB) Dlm {
 			}
 		},
 
+		// 分享页获取单条事件
+		"GetSharedEventById": func(r *http.Request) (string, interface{}) {
+			hot_id:= GetParameter(r, "hot_id")
+			event_id := GetParameter(r, "event_id")
+			return "获取单条事件成功", GetSharedEventById(hot_id, event_id, db)
+		},
+		
 		"getEventById": func(r *http.Request) (string, interface{}) {
 			return "获取单条事件成功", GetEventById(GetParameter(r, "id"), db)
 		},
@@ -551,6 +558,21 @@ func GetEventById(id string, db *sql.DB) EventWithCommentsCountAndZan {
 	err = db.QueryRow("select count(*) from zans where event_id = ?", id).Scan(&e.Zan)
 	log.Println(e)
 	return e
+}
+
+// 分享页获取单条事件
+func GetSharedEventById(hot_id, event_id string, db *sql.DB) []Event {
+	log.Println(hot_id, event_id)
+	var e Event
+	var event[] Event
+	err := db.QueryRow("select e.id, e.title, e.status, e.content, strftime('%Y-%m-%d %H:%M:%S', e.logdate), e.userid from events e where e.hot_id = ? and e.id = ?", hot_id, event_id).Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId)
+	if err != nil {
+		log.Println(err)
+		panic("读取单条事件失败")
+	}
+	log.Println(e)
+	event = append(event, e)
+	return event
 }
 
 func GetCommentById(id string, db *sql.DB) Comment {
