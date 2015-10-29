@@ -227,7 +227,7 @@ var _upload = function(options) {
 				}, function(d) {
 					options.uploadCallback(d);
 					_stopLoading();
-					vform.remove();
+					// vform.remove();
 				});
 			});
 		}
