@@ -39,6 +39,7 @@ type EventWithCommentsCountAndZan struct {
 type Hot struct {
 	Id          int    `json:"id"`
 	Title       string `json:"title"`
+	Description string `json:"description"`
 	Logdate     string `json:"logdate"`
 	EventsCount int    `json:"eventsCount"`
 }
@@ -161,8 +162,10 @@ func Dispatch(db *sql.DB) Dlm {
 		},
 
 		"newHot": func(r *http.Request) (string, interface{}) {
-			stmt, _ := db.Prepare("insert into hots(title) values (?)")
-			stmt.Exec(GetParameter(r, "title"))
+			title := GetParameter(r, "title")
+			description := GetParameter(r, "description")
+			stmt, _ := db.Prepare("insert into hots(title, description) values (?, ?)")
+			stmt.Exec(title, description)
 			return "插入新热点成功", nil
 		},
 
@@ -203,7 +206,7 @@ func Dispatch(db *sql.DB) Dlm {
 		},
 
 		// 分享页获取单条事件
-		"GetSharedEventById": func(r *http.Request) (string, interface{}) {
+		"getSharedEventById": func(r *http.Request) (string, interface{}) {
 			hot_id:= GetParameter(r, "hot_id")
 			event_id := GetParameter(r, "event_id")
 			return "获取单条事件成功", GetSharedEventById(hot_id, event_id, db)
@@ -587,8 +590,8 @@ func GetCommentById(id string, db *sql.DB) Comment {
 
 func GetHotById(id string, db *sql.DB) Hot {
 	var h Hot
-	// log.Println("GetHotById --> "+id)
-	err := db.QueryRow("select id, title, strftime('%Y-%m-%d %H:%M:%S', logdate) from hots where id = ?", id).Scan(&h.Id, &h.Title, &h.Logdate)
+//	log.Println("GetHotById --> "+id)
+	err := db.QueryRow("select id, title, description, strftime('%Y-%m-%d %H:%M:%S', logdate) from hots where id = ?", id).Scan(&h.Id, &h.Title, &h.Description, &h.Logdate)
 	if err != nil {
 		log.Println(err)
 		panic("获取单条热点失败")

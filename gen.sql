@@ -1,6 +1,7 @@
 create table if not exists hots (
 	id integer primary key,
 	title text not null,
+	description text,
 	logdate datetime default (datetime('now', 'localtime'))
 );
 

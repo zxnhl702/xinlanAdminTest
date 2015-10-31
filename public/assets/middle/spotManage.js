@@ -37,12 +37,17 @@ $(function() {
 	
 	$("#append-hot").click(function() {
 		var title = $("#new-title").val().replace(/\s/g, "");
+		var description = $("#new-descript").val().replace(/\s/g, "");
 		if (title == '') return _toast.show("请填写标题");
+		if (description == '') return _toast.show("请填写热点描述");
 		_callAjax({
 			"cmd":"newHot",
-			"title":title
+			"title":title,
+			"description":description
 		}, function(d){
 			if (d.success) {
+				$("#new-title").val("");
+				$("#new-descript").val("");
 				_callAjax({
 					"cmd":"getHotsIds"
 				}, function(d){

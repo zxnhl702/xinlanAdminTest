@@ -10,9 +10,9 @@
 		<!-- Favicons -->
 		<link rel="shortcut icon" href="assets/images/icons/favicon.png" />
 		<!--[if lt IE 9]>
-          <script src="assets/js/minified/core/html5shiv.min.js"></script>
-          <script src="assets/js/minified/core/respond.min.js"></script>
-        <![endif]-->
+			<script src="assets/js/minified/core/html5shiv.min.js"></script>
+			<script src="assets/js/minified/core/respond.min.js"></script>
+		<![endif]-->
 		<!-- Fides Admin CSS Core -->
 		<link rel="stylesheet" type="text/css" href="assets/css/minified/aui-production.min.css" />
 		<!-- Theme UI -->
@@ -58,34 +58,46 @@
 				</div>
 				<div id="page-content">
 					<h3>新增热点</h3>
-	            	<form action="" class="col-md-12" method="">
-	            		<div class="form-row">
-	            			<div class="form-label col-md-2">
-			                    <label for="">
-			                        	热点标题:
-			                    </label>
-			                </div>
-			                <div class="form-input col-md-12">
-			                	<div class="col-md-8">
-			                    	<input type="text" id="new-title" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
-		                    	</div>
-		                    	<div class="col-md-2">
-		                    		<input type="hidden" name="superhidden" id="superhidden">
-					                <div class="form-input col-md-10 col-md-offset-2">
-					                    <a href="javascript:;" class="btn medium primary-bg radius-all-4" id="demo-form-2-valid" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
-					                        <span class="button-content" id="append-hot">
-					                            添加
-					                        </span>
-					                    </a>
-					                </div>
-		                    	</div>
-			                </div>
-	            		</div>
-	            	</form>
-	            	<div class="divider"></div>
+					<form action="" class="col-md-12" method="">
+						<div class="form-row">
+							<div class="form-label col-md-2">
+								<label for="">
+										<span style="color:red">*</span>热点标题:
+								</label>
+							</div>
+							<div class="form-input col-md-12">
+								<div class="col-md-8">
+									<input type="text" id="new-title" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-label col-md-2">
+								<label for="">
+										<span style="color:red">*</span>热点描述:
+								</label>
+							</div>
+							<div class="form-input col-md-12">
+								<div class="col-md-8">
+									<input type="text" id="new-descript" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<input type="hidden" name="superhidden" id="superhidden">
+							<div class="form-input col-md-10 ">
+								<a href="javascript:;" class="btn medium primary-bg radius-all-4" id="demo-form-2-valid" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
+									<span class="button-content" id="append-hot">
+										添加
+									</span>
+								</a>
+							</div>
+						</div>
+					</form>
+					<div class="divider"></div>
 					<h3 class="bottom-margin noty" data-layout="top" data-type="success">
-	            		热点列表
-	            	</h3>
+						热点列表
+					</h3>
 					<div class="col-md-12">
 						<table class="table table-striped text-center">
 							<thead>
@@ -108,9 +120,9 @@
 										<div class="dropdown">
 											<a href="javascript:;" title="" class="btn medium bg-blue" data-toggle="dropdown">
 												<span class="button-content">
-				                                    <i class="glyph-icon font-size-11 icon-cog"></i>
-				                                    <i class="glyph-icon font-size-11 icon-chevron-down"></i>
-				                                </span>
+													<i class="glyph-icon font-size-11 icon-cog"></i>
+													<i class="glyph-icon font-size-11 icon-chevron-down"></i>
+												</span>
 											</a>
 											<ul class="dropdown-menu float-right">
 												<li>
@@ -138,20 +150,20 @@
 								<i class="glyph-icon icon-chevron-left"></i>
 							</a>
 							<a href="javascript:;" class="btn large ui-state-default hots">
-		                        1
-		                    </a>
+								1
+							</a>
 							<a href="javascript:;" class="btn large disabled ui-state-default hots">
-		                        2
-		                    </a>
+								2
+							</a>
 							<a href="javascript:;" class="btn large ui-state-default hots">
-		                        3
-		                    </a>
+								3
+							</a>
 							<a href="javascript:;" class="btn large ui-state-default hots">
-		                        4
-		                    </a>
+								4
+							</a>
 							<a href="javascript:;" class="btn large ui-state-default hots">
-		                        5
-		                    </a>
+								5
+							</a>
 							<a href="javascript:;" class="btn large ui-state-default" id="hot-right">
 								<i class="glyph-icon icon-chevron-right"></i>
 							</a>

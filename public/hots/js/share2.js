@@ -18,7 +18,10 @@ $(function() {
 	
 	// 更新页面事件信息
 	var updateEvents = function(d) {
-		if(d.data == null) return _toast.show("全部加载完成！");
+		if(d.data == null) {
+			$(".share-more").hide();
+			return _toast.show("全部加载完成！");
+		}
 		d.data.forEach(function(r) {
 			// 拼事件的html
 			var str = '<div class="list clearfix mt10 mb5" data-id='+r.id+'>' + 
@@ -38,7 +41,7 @@ $(function() {
 		});
 	}
 	
-	//  ajax取热点标题、报道数、访问量
+	//  ajax取热点标题、报道数、访问量、热点描述
 	_callAjax({
 		"cmd":"getHotInfoById",
 		"hot_id":hot_id
@@ -47,6 +50,11 @@ $(function() {
 			$("#hot-title").text(d.data.title);
 			$("#events-count").text("报道数："+d.data.eventsCount);
 			$("#clicks-count").text(d.data.clicksCount+" 次浏览量");
+			if(d.data.description != null || d.data.description != "") {
+				$("#share-info").text(d.data.description);
+			} else {
+				$("#share-info").hide();
+			}
 		} else {
 			_toast.show("页面初始化失败！");
 		}
@@ -54,7 +62,7 @@ $(function() {
 	
 	// ajax取分享页单条事件
 	_callAjax({
-		"cmd":"GetSharedEventById",
+		"cmd":"getSharedEventById",
 		"hot_id":hot_id,
 		"event_id":event_id
 	}, function(d) {
