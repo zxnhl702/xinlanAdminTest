@@ -2,11 +2,11 @@ $(function() {
 	// 投票编号
 	var vote_id = _getPar("vote_id");
 	// 图片地址
-	var img_url_root = "http://127.0.0.1:11001/images/votes/vote_" + vote_id + "/";
+	var img_url_root = imgURL + "/vote_" + vote_id + "/";
 	$.hg_h5app({
 		"needSystemInfo":function(d) {
 			var device_token = _getToken(d, "device_token"),
-			_callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/votes"),
+			_callAjax = _genCallAjax(ajaxURL),
 			comments = [],
 			ifComment = _getPar("comment"),
 			MAX = 10e5;

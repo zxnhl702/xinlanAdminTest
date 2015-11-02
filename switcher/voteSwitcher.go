@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	vote_img_root = "/home/zhangxiangnan/web-location/images/votes"
+	vote_img_root = VOTE_IMG_ROOT
 	vote_top_img_name = "banner"
 	vote_profile_img_name = "profile"
 	vote_item_thumb_prefix = "thumb"

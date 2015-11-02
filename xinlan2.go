@@ -27,8 +27,8 @@ type Ret struct {
 	Data    interface{} `json:"data"`
 }
 
-var file_dir = "/home/zhangxiangnan/web-location/images/hots"
-var img_root = "/home/zhangxiangnan/web-location/images"
+var file_dir = sw.FILE_DIR
+var img_root = sw.IMG_ROOT
 
 func main() {
 	rt := httprouter.New()
@@ -40,7 +40,7 @@ func main() {
 
 	n := negroni.Classic()
 	n.UseHandler(rt)
-	n.Run(":11006")
+	n.Run(sw.SERVER_PORT)
 }
 
 func GetMd5String(s string) string {
@@ -150,7 +150,7 @@ func UploadHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params)
 	}
 	callback := sw.GetParameter(r, "CKEditorFuncNum")
 	log.Println("callback: " + callback) // ----- TEST
-	fmt.Fprintf(rw, "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction("+callback+",'"+"http://127.0.0.1:11001/images/hots/"+filename+"','')</script>")
+	fmt.Fprintf(rw, "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction("+callback+",'"+sw.HOTS_IMG_URL+filename+"','')</script>")
 }
 
 // 投票的业务句柄

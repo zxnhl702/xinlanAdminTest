@@ -5,7 +5,7 @@ $(function() {
 	 // 投票编号
 	var vote_id = _getPar("vote_id");
 	// 图片地址
-	var img_url_root = "http://127.0.0.1:11001/images/votes/vote_" + vote_id + "/";
+	var img_url_root = imgURL + "/vote_" + vote_id + "/";
 	
 	// 头图
 	var bannerImg = '<img src="'+img_url_root+'profile.jpg" width="100%" class="db"/>';
