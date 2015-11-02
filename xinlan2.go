@@ -27,8 +27,8 @@ type Ret struct {
 	Data    interface{} `json:"data"`
 }
 
-var file_dir = "/home/zhangxiangnan/web_location/images/hots"
-var img_root = "/home/zhangxiangnan/web_location/images"
+var file_dir = "/home/zhangxiangnan/web-location/images/hots"
+var img_root = "/home/zhangxiangnan/web-location/images"
 
 func main() {
 	rt := httprouter.New()

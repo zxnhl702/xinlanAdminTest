@@ -130,6 +130,11 @@ $(function() {
 				$("#hot-title").text(d.data.title);
 				$("#events-count").text("报道数："+d.data.eventsCount);
 				$("#clicks-count").text(d.data.clicksCount+" 次浏览量");
+				if(d.data.description != null || d.data.description != "") {
+					$("#share-info").text(d.data.description);
+				} else {
+					$("#share-info").hide();
+				}
 			});
 
 			_callAjax({
