@@ -32,3 +32,16 @@
 		z-index:56
 	}
 }
+
+/*
+ * 投票管理显示大图
+ */
+.item-list-img-hover{
+	display:block;
+	width:200px;
+	margin-left:-150px;
+	margin-top:-100px;
+	z-index:99;
+	position:absolute;
+	border:1px solid #ededed;
+ }

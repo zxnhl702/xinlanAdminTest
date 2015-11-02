@@ -6,6 +6,8 @@ $(function() {
 	var _callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/votes");
 	// 上传图片ajax的后台地址
 	var fileUploadURL = "http://127.0.0.1:11006/upload/votes";
+	var user_id = _getPar("user_id");
+	var privilege = _getPar("privilege");
 	pageVote = _pageBar([], ".votes", "#vote-left", "#vote-right", function(ids) {
 		$("#votes-list").empty();
 		_callAjax({
@@ -36,13 +38,15 @@ $(function() {
 			
 			// 跳转到管理投票页面
 			e.find("a:has(.icon-gear)").click(function() {
-				location.href = "vote-manage.html?vote_id="+r.id;
+				location.href = "vote-manage.html?vote_id=" + r.id + 
+												"&user_id=" + user_id + 
+												"&privilege=" + privilege;
 			});
 			
 			// 删除本条数据
 			e.find("a:has(.icon-remove)").click(function() {
 				_callAjax({
-					"cmd":"removeVoteById",
+					"cmd":"removeVoteLogicallyById",
 					"id":r.id
 				},function(d) {
 					if (!d.success) return _toast.show("删除投票失败");

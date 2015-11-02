@@ -41,7 +41,14 @@ $(function() {
 					"amount":10,
 					"vote_id":vote_id
 				}, function(d) {
-					if (d.success) updateList(d.data);
+					if (d.success) {
+						if (null == d.data) {
+							_toast.show("全部加载完毕");
+							$("#more-candidates").hide();
+							return;
+						}
+						updateList(d.data);
+					}
 				});
 			};
 
@@ -199,14 +206,12 @@ $(function() {
 			});
 			
 			// 头图
-			var bannerImg = '<img src="'+img_url_root+'banner-img.jpg" width="100%" class="db"/>';
+			var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
 			$(bannerImg).appendTo(".banner");
 			// 底栏
-			var footColumn = '<a href="index.html?vote_id=' + vote_id + '" class="orange"><i class="fa fa-home fa-2x"></i><br />首页</a>' + 
-								'<a href="profile.html?vote_id=' + vote_id + '" class="g6"><i class="fa fa-info fa-2x"></i><br />简介</a>' + 
-								'<a href="rank.html?vote_id=' + vote_id + '" class="g6"><i class="fa fa-signal fa-2x"></i><br />排行</a>' +
-								'<a class="g6 comment"><i class="fa fa-comments-o fa-2x"></i><br />评论</a>';
-			$(footColumn).appendTo(".footer-cloumn");
+			$("#goIndex").attr("href", "index.html?vote_id=" + vote_id);
+			$("#goProfile").attr("href", "profile.html?vote_id=" + vote_id);
+			$("#goRank").attr("href", "rank.html?vote_id=" + vote_id);
 
 			setInterval(function(){
 				emitComment();

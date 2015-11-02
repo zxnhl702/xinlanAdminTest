@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	vote_img_root = "/home/zhangxiangnan/web_location/images/votes"
+	vote_img_root = "/home/zhangxiangnan/web-location/images/votes"
 	vote_top_img_name = "banner"
 	vote_profile_img_name = "profile"
 	vote_item_thumb_prefix = "thumb"
@@ -174,7 +174,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 		// 获取投票编号
 		"getVotesIds": func(r *http.Request) (string, interface{}) {
 
-			rows, err := db.Query("select id from votes order by id desc")
+			rows, err := db.Query("select id from votes where isOnline = 1 order by id desc")
 			defer rows.Close()
 			if nil != err {
 				log.Println(err)
@@ -355,6 +355,24 @@ func VoteDispatch(db *sql.DB) Dlm {
 		},
 		
 		// update
+		// 根据投票编号逻辑删除投票
+		"removeVoteLogicallyById": func(r *http.Request) (string, interface{}) {
+			// 投票编号
+			id := GetParameter(r, "id")
+			stmt, err := db.Prepare("update votes set isOnline = 0 where id = ?")
+			defer stmt.Close()
+			if nil != err {
+				log.Println(err)
+				panic("逻辑删除投票失败")
+			}
+			_, err = stmt.Exec(id)
+			if nil != err {
+				log.Println(err)
+				panic("逻辑删除投票失败2")
+			}
+			return "逻辑删除投票成功", nil
+		},
+		
 		// 根据投票项目编号逻辑删除投票项目
 		"removeVoteItemLogicallyById": func(r *http.Request) (string, interface{}) {
 			// 投票项目编号
@@ -413,8 +431,22 @@ func VoteDispatch(db *sql.DB) Dlm {
 			id := GetParameter(r, "id")
 			// 根据编号删除投票项目采番
 			removeVoteItemIdSeqByVoteId(id, db)
+			// 根据编号删除投票项目
+			removeVoteItemByVoteId(id, db)
+			// 根据编号删除投票信息
+			removeVoteInfoByVoteId(id, db)
+			// 根据编号删除投票评论
+			removeVoteCommentsByVoteId(id, db)
+			// 根据编号删除投票用户
+			removeVoteAppUserByVoteId(id, db)
+			// 根据编号删除投票访问记录
+			removeVoteClicksByVoteId(id, db)
+			log.Println(vote_img_root + "/vote_" + id)
 			// 删除投票图片文件夹
-			os.RemoveAll(vote_img_root + "/vote_" + id)
+			err := os.RemoveAll(vote_img_root + "/vote_" + id)
+			if nil != err {
+				log.Println(err)
+			}
 			// 删除投票
 			removeVoteByVoteId(id, db)
 			return "删除投票成功", nil

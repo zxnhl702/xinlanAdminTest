@@ -33,7 +33,7 @@ $(function() {
 			var str = '<tr><td>' + r.id + '</td>' +
 						'<td class="font-bold text-left">' + r.name + '</td>' + 
 						'<td>' + r.work + '</td>' + 
-						'<td data-dir="' + voteImgRootURL + 'vote_' + vote_id + '/'+ r.img +'">' + r.img+ '</td>' + 
+						'<td class="item-list-img" data-dir="' + voteImgRootURL + 'vote_' + vote_id + '/'+ r.img +'">' + r.img+ '</td>' + 
 						'<td>' + 
 						'<a class="btn medium bg-blue" href="javascript:">' + 
 						'<span class="button-content"><i class="glyph-icon font-size-11 icon-remove"></i>删除</span>' + 
@@ -54,6 +54,13 @@ $(function() {
 				})
 			});
 		});
+		
+		//显示大图
+		$('.item-list-img').hover(function(){
+			$('<div class="item-list-img-hover"><img width="100%" src=' + $(this).attr('data-dir') + ' /></div>').appendTo($(this))
+		},function(){
+			$('.item-list-img-hover').remove();
+		})
 	};
 	
 	// 新增投票项目

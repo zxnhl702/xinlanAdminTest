@@ -10,3 +10,4 @@ if (t != '') {
 }
 $("#hotSpot-manage").attr("href", "hotSpot-manage.html?user_id="+user_id+"&privilege="+t);
 $("#hotNews-add").attr("href", "hotNews-add.html?user_id="+user_id+"&privilege="+t);
+$("#vote-manage").attr("href", "vote.html?user_id="+user_id+"&privilege="+t);

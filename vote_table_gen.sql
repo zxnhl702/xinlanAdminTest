@@ -4,7 +4,8 @@ create table if not exists votes (
 	title text not null,
 	topImg text,
 	profileImg text,
-	logdate datetime default (datetime('now', 'localtime'))
+	logdate datetime default (datetime('now', 'localtime')),
+	isOnline integer default 1
 );
 
 drop table if exists votes_candidate;
