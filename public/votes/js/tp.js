@@ -143,7 +143,7 @@ $(function() {
 			$("#more-candidates").click(function(){
 				var l_lst = parseInt($("#left li:last").attr("data-id")),
 				r_lst = parseInt($("#right li:last").attr("data-id")),
-				last = l_lst<r_lst?l_lst:r_lst;
+				last = l_lst>r_lst?l_lst:r_lst;
 				getCandidates(last);
 			});
 
@@ -201,7 +201,7 @@ $(function() {
 				$("#candidates-count").text(d.data.itemCount);
 				$("#votes-count").text(parseInt(d.data.voteCount));
 				$("#clicks-count").text(d.data.clickCount);
-				getCandidates(MAX);
+				getCandidates(0);
 				getComments(MAX);
 			});
 			

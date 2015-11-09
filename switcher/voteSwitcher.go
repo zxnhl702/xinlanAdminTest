@@ -275,7 +275,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
 //			rows, err := db.Query("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc, votes_info vi where vc.id >= ? and vc.id < ? and vc.id = vi.vote_for and vc.vote_id = ? and vc.vote_id = vi.vote_id and vc.isOnline = 1 group by id", from, to, vote_id)
-			stmt, err := db.Prepare("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc left outer join votes_info vi on vc.id = vi.vote_for and vc.vote_id = vi.vote_id where vc.id < ? and vc.vote_id = ? and vc.isOnline = 1 group by id limit ?")
+			stmt, err := db.Prepare("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc left outer join votes_info vi on vc.id = vi.vote_for and vc.vote_id = vi.vote_id where vc.id > ? and vc.vote_id = ? and vc.isOnline = 1 group by id limit ?")
 			defer stmt.Close()
 			if err != nil {
 				log.Println(err)
