@@ -379,7 +379,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			id := GetParameter(r, "id")
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
-			stmt, err := db.Prepare("update votes_candidate set isOnline = 0 where id = 1 and vote_id = 7")
+			stmt, err := db.Prepare("update votes_candidate set isOnline = 0 where id = ? and vote_id = ?")
 			defer stmt.Close()
 			if nil != err {
 				log.Println(err)
