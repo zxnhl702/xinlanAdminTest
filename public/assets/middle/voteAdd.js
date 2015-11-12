@@ -3,9 +3,9 @@
  */
 $(function() {
 	// ajax的后台地址
-	var _callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/votes");
+	var _callAjax = _genCallAjax(ajaxVoteURL);
 	// 上传图片ajax的后台地址
-	var fileUploadURL = "http://127.0.0.1:11006/upload/votes";
+	var fileUploadURL = fileUploadVoteURL;
 	var user_id = _getPar("user_id");
 	var privilege = _getPar("privilege");
 	pageVote = _pageBar([], ".votes", "#vote-left", "#vote-right", function(ids) {

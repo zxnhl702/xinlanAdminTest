@@ -3,7 +3,7 @@
  */
 $(function() {
 	// 后台ajax的URL
-	var _callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/");
+	var _callAjax = _genCallAjax("http://127.0.0.1:11002/xinlan/");
 	// 左侧小图标的URL
 	var imgsrc = "http://127.0.0.1:11001/images/xinlanUser/";
 

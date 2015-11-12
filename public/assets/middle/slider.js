@@ -8,6 +8,11 @@ var t = _getPar("privilege");
 if (t != '') {
 	$("."+t).show();
 }
+// 热点管理
 $("#hotSpot-manage").attr("href", "hotSpot-manage.html?user_id="+user_id+"&privilege="+t);
+// 新增热点
 $("#hotNews-add").attr("href", "hotNews-add.html?user_id="+user_id+"&privilege="+t);
+// 新增投票
 $("#vote-manage").attr("href", "vote.html?user_id="+user_id+"&privilege="+t);
+// 新增问答
+$("#quiz-manage").attr("href", "quiz.html?user_id="+user_id+"&privilege="+t);

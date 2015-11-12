@@ -337,6 +337,6 @@ $(function() {
 	var only_for_user = true;
 	_wxzs({
 		"callback": h5_cb,
-		"_callAjax": _genCallAjax("http://127.0.0.1:11006/xinlan/")
+		"_callAjax": _genCallAjax("http://127.0.0.1:11002/xinlan/")
 	}, only_for_user);
 });

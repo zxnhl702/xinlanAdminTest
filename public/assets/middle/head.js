@@ -3,7 +3,7 @@
 //var i = _get("xinlan_id");
 var i = _getPar("user_id");
 if (i == "") i = 1;
-$("#user-img").attr("src", "http://127.0.0.1:11001/images/xinlanUser/"+i+".jpg");
+$("#user-img").attr("src", imgRootURL+"/xinlanUser/"+i+".jpg");
 
 $("#logout").click(function() {
   _set("xinlan_privilege", "");

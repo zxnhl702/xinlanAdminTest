@@ -3,11 +3,11 @@
  */
 $(function() {
 	// ajax的后台地址
-	var _callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/votes");
+	var _callAjax = _genCallAjax(ajaxVoteURL);
 	// 上传图片ajax的后台地址
-	var fileUploadURL = "http://127.0.0.1:11006/upload/votes";
+	var fileUploadURL = fileUploadVoteURL;
 	// 图片服务器地址
-	var voteImgRootURL = "http://127.0.0.1:11001/images/votes/"
+	var voteImgRootURL = imgVoteURL
 	// 投票编号
 	var vote_id = _getPar("vote_id");
 	if('' == vote_id) return;
@@ -33,7 +33,7 @@ $(function() {
 			var str = '<tr><td>' + r.id + '</td>' +
 						'<td class="font-bold text-left">' + r.name + '</td>' + 
 						'<td>' + r.work + '</td>' + 
-						'<td class="item-list-img" data-dir="' + voteImgRootURL + 'vote_' + vote_id + '/'+ r.img +'">' + r.img+ '</td>' + 
+						'<td class="item-list-img" data-dir="' + voteImgRootURL + '/vote_' + vote_id + '/'+ r.img +'">' + r.img+ '</td>' + 
 						'<td>' + 
 						'<a class="btn medium bg-blue" href="javascript:">' + 
 						'<span class="button-content"><i class="glyph-icon font-size-11 icon-remove"></i>删除</span>' + 

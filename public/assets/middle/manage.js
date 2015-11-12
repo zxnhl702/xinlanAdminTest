@@ -1,5 +1,5 @@
 $(function() {
-	var _callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/"),
+	var _callAjax = _genCallAjax(ajaxRootURL),
 			hot_id = _getPar("hot_id");
 	if (hot_id == '') return;
 	var user_id = _getPar("user_id");

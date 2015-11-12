@@ -44,4 +44,16 @@
 	z-index:99;
 	position:absolute;
 	border:1px solid #ededed;
- }
+}
+
+/*
+ *	问答
+ */
+.wenda-add-text{
+	height:32px;
+	line-height:32px;
+	text-align:center
+}
+.wenda-subject-add{
+	cursor:pointer
+}

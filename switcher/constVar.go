@@ -16,5 +16,5 @@ const (
 	HOTS_IMG_URL = "http://127.0.0.1:11001/images/hots/"
 	
 	// 程序端口号
-	SERVER_PORT = ":11006"
+	SERVER_PORT = ":11002"
 )

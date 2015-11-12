@@ -1,5 +1,5 @@
 $(function() {
-	var _callAjax = _genCallAjax("http://127.0.0.1:11006/xinlan/");
+	var _callAjax = _genCallAjax("http://127.0.0.1:11002/xinlan/");
 
 	_set("xinlan_privilege", '');
 
