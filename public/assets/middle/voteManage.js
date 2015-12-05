@@ -65,10 +65,11 @@ $(function() {
 				$('<div class="item-list-img-hover"><img width="100%" src=' + $(this).attr('data-dir') + ' /></div>').appendTo($(this));
 			// 音频投票
 			} else if(1 == vote_type) {
-				$('<div class="item-list-img-hover"><audio src="' + $(this).attr('data-dir')	 + '" display="none" autoplay="autoplay"></audio>').appendTo($(this));
+				$('<div class="audio-hover"><audio src="' + $(this).attr('data-dir')	 + '" display="none" autoplay="autoplay"></audio></div>').appendTo($(this));
 			}
 		},function(){
 			$('.item-list-img-hover').remove();
+			$('.audio-hover').remove();
 		})
 	};
 	
