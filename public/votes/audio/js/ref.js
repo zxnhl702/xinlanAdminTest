@@ -158,6 +158,15 @@ var _toast = $.hg_toast({
 	"delay":1500
 }); // show; confirm
 
+var _isWeixin = function() {
+	var ua = navigator.userAgent.toLowerCase();
+	if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		return true;
+ 	} else {
+		return false;
+	}
+}
+
 // SSP
 /*
 $('.comment').bind("click", function() {

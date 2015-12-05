@@ -3,6 +3,15 @@ $(function() {
 	var vote_id = _getPar("vote_id");
 	// 图片地址
 	var img_url_root = imgURL + "/vote_" + vote_id + "/";
+	// 是否是微信登陆
+	var weixinLogin = _isWeixin()||debugMod;
+	if(weixinLogin) {
+		// for weixin
+		$.hg_h5app = function(kv) {
+			kv["needUserInfo"]();
+		};
+	}
+	
 	$.hg_h5app({
 		"needUserInfo":function() {
 			var _callAjax = _genCallAjax(ajaxURL);
@@ -34,13 +43,15 @@ $(function() {
 			var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db banner"/>';
 			$(bannerImg).appendTo(".banner");
 			// 底栏
-			var openid = _getPar("openid");
-			$("#goIndex").attr("href", "index.html?vote_id=" + vote_id 
-					+ "&openid=" + openid); // for weixin
-			$("#goProfile").attr("href", "profile.html?vote_id=" + vote_id
-					+ "&openid=" + openid); // for weixin
-			$("#goRank").attr("href", "rank.html?vote_id=" + vote_id
-					+ "&openid=" + openid); // for weixin
+			// 拼url中？之后的部分
+			var urlSearch = "vote_id=" + vote_id;
+			if(weixinLogin) {
+				var openid = _getPar("openid");
+				urlSearch += "&openid=" + openid;
+			}
+			$("#goIndex").attr("href", "index.html?" + urlSearch);
+			$("#goProfile").attr("href", "profile.html?" + urlSearch);
+			$("#goRank").attr("href", "rank.html?" + urlSearch);
 			
 			$('.comment').bind("click", function() {
 				location.href = "index.html?comment=1&vote_id="+vote_id;

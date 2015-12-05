@@ -7,3 +7,5 @@ var domain = window.location.hostname;
 var ajaxURL = "http://"+host+"/xinlan/votes";
 // 图片基准地址
 var imgURL = "http://" + domain + ":11001/images/votes";
+// 测试用
+var debugMod = false;

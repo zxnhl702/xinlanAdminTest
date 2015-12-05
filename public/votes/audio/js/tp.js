@@ -5,18 +5,25 @@ $(function() {
 	var img_url_root = imgURL + "/vote_" + vote_id + "/";
 	// 正在播放的audio标签
 	var nowPlayingAudio = null;
+	// 是否是微信登陆
+	var weixinLogin = _isWeixin()||debugMod;
 
-	// for weixin
-	$.hg_h5app = function(kv) {
-		kv["needSystemInfo"]();
-	};
+	if(weixinLogin) {
+		// for weixin
+		$.hg_h5app = function(kv) {
+			kv["needSystemInfo"]();
+		};
+	}
 	
 	$.hg_h5app({
 		"needSystemInfo":function(d) {
-			// var device_token = _getToken(d, "device_token"),
-			// for weixin
-			var device_token = _getPar("openid");
-
+			if(weixinLogin) {
+				// for weixin
+				var device_token = _getPar("openid");
+			} else {
+				var device_token = _getToken(d, "device_token");
+			}
+			
 			_callAjax = _genCallAjax(ajaxURL),
 			comments = [],
 			ifComment = _getPar("comment"),
@@ -241,13 +248,15 @@ $(function() {
 			var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
 			$(bannerImg).appendTo(".banner");
 			// 底栏
-			var openid = _getPar("openid");
-			$("#goIndex").attr("href", "index.html?vote_id=" + vote_id 
-					+ "&openid=" + openid); // for weixin
-			$("#goProfile").attr("href", "profile.html?vote_id=" + vote_id
-					+ "&openid=" + openid); // for weixin
-			$("#goRank").attr("href", "rank.html?vote_id=" + vote_id
-					+ "&openid=" + openid); // for weixin
+			// 拼url中？之后的部分
+			var urlSearch = "vote_id=" + vote_id;
+			if(weixinLogin) {
+				var openid = _getPar("openid");
+				urlSearch += "&openid=" + openid;
+			}
+			$("#goIndex").attr("href", "index.html?" + urlSearch);
+			$("#goProfile").attr("href", "profile.html?" + urlSearch);
+			$("#goRank").attr("href", "rank.html?" + urlSearch);
 
 			setInterval(function(){
 				emitComment();
