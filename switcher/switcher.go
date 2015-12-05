@@ -401,14 +401,6 @@ func Dispatch(db *sql.DB) Dlm {
 	}
 }
 
-func GetParameter(r *http.Request, key string) string {
-	s := r.URL.Query().Get(key)
-	if s == "" {
-		panic("没有参数" + key)
-	}
-	return s
-}
-
 func today() string {
 	return time.Now().Format("2006-01-02")
 }

@@ -157,8 +157,8 @@ func UploadHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params)
 func DlmVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	module := p.ByName("module")
 	log.Println("module: " + module)
-	
-	db := ConnectDB("./middle.db")
+	// 根据模块连接相对应的数据库
+	db := GetModuleConnectDB(module)
 
 	defer func() {
 		db.Close()
@@ -168,7 +168,7 @@ func DlmVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params
 			log.Println(err)
 		}
 	}()
-	
+	// 根据模块选择相对应的业务逻辑处理函数
 	switcher := GetModuleSwitcher(module, db)
 	var ret []byte
 	if Authorize(r) {
@@ -223,6 +223,18 @@ func GenJsonpResult(r *http.Request, rt *Ret) []byte {
 	return []byte(sw.GetParameter(r, "callback") + "(" + string(bs) + ")")
 }
 
+// 根据模块连接数据库
+func GetModuleConnectDB(moduleName string) *sql.DB {
+	switch moduleName {
+		case "votes":
+			return ConnectDB("middle.db")
+		case "quiz":
+			return ConnectDB("middle_quiz.db")
+		default:
+			return ConnectDB("middle.db")
+	}
+}
+
 func ConnectDB(dbPath string) *sql.DB {
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
@@ -253,9 +265,11 @@ func GetModuleSwitcher(moduleName string, db *sql.DB) sw.Dlm {
 	var switcher sw.Dlm
 	switch moduleName {
 		case "votes":
-		switcher = sw.VoteDispatch(db)
+			switcher = sw.VoteDispatch(db)
+		case "quiz":
+			switcher = sw.QuizDispatch(db)
 		default:
-		switcher = sw.Dispatch(db)
+			switcher = sw.Dispatch(db)
 	}
 	return switcher
 }

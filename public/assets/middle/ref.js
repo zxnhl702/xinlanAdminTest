@@ -162,16 +162,20 @@ var _howLongAgo= function(d) {
 		return d;
 	}
 }
-
+// 检查图片格式
 var _checkImgType = function(filename) {
-	if ("" == filename) {
+	if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(filename)) {
 		return false;
 	} else {
-		if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(filename)) {
-			return false;
-		} else {
-			return true;
-		}
+		return true;
+	}
+}
+// 检查音频格式
+var _checkAudioType = function(filename) {
+	if (!/\.(mp3|MP3)$/.test(filename)) {
+		return false;
+	} else {
+		return true;
 	}
 }
 

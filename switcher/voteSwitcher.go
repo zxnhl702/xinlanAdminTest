@@ -7,17 +7,18 @@ import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
-	"strings"
-	"strconv"
 	"net/http"
-	"path"
 	"os"
+	"path"
+	"strconv"
+	"strings"
 )
 
 const (
-	vote_img_root = VOTE_IMG_ROOT
-	vote_top_img_name = "banner"
-	vote_profile_img_name = "profile"
+	vote_img_root          = VOTE_IMG_ROOT
+	vote_sub_fold          = "/vote_"
+	vote_top_img_name      = "banner"
+	vote_profile_img_name  = "profile"
 	vote_item_thumb_prefix = "thumb"
 )
 
@@ -25,6 +26,7 @@ const (
 type Votes struct {
 	Vote_id         int    `json:"id"`         //投票编号
 	Vote_title      string `json:"title"`      //投票标题
+	Vote_type       string `json:"type"`       //投票类型
 	Vote_item_count int    `json:"itemCount"`  //参赛人数
 	Vote_count      int    `json:"voteCount"`  //投票人次
 	Vote_clicks     int    `json:"clickCount"` //访问量
@@ -32,16 +34,17 @@ type Votes struct {
 
 // 投票标题结构体
 type VoteTitle struct {
-	Vote_id         int    `json:"id"`         //投票编号
-	Vote_title      string `json:"title"`      //投票标题
+	Vote_id    int    `json:"id"`    //投票编号
+	Vote_title string `json:"title"` //投票标题
+	Vote_type  string `json:"type"`  //投票类型
 }
 
 // 投票选项信息结构体
 type VoteItems struct {
-	VItem_id         int    `json:"id"`     //选项编号
-	VItem_name       string `json:"name"`   //参加投票的用户名
-	VItem_work       string `json:"work"`   //参加投票的作品名/参赛标题/描述
-	VItem_img        string `json:"img"`    //参加投票的图片地址
+	VItem_id   int    `json:"id"`   //选项编号
+	VItem_name string `json:"name"` //参加投票的用户名
+	VItem_work string `json:"work"` //参加投票的作品名/参赛标题/描述
+	VItem_img  string `json:"img"`  //参加投票的图片地址
 }
 
 // 手机页面用投票选项信息结构体
@@ -59,8 +62,8 @@ type VoteComment struct {
 }
 
 func VoteDispatch(db *sql.DB) Dlm {
-	return Dlm {
-		
+	return Dlm{
+
 		// 认证&手机页面初始化
 		"auth": func(r *http.Request) (string, interface{}) {
 			newVoteVisitLog(r, db)
@@ -68,12 +71,19 @@ func VoteDispatch(db *sql.DB) Dlm {
 			device_token := GetParameter(r, "device_token")
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
+			// 检测投票是否上线
+			var voteCount int
+			err := db.QueryRow("select count(id) from votes where id = ? and isOnline=1", vote_id).Scan(&voteCount)
+			if nil != err || 0 == voteCount {
+				log.Println(err)
+				panic("活动已经下线")
+			}
 			stmt, _ := db.Prepare("insert into votes_app_user(device_token, vote_id) values(?, ?)")
 			defer stmt.Close()
 			stmt.Exec(device_token, vote_id)
 			var v Votes
 			// votes_candidate表  参赛人数
-			err := db.QueryRow("select count(id) from votes_candidate where isOnline = 1 and vote_id = ?", vote_id).Scan(&v.Vote_item_count)
+			err = db.QueryRow("select count(id) from votes_candidate where isOnline = 1 and vote_id = ?", vote_id).Scan(&v.Vote_item_count)
 			if nil != err {
 				log.Println(err)
 				panic("认证失败3")
@@ -92,11 +102,11 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "验证成功", v
 		},
-		
+
 		// insert
 		// 新增投票
 		"newVote": func(r *http.Request) (string, interface{}) {
-			
+
 			// 投票头图
 			topImg := GetParameter(r, "topImg")
 			newTopImg := vote_top_img_name + path.Ext(topImg)
@@ -105,58 +115,90 @@ func VoteDispatch(db *sql.DB) Dlm {
 			newProfileImg := vote_profile_img_name + path.Ext(profileImg)
 			// 投票标题
 			title := GetParameter(r, "title")
+			// 投票类型
+			voteType := GetParameter(r, "voteType")
 			// 插入投票数据
-			result := newVote(title, newTopImg, newProfileImg, db)
+			result := newVote(title, newTopImg, newProfileImg, voteType, db)
 			// 获取新增投票的编号
 			rowid, _ := result.LastInsertId()
 			// 新投票创建投票项目采番
 			newVoteItemIdSeq(strconv.FormatInt(rowid, 10), db)
 			// 创建新投票图片文件夹
-			os.Mkdir(vote_img_root+"/vote_"+strconv.FormatInt(rowid, 10), os.ModePerm)
+			os.Mkdir(vote_img_root+vote_sub_fold+strconv.FormatInt(rowid, 10), os.ModePerm)
 			// 图片文件移动至指定文件夹
-			moveFile(topImg, newTopImg, strconv.FormatInt(rowid, 10))
-			moveFile(profileImg, newProfileImg, strconv.FormatInt(rowid, 10))
+			moveFile(vote_img_root, vote_sub_fold, topImg, newTopImg, strconv.FormatInt(rowid, 10))
+			moveFile(vote_img_root, vote_sub_fold, profileImg, newProfileImg, strconv.FormatInt(rowid, 10))
 			return "插入新投票成功", nil
 		},
-		
+
 		// 新增投票项目
 		"newVoteItem": func(r *http.Request) (string, interface{}) {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
+			// 投票类型
+			voteType := GetParameter(r, "voteType")
+			log.Println(voteType)
 			// 用户名
 			name := GetParameter(r, "name")
 			// 参赛标题
 			work := GetParameter(r, "work")
 			// 大图
 			img := GetParameter(r, "img")
-			// 缩略图
-			thumb := GetParameter(r, "thumb")
-			// 投票项目编号
-			id, err := getVoteItemIdSeq(vote_id, db)
-			if nil != err {
-				// 删除已经上传的图片
-				os.Remove(vote_img_root + "/" + img)
-				os.Remove(vote_img_root + "/" + thumb)
-				panic("获取投票项目编号失败")
+			// 图片投票
+			if "0" == voteType {
+				// 缩略图
+				thumb := GetParameter(r, "thumb")
+				// 投票项目编号
+				id, err := getVoteItemIdSeq(vote_id, db)
+				if nil != err {
+					// 删除已经上传的图片
+					os.Remove(vote_img_root + "/" + img)
+					os.Remove(vote_img_root + "/" + thumb)
+					panic("获取投票项目编号失败")
+				}
+				// 新图片名称
+				newImg := strconv.Itoa(id) + path.Ext(img)
+				// 新缩略图名称
+				newThumb := vote_item_thumb_prefix + strconv.Itoa(id) + path.Ext(thumb)
+				// 插入投票项目数据
+				err = newVoteItem(strconv.Itoa(id), vote_id, name, work, newImg, newThumb, db)
+				if nil != err {
+					// 删除已经上传的图片
+					os.Remove(vote_img_root + "/" + img)
+					os.Remove(vote_img_root + "/" + thumb)
+					panic("插入投票项目数据失败")
+				}
+				// 图片文件移动至指定文件夹
+				moveFile(vote_img_root, vote_sub_fold, img, newImg, vote_id)
+				moveFile(vote_img_root, vote_sub_fold, thumb, newThumb, vote_id)
+			// 音频投票
+			} else if "1" == voteType {
+				// 投票项目编号
+				id, err := getVoteItemIdSeq(vote_id, db)
+				if nil != err {
+					// 删除已经上传的图片
+					os.Remove(vote_img_root + "/" + img)
+					panic("获取投票项目编号失败")
+				}
+				// 新音频名称
+				newImg := strconv.Itoa(id) + path.Ext(img)
+				// 插入投票项目数据
+				err = newVoteItem(strconv.Itoa(id), vote_id, name, work, newImg, newImg, db)
+				if nil != err {
+					// 删除已经上传的图片
+					os.Remove(vote_img_root + "/" + img)
+					panic("插入投票项目数据失败")
+				}
+				// 图片文件移动至指定文件夹
+				moveFile(vote_img_root, vote_sub_fold, img, newImg, vote_id)
+			// 视频投票
+			} else if "2" == voteType {
+				// TODO
 			}
-			// 新图片名称
-			newImg := strconv.Itoa(id) + path.Ext(img)
-			// 新缩略图名称
-			newThumb := vote_item_thumb_prefix + strconv.Itoa(id) + path.Ext(thumb)
-			// 插入投票项目数据
-			err = newVoteItem(strconv.Itoa(id), vote_id, name, work, newImg, newThumb, db)
-			if nil != err {
-				// 删除已经上传的图片
-				os.Remove(vote_img_root + "/" + img)
-				os.Remove(vote_img_root + "/" + thumb)
-				panic("插入投票项目数据失败")
-			}
-			// 图片文件移动至指定文件夹
-			moveFile(img, newImg, vote_id)
-			moveFile(thumb, newThumb, vote_id)
+
 			return "插入新投票项目成功", nil
 		},
-		
+
 		// 新增评论
 		"comment": func(r *http.Request) (string, interface{}) {
 			// 评论
@@ -169,7 +211,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "评论成功", nil
 		},
-		
+
 		// select
 		// 获取投票编号
 		"getVotesIds": func(r *http.Request) (string, interface{}) {
@@ -180,7 +222,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 				log.Println(err)
 				panic("获取投票编号失败")
 			}
-			var ids[] int
+			var ids []int
 			for rows.Next() {
 				var id int
 				rows.Scan(&id)
@@ -188,7 +230,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "获取投票编号成功", ids
 		},
-		
+
 		// 根据全部投票编号获取投票信息
 		"getAllVotesByIds": func(r *http.Request) (string, interface{}) {
 
@@ -201,7 +243,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "根据全部编号获取投票信息成功", votes
 		},
-		
+
 		// 获取投票项目编号
 		"getVoteItemsIds": func(r *http.Request) (string, interface{}) {
 
@@ -220,7 +262,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 				panic("获取投票项目编号失败2")
 			}
 			// 投票编号的集合
-			var ids[] int
+			var ids []int
 			for rows.Next() {
 				var id int
 				rows.Scan(&id)
@@ -228,7 +270,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "获取投票项目编号成功", ids
 		},
-		
+
 		// 根据全部投票项目项目编号获取项目信息
 		"getAllVoteItemsByIds": func(r *http.Request) (string, interface{}) {
 
@@ -237,32 +279,32 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
 			ids := GetParameter(r, "ids")
-			for _, i := range(strings.Split(ids, "|")) {
+			for _, i := range strings.Split(ids, "|") {
 				items = append(items, getVoteItemById(i, vote_id, db))
 			}
 			return "根据全部投票项目项目编号获取项目信息成功", items
 		},
-		
+
 		// 根据投票编号获取投票标题
 		"getVoteTitleByVoteId": func(r *http.Request) (string, interface{}) {
 			// 投票标题结构体
 			var vt VoteTitle
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
-			stmt, err := db.Prepare("select id, title from votes where id = ?")
+			stmt, err := db.Prepare("select id, title, voteType from votes where id = ?")
 			defer stmt.Close()
 			if nil != err {
 				log.Println(err)
 				panic("获取投票标题失败")
 			}
-			err = stmt.QueryRow(vote_id).Scan(&vt.Vote_id, &vt.Vote_title)
+			err = stmt.QueryRow(vote_id).Scan(&vt.Vote_id, &vt.Vote_title, &vt.Vote_type)
 			if nil != err {
 				log.Println(err)
 				panic("获取投票标题失败2")
 			}
 			return "获取投票标题成功", vt
 		},
-		
+
 		// 获取参赛者信息
 		"getCandidates": func(r *http.Request) (string, interface{}) {
 			newVoteVisitLog(r, db)
@@ -270,11 +312,11 @@ func VoteDispatch(db *sql.DB) Dlm {
 			from := GetParameter(r, "from")
 			// 现实参赛者数量
 			amount := GetParameter(r, "amount")
-//			// 结束编号
-//			to := from + amount
+			//			// 结束编号
+			//			to := from + amount
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
-//			rows, err := db.Query("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc, votes_info vi where vc.id >= ? and vc.id < ? and vc.id = vi.vote_for and vc.vote_id = ? and vc.vote_id = vi.vote_id and vc.isOnline = 1 group by id", from, to, vote_id)
+			//			rows, err := db.Query("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc, votes_info vi where vc.id >= ? and vc.id < ? and vc.id = vi.vote_for and vc.vote_id = ? and vc.vote_id = vi.vote_id and vc.isOnline = 1 group by id", from, to, vote_id)
 			stmt, err := db.Prepare("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc left outer join votes_info vi on vc.id = vi.vote_for and vc.vote_id = vi.vote_id where vc.id > ? and vc.vote_id = ? and vc.isOnline = 1 group by id limit ?")
 			defer stmt.Close()
 			if err != nil {
@@ -296,7 +338,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 
 			return "获取参赛者信息成功", candidates
 		},
-		
+
 		// 根据投票项目编号获取参赛者信息
 		"getCandidateById": func(r *http.Request) (string, interface{}) {
 			newVoteVisitLog(r, db)
@@ -305,13 +347,17 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
 			var c VoteCandidate
-			err := db.QueryRow("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc, votes_info vi where vc.id = ? and vc.id = vi.vote_for and vc.vote_id = ? and vc.vote_id = vi.vote_id and vc.isOnline = 1 group by id", id, vote_id).Scan(&c.Id, &c.Name, &c.Work, &c.Cnt)
+			err := db.QueryRow("select id, name, work from votes_candidate where id = ? and vote_id = ? and isOnline =1", id, vote_id).Scan(&c.Id, &c.Name, &c.Work)
+			if err != nil {
+				panic("没有该id指定的参赛者")
+			}
+			err = db.QueryRow("select count(vote_from) from votes_info where vote_for = ? and vote_id = ?", id, vote_id).Scan(&c.Cnt)
 			if err != nil {
 				panic("没有该id指定的参赛者")
 			}
 			return "获取id参赛者信息成功", c
 		},
-		
+
 		// 获取评论
 		"getComments": func(r *http.Request) (string, interface{}) {
 			newVoteVisitLog(r, db)
@@ -334,7 +380,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "获取评论成功", comments
 		},
-		
+
 		// 获取前10个投票项目信息
 		"top_list": func(r *http.Request) (string, interface{}) {
 			newVoteVisitLog(r, db)
@@ -353,7 +399,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "获取前10个成功", candidates
 		},
-		
+
 		// update
 		// 根据投票编号逻辑删除投票
 		"removeVoteLogicallyById": func(r *http.Request) (string, interface{}) {
@@ -372,7 +418,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "逻辑删除投票成功", nil
 		},
-		
+
 		// 根据投票项目编号逻辑删除投票项目
 		"removeVoteItemLogicallyById": func(r *http.Request) (string, interface{}) {
 			// 投票项目编号
@@ -392,7 +438,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "逻辑删除投票项目成功", nil
 		},
-		
+
 		// 投票
 		"vote_for": func(r *http.Request) (string, interface{}) {
 			newVoteVisitLog(r, db)
@@ -423,7 +469,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			stmt.Exec(dt, vote_id)
 			return "投票成功", nil
 		},
-		
+
 		// delete
 		// 根据编号物理删除投票
 		"removeVoteById": func(r *http.Request) (string, interface{}) {
@@ -451,7 +497,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			removeVoteByVoteId(id, db)
 			return "删除投票成功", nil
 		},
-		
+
 		// 根据投票项目编号物理删除投票项目
 		"removeVoteItemById": func(r *http.Request) (string, interface{}) {
 			// 投票项目编号
@@ -476,14 +522,14 @@ func VoteDispatch(db *sql.DB) Dlm {
 
 // insert
 // 新增投票
-func newVote(title, topImg, profileImg string, db *sql.DB) sql.Result {
-	stmt, err := db.Prepare("insert into votes (title, topImg, profileImg) values (?, ?, ?)")
+func newVote(title, topImg, profileImg, voteType string, db *sql.DB) sql.Result {
+	stmt, err := db.Prepare("insert into votes (title, topImg, profileImg, voteType) values (?, ?, ?, ?)")
 	defer stmt.Close()
 	if nil != err {
 		log.Println(err)
 		panic("插入新投票失败")
 	}
-	result, err := stmt.Exec(title, topImg, profileImg)
+	result, err := stmt.Exec(title, topImg, profileImg, voteType)
 	if nil != err {
 		log.Println(err)
 		panic("插入新投票失败2")
@@ -510,8 +556,8 @@ func newVoteItem(id, vote_id, name, work, newImg, newThumb string, db *sql.DB) e
 }
 
 // 新增投票项目采番
-func newVoteItemIdSeq(vote_id string, db *sql.DB) bool{
-	
+func newVoteItemIdSeq(vote_id string, db *sql.DB) bool {
+
 	stmt, err := db.Prepare("insert into votes_seq (vote_id) values (?)")
 	defer stmt.Close()
 	if nil != err {
@@ -552,7 +598,7 @@ func getVoteById(id string, db *sql.DB) Votes {
 	// 投票信息结构体的集合
 	var v Votes
 	// vote表 投票标题
-	err := db.QueryRow("select id, title from votes where id = ?", id).Scan(&v.Vote_id, &v.Vote_title)
+	err := db.QueryRow("select id, title, voteType from votes where id = ?", id).Scan(&v.Vote_id, &v.Vote_title, &v.Vote_type)
 	if nil != err {
 		log.Println(err)
 		panic("根据编号获取投票信息失败")
@@ -593,7 +639,7 @@ func getVoteItemById(id string, vote_id string, db *sql.DB) VoteItems {
 
 // 获得投票项目的采番 no panic
 func getVoteItemIdSeq(vote_id string, db *sql.DB) (int, error) {
-	
+
 	// 当前采番值
 	var idSeq int
 	err := db.QueryRow("select seq from votes_seq where vote_id = ?", vote_id).Scan(&idSeq)
@@ -732,12 +778,4 @@ func removeVoteClicksByVoteId(vote_id string, db *sql.DB) bool {
 		panic("删除投票访问记录失败2")
 	}
 	return true
-}
-
-// file operate
-// 移动/重命名文件
-func moveFile(filename, newfilename,vote_id string) error {
-	oldPath := vote_img_root + "/" + filename
-	newPath := vote_img_root + "/vote_" + vote_id + "/" + newfilename
-	return os.Rename(oldPath, newPath)
 }

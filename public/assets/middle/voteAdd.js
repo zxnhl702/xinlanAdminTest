@@ -8,6 +8,8 @@ $(function() {
 	var fileUploadURL = fileUploadVoteURL;
 	var user_id = _getPar("user_id");
 	var privilege = _getPar("privilege");
+	// 投票类型
+	var voteType = new Array("图片投票", "音频投票", "视频投票");
 	pageVote = _pageBar([], ".votes", "#vote-left", "#vote-right", function(ids) {
 		$("#votes-list").empty();
 		_callAjax({
@@ -24,6 +26,7 @@ $(function() {
 		votes.forEach(function(r) {
 			var str = '<tr><td>' + r.id + '</td>' + 
 						'<td class="font-bold text-left">' + r.title + '</td>' + 
+						'<td class="text-left">' + voteType[r.type] + '</td>' + 
 						'<td><div class="label bg-orange">' + r.itemCount + '</div></td>' +
 						'<td><div class="label bg-orange">' + r.voteCount + '</div></td>' +
 						'<td><div class="label bg-orange">' + r.clickCount + '</div></td>' +
@@ -65,6 +68,7 @@ $(function() {
 		var title = $("#new-title").val().replace(/\s/g, "");
 		var topImg = $("#new-banner").val().replace(/\s/g, "");
 		var profileImg = $("#new-profile").val().replace(/\s/g, "");
+		var voteType = $("#new-type").val().replace(/\s/g, "");
 		if (title == '') return _toast.show("请填写标题");
 		if (topImg == '') return _toast.show("请选择投票头图");
 		if (profileImg == '') return _toast.show("请选择投票简介图");
@@ -100,7 +104,8 @@ $(function() {
 					"cmd":"newVote",
 					"title":title,
 					"topImg":filenames[0],
-					"profileImg":filenames[1]
+					"profileImg":filenames[1],
+					"voteType":voteType
 				}, function(d){
 					if (d.success) {
 						_toast.show("新增投票成功");

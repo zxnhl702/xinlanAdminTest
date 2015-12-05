@@ -10,9 +10,9 @@
 		<!-- Favicons -->
 		<link rel="shortcut icon" href="assets/images/icons/favicon.png" />
 		<!--[if lt IE 9]>
-          <script src="assets/js/minified/core/html5shiv.min.js"></script>
-          <script src="assets/js/minified/core/respond.min.js"></script>
-        <![endif]-->
+			<script src="assets/js/minified/core/html5shiv.min.js"></script>
+			<script src="assets/js/minified/core/respond.min.js"></script>
+		<![endif]-->
 		<!-- Fides Admin CSS Core -->
 		<link rel="stylesheet" type="text/css" href="assets/css/minified/aui-production.min.css" />
 		<!-- Theme UI -->
@@ -66,44 +66,60 @@
 				</div>
 				<div id="page-content">
 					<h3>新增投票</h3>
-	            	<form action="" id="new-vote" class="col-md-12" method="POST" enctype="multipart/form-data">
-	            		<div class="form-row">
-	            			<div class="form-label col-md-2">
-			                    <label for="">
-			                        	<span style="color:red">* </span>投票标题:
-			                    </label>
-			                </div>
-			                <div class="form-input col-md-10">
-			                	<div class="col-md-12">
-			                    	<input type="text" id="new-title" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
-		                    	</div>
-			                </div>
-	            		</div>
+					<form action="" id="new-vote" class="col-md-12" method="POST" enctype="multipart/form-data">
 						<div class="form-row">
-	            			<div class="form-label col-md-2">
-			                    <label for="">
-			                        	<span style="color:red">* </span>投票头图:
-			                    </label>
-			                </div>
-			                <div class="form-input col-md-10">
-			                	<div class="col-md-12">
-			                    	<input type="file" id="new-banner" name="banner-img" accept="image/*">
-			                    	<!-- <input type="file" id="new-banner" name="banner-img" accept="image/*"> -->
-		                    	</div>
-			                </div>
-	            		</div>
+							<div class="form-label col-md-2">
+								<label for="">
+										<span style="color:red">* </span>投票标题:
+								</label>
+							</div>
+							<div class="form-input col-md-10">
+								<div class="col-md-12">
+									<input type="text" id="new-title" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+								</div>
+							</div>
+						</div>
 						<div class="form-row">
-	            			<div class="form-label col-md-2">
-			                    <label for="">
-			                        	<span style="color:red">* </span>投票简介图:
-			                    </label>
-			                </div>
-			                <div class="form-input col-md-10">
-			                	<div class="col-md-12">
-			                    	<input type="file" id="new-profile" name="profile-img" accept="image/*"/>
-		                    	</div>
-			                </div>
-	            		</div>
+							<div class="form-label col-md-2">
+								<label for="">
+										<span style="color:red">* </span>投票类型:
+								</label>
+							</div>
+							<div class="form-input col-md-10">
+								<div class="col-md-12">
+									<select id="new-type">
+										<option value="0" selected="selected">图片投票</option>
+										<option value="1">音频投票</option>
+										<!-- <option value="2">视频投票</option> -->
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-label col-md-2">
+								<label for="">
+										<span style="color:red">* </span>投票头图:
+								</label>
+							</div>
+							<div class="form-input col-md-10">
+								<div class="col-md-12">
+									<input type="file" id="new-banner" name="banner-img" accept="image/*">
+									<!-- <input type="file" id="new-banner" name="banner-img" accept="image/*"> -->
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-label col-md-2">
+								<label for="">
+										<span style="color:red">* </span>投票简介图:
+								</label>
+							</div>
+							<div class="form-input col-md-10">
+								<div class="col-md-12">
+									<input type="file" id="new-profile" name="profile-img" accept="image/*"/>
+								</div>
+							</div>
+						</div>
 						<div class="form-row">
 							<div class="form-input float-right">
 								<input type="hidden" name="superhidden" id="superhidden">
@@ -116,17 +132,18 @@
 								</div>
 							</div>
 						</div>
-	            	</form>
-	            	<div class="divider"></div>
+					</form>
+					<div class="divider"></div>
 					<h3 class="bottom-margin">
-	            		投票列表
-	            	</h3>
+						投票列表
+					</h3>
 					<div class="col-md-12">
 						<table class="table table-striped text-center">
 							<thead>
 								<tr>
 									<th class="text-center"></th>
 									<th>投票标题</th>
+									<th>投票类型</th>
 									<th class="text-center">参赛人数</th>
 									<th class="text-center">投票人次</th>
 									<th class="text-center">访问量</th>
@@ -151,9 +168,9 @@
 										<div class="dropdown">
 											<a href="javascript:;" title="" class="btn medium bg-blue" data-toggle="dropdown">
 												<span class="button-content">
-				                                    <i class="glyph-icon font-size-11 icon-cog"></i>
-				                                    <i class="glyph-icon font-size-11 icon-chevron-down"></i>
-				                                </span>
+													<i class="glyph-icon font-size-11 icon-cog"></i>
+													<i class="glyph-icon font-size-11 icon-chevron-down"></i>
+												</span>
 											</a>
 											<ul class="dropdown-menu float-right">
 												<li>
@@ -181,20 +198,20 @@
 								<i class="glyph-icon icon-chevron-left"></i>
 							</a>
 							<a href="javascript:;" class="btn large ui-state-default votes">
-		                        1
-		                    </a>
+								1
+							</a>
 							<a href="javascript:;" class="btn large disabled ui-state-default votes">
-		                        2
-		                    </a>
+								2
+							</a>
 							<a href="javascript:;" class="btn large ui-state-default votes">
-		                        3
-		                    </a>
+								3
+							</a>
 							<a href="javascript:;" class="btn large ui-state-default votes">
-		                        4
-		                    </a>
+								4
+							</a>
 							<a href="javascript:;" class="btn large ui-state-default votes">
-		                        5
-		                    </a>
+								5
+							</a>
 							<a href="javascript:;" class="btn large ui-state-default" id="vote-right">
 								<i class="glyph-icon icon-chevron-right"></i>
 							</a>
