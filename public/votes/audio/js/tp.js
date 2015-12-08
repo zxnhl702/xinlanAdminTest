@@ -149,10 +149,10 @@ $(function() {
 					_loading();
 					// 标签中写入音频文件url
 					$("#audioPlayer")[0].src = audioSrc;
+					$("#audioPlayer")[0].play();
 					// 正在播放的url
 					nowPlayingAudio = id;
 					$("#audioPlayer")[0].addEventListener("loadeddata",function() {
-						$("#audioPlayer")[0].play();
 						_stopLoading();
 					}, false);
 				// 同一个音频 点击播放/暂停
