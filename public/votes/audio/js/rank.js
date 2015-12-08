@@ -5,7 +5,12 @@ $(function() {
 	var img_url_root = imgURL + "/vote_" + vote_id + "/";
 	// 是否是微信登陆
 	var weixinLogin = _isWeixin()||debugMod;
+	// 微信登陆的情况下
 	if(weixinLogin) {
+		// 去除无限舟山app需要的js文件
+		$("script[src='js/h5app.js']").remove();
+		$("script[src='js/viewPC.js']").remove();
+		$("script[src='js/print.js']").remove();
 		// for weixin
 		$.hg_h5app = function(kv) {
 			kv["needUserInfo"]();
@@ -37,6 +42,16 @@ $(function() {
 							'<td width="30%" class="orange">'+r.cnt+'</td> </tr> ';
 					$(str).appendTo(".rank-table");
 				});
+			});
+			
+			// 取页面的title
+			_callAjax({
+				"cmd":"getVoteTitleByVoteId",
+				"vote_id":vote_id
+			}, function(d) {
+				if(d.success) {
+					$("#vote-title").text(d.data.title);
+				}
 			});
 			
 			// 头图

@@ -9,6 +9,17 @@ $(function() {
 	// 是否是微信登陆
 	var weixinLogin = _isWeixin()||debugMod;
 	
+	var _callAjax = _genCallAjax(ajaxURL);
+	// 取页面的title
+	_callAjax({
+		"cmd":"getVoteTitleByVoteId",
+		"vote_id":vote_id
+	}, function(d) {
+		if(d.success) {
+			$("#vote-title").text(d.data.title);
+		}
+	});
+	
 	// 头图
 	var bannerImg = '<img src="'+img_url_root+'profile.jpg" width="100%" class="db"/>';
 	$(bannerImg).appendTo(".main");

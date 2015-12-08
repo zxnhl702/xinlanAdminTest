@@ -7,8 +7,12 @@ $(function() {
 	var nowPlayingAudio = null;
 	// 是否是微信登陆
 	var weixinLogin = _isWeixin()||debugMod;
-
+	// 微信登陆的情况下
 	if(weixinLogin) {
+		// 去除无限舟山app需要的js文件
+		$("script[src='js/h5app.js']").remove();
+		$("script[src='js/viewPC.js']").remove();
+		$("script[src='js/print.js']").remove();
 		// for weixin
 		$.hg_h5app = function(kv) {
 			kv["needSystemInfo"]();
@@ -113,24 +117,23 @@ $(function() {
 			// 更新页面信息
 			var updateList = function(d) {
 				d.forEach(function(r) {
-					var str = '<li class="mb15 pct100 pt10 pb10 bdd cl rel" data-id='+r.id+'>' + 
+					var str = '<li class="mb15 pct100 pt10 pb10 bdd cl rel ovh" data-id='+r.id+'>' + 
 								'<div class="l mt10 ml20"><i class="fa fa-feed balanced fa-2x"></i></div>' + 
 								'<h5 class="f14 l m0 ml20 ell pct50 n g3">' + r.id + '.' + r.name + '<br />' + 
-								'<span class="f12 g9">' + r.work + ' | ' + 
-								'<span class="cnt">' + r.cnt + '</span>' + '票</span>' + '</h5>' + 
-								'<span class="btn bg_orange r mr20 mt5">投票</span>' + 
-								'<audio src="' + img_url_root + r.id + '.mp3" class="dn"></audio>' + 
+								'<span class="f12 g9">来自：' + r.work + //' | ' + 
+								//'<span class="cnt">' + r.cnt + '</span>' + '票</span>' + '</h5>' + 
+								//'<span class="btn bg_orange r mr20 mt5">投票</span>' + 
+//废弃予定						'<audio src="' + img_url_root + r.id + '.mp3" class="dn"></audio>' + 
 								'</li>';
 					var e = $(str).appendTo("#audio-list");
 					// 点击播放
 					e.click(function() {
-						playDifferentAudio(e.find("audio")[0]);
+//					$('li[data-id="'+r.id+'"]').click(function() {
+						// 音频文件url
+						var mp3Src = img_url_root + r.id + ".mp3";
+						playDifferentAudio(mp3Src, r.id);
 						$(".list-ani").remove();
 						$(".active").removeClass("active");
-						if(!e.find("audio")[0].paused) {
-							e.addClass("active");
-							e.append('<section class="list-ani abs"></section>');
-						}
 					})
 					// 投票
 					e.find(".btn").click(function(e) {
@@ -139,38 +142,36 @@ $(function() {
 					});
 				});
 			};
-			// 播放不同的音频
-			function playDifferentAudio(needToPlayAudio) {
-				// 初次加载没有正在播放的音频
-				if(null == nowPlayingAudio) {
-					playControl(needToPlayAudio);
+			// 播放音频
+			function playDifferentAudio(audioSrc, id) {
+				// 页面初始化后首次播放 不同的音频 更换音频播放
+				if($("#audioPlayer")[0].src != audioSrc){
+					_loading();
+					// 标签中写入音频文件url
+					$("#audioPlayer")[0].src = audioSrc;
+					// 正在播放的url
+					nowPlayingAudio = id;
+					$("#audioPlayer")[0].addEventListener("loadeddata",function() {
+						$("#audioPlayer")[0].play();
+						_stopLoading();
+					}, false);
+				// 同一个音频 点击播放/暂停
 				} else {
-					// 正在播放的音频与需要播放的是同一个
-					if(nowPlayingAudio.src == needToPlayAudio.src) {
-						playControl(needToPlayAudio);
-					// 不同个
+					if($("#audioPlayer")[0].paused) {
+						$("#audioPlayer")[0].play();
 					} else {
-						// 正在播放的暂停
-						nowPlayingAudio.pause();
-						// 播放需要播放的音频
-						playControl(needToPlayAudio);
+						$("#audioPlayer")[0].pause();
 					}
 				}
 			}
-			// 点击播放/暂停
-			function playControl(audio) {
-				// 如果暂停 
-				if(audio.paused) {
-					// 播放
-					audio.play();
-					// 正在播放的audio写入正在播放的公共变量
-					nowPlayingAudio = audio;
-				} else {
-					// 暂停
-					audio.pause();
-				}
-			}
-
+			
+			// 为正在播放的条目添加播放效果
+			$("#audioPlayer")[0].addEventListener("play",function() {
+				var ee = $('li[data-id="'+nowPlayingAudio+'"]');
+				ee.addClass("active");
+				ee.append('<section class="list-ani abs"></section>');
+			}, false);
+			
 			// 加载更多
 			$("#more-candidates").click(function(){
 				// 页面id为audio-list里的最后一个li标签中的data-id的属性值即为页面投票项目id最大的值
@@ -215,7 +216,6 @@ $(function() {
 					"id":id,
 					"vote_id":vote_id
 				}, function(d) {
-					console.log(d);
 					if (d.success) {
 						$("#audio-list").empty();
 						var dataArray = new Array(d.data)
@@ -241,6 +241,15 @@ $(function() {
 					getComments(MAX);
 				} else {
 					_toast.show(d.errMsg);
+				}
+			});
+			// 取页面的title
+			_callAjax({
+				"cmd":"getVoteTitleByVoteId",
+				"vote_id":vote_id
+			}, function(d) {
+				if(d.success) {
+					$("#vote-title").text(d.data.title);
 				}
 			});
 			
