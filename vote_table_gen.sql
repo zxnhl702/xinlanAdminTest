@@ -22,7 +22,7 @@ create table if not exists votes_candidate (
 
 drop table if exists votes_app_user;
 create table if not exists votes_app_user (
-	device_token text primary key,
+	device_token text,
 	vote_id integer not null,
 	if_voted integer default 0
 );

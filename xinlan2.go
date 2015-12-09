@@ -156,7 +156,7 @@ func UploadHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params)
 // 投票的业务句柄
 func DlmVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	module := p.ByName("module")
-	log.Println("module: " + module)
+	log.Println("module: " + module + "| cmd: " + GetParameter(r, "cmd"))
 	// 根据模块连接相对应的数据库
 	db := GetModuleConnectDB(module)
 

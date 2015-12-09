@@ -78,9 +78,19 @@ func VoteDispatch(db *sql.DB) Dlm {
 				log.Println(err)
 				panic("活动已经下线")
 			}
-			stmt, _ := db.Prepare("insert into votes_app_user(device_token, vote_id) values(?, ?)")
-			defer stmt.Close()
-			stmt.Exec(device_token, vote_id)
+			// 检测是否已经登记过登陆信息
+			deviceCount := -1
+			err = db.QueryRow("select count(device_token) from votes_app_user where device_token = ? and vote_id = ?", device_token, vote_id).Scan(&deviceCount)
+			if nil != err {
+				log.Println(err)
+				panic("认证失败2")
+			}
+			// 没有登记过就登记信息
+			if 0 == deviceCount {
+				stmt, _ := db.Prepare("insert into votes_app_user(device_token, vote_id) values(?, ?)")
+				defer stmt.Close()
+				stmt.Exec(device_token, vote_id)
+			}
 			var v Votes
 			// votes_candidate表  参赛人数
 			err = db.QueryRow("select count(id) from votes_candidate where isOnline = 1 and vote_id = ?", vote_id).Scan(&v.Vote_item_count)
