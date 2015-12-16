@@ -5,11 +5,11 @@ $(function() {
 	var img_url_root = imgURL + "/vote_" + vote_id + "/";
 	$.hg_h5app({
 		"needSystemInfo":function(d) {
-			var device_token = _getToken(d, "device_token"),
-			_callAjax = _genCallAjax(ajaxURL),
-			comments = [],
-			ifComment = _getPar("comment"),
-			MAX = 10e5;
+			var device_token = _getToken(d, "device_token");
+			var _callAjax = _genCallAjax(ajaxURL);
+			var comments = [];
+			var ifComment = _getPar("comment");
+			var MAX = 10e5;
 
 			// FUNCTIONS
 			// 投票

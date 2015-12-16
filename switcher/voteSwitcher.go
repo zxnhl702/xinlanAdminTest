@@ -49,10 +49,12 @@ type VoteItems struct {
 
 // 手机页面用投票选项信息结构体
 type VoteCandidate struct {
-	Id   int    `json:"id"`   //选项编号
-	Name string `json:"name"` //参加投票的用户名
-	Work string `json:"work"` //参加投票的作品名/参赛标题/描述
-	Cnt  int    `json:"cnt"`  //票数
+	Id    int    `json:"id"`    //选项编号
+	Name  string `json:"name"`  //参加投票的用户名
+	Work  string `json:"work"`  //参加投票的作品名/参赛标题/描述
+	Img   string `json:"img"`   //投票图片或者音频
+	Thumb string `json:"thumb"` //投票的缩略图
+	Cnt   int    `json:"cnt"`   //票数
 }
 
 // 手机页面用评论结构体
@@ -327,7 +329,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
 			//			rows, err := db.Query("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc, votes_info vi where vc.id >= ? and vc.id < ? and vc.id = vi.vote_for and vc.vote_id = ? and vc.vote_id = vi.vote_id and vc.isOnline = 1 group by id", from, to, vote_id)
-			stmt, err := db.Prepare("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc left outer join votes_info vi on vc.id = vi.vote_for and vc.vote_id = vi.vote_id where vc.id > ? and vc.vote_id = ? and vc.isOnline = 1 group by id limit ?")
+			stmt, err := db.Prepare("select vc.id, vc.name, vc.work, vc.img, vc.thumb, count(vi.vote_from) as cnt from votes_candidate vc left outer join votes_info vi on vc.id = vi.vote_for and vc.vote_id = vi.vote_id where vc.id > ? and vc.vote_id = ? and vc.isOnline = 1 group by id limit ?")
 			defer stmt.Close()
 			if err != nil {
 				log.Println(err)
@@ -342,7 +344,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			var candidates []VoteCandidate
 			for rows.Next() {
 				var c VoteCandidate
-				rows.Scan(&c.Id, &c.Name, &c.Work, &c.Cnt)
+				rows.Scan(&c.Id, &c.Name, &c.Work, &c.Img, &c.Thumb,&c.Cnt)
 				candidates = append(candidates, c)
 			}
 
@@ -357,7 +359,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
 			var c VoteCandidate
-			err := db.QueryRow("select id, name, work from votes_candidate where id = ? and vote_id = ? and isOnline =1", id, vote_id).Scan(&c.Id, &c.Name, &c.Work)
+			err := db.QueryRow("select id, name, work, img, thumb from votes_candidate where id = ? and vote_id = ? and isOnline =1", id, vote_id).Scan(&c.Id, &c.Name, &c.Work, &c.Img, &c.Thumb)
 			if err != nil {
 				panic("没有该id指定的参赛者")
 			}

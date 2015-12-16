@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"path"
 	"strings"
+	"time"
 	sw "xinlanAdminTest/switcher"
 	xupload "xinlanAdminTest/xinlanUpload"
 )
@@ -32,6 +33,7 @@ var img_root = sw.IMG_ROOT
 
 func main() {
 	rt := httprouter.New()
+	rt.GET("/getGuid", GetGuidHandler)
 	rt.GET("/xinlan", DlmHandler)
 	rt.GET("/xinlan/:module", DlmVoteHandler)
 	rt.POST("/upload", UploadHandler)
@@ -64,6 +66,18 @@ func SubString(s string, pos, length int) string {
 		l = len(runes)
 	}
 	return string(runes[pos:l])
+}
+
+// 生成guid的句柄
+func GetGuidHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+//	session := sessions.GetSession(r)
+//	log.Println(session)
+	guid := generateGuid()
+	log.Println("guid:"+guid)
+//	session.Set("guid", guid)
+//	cookie := http.Cookie{Name: "guid", Value: guid}
+//	http.SetCookie(rw, &cookie)
+	rw.Write(GenJsonpResult(r, &Ret{false, "", guid}))
 }
 
 // 上传文件的句柄
@@ -280,4 +294,15 @@ func formJson(rt *Ret) []byte {
 		panic(err)
 	}
 	return []byte(string(bs))
+}
+
+// 生成随机码 GUID
+func generateGuid() string {
+	b := make([]byte, 48)
+	if _, err := io.ReadFull(rand.Reader, b); err != nil {
+		panic("获取随机码错误")
+	}
+	h := md5.New()
+	h.Write([]byte(base64.URLEncoding.EncodeToString(b)))
+	return hex.EncodeToString(h.Sum(nil))+time.Now().Format("20060102150405")
 }

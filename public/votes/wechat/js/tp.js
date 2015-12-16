@@ -15,10 +15,10 @@ $(function() {
 			// for weixin
 			var device_token = _getPar("openid");
 
-			_callAjax = _genCallAjax(ajaxURL),
-			comments = [],
-			ifComment = _getPar("comment"),
-			MAX = 10e5;
+			var _callAjax = _genCallAjax(ajaxURL);
+			var comments = [];
+			var ifComment = _getPar("comment");
+			var MAX = 10e5;
 
 			// FUNCTIONS
 			// 投票

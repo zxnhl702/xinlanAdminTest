@@ -28,10 +28,10 @@ $(function() {
 				var device_token = _getToken(d, "device_token");
 			}
 			
-			_callAjax = _genCallAjax(ajaxURL),
-			comments = [],
-			ifComment = _getPar("comment"),
-			MAX = 10e5;
+			var _callAjax = _genCallAjax(ajaxURL);
+			var comments = [];
+			var ifComment = _getPar("comment");
+			var MAX = 10e5;
 
 			// FUNCTIONS
 			// 投票
@@ -170,6 +170,12 @@ $(function() {
 				var ee = $('li[data-id="'+nowPlayingAudio+'"]');
 				ee.addClass("active");
 				ee.append('<section class="list-ani abs"></section>');
+			}, false);
+			
+			// 播放完毕的条目取消播放效果
+			$("#audioPlayer")[0].addEventListener("ended",function() {
+				$(".list-ani").remove();
+				$(".active").removeClass("active");
 			}, false);
 			
 			// 加载更多
