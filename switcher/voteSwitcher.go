@@ -344,7 +344,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			var candidates []VoteCandidate
 			for rows.Next() {
 				var c VoteCandidate
-				rows.Scan(&c.Id, &c.Name, &c.Work, &c.Img, &c.Thumb,&c.Cnt)
+				rows.Scan(&c.Id, &c.Name, &c.Work, &c.Img, &c.Thumb, &c.Cnt)
 				candidates = append(candidates, c)
 			}
 
@@ -372,7 +372,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 
 		// 获取评论
 		"getComments": func(r *http.Request) (string, interface{}) {
-			newVoteVisitLog(r, db)
+//			newVoteVisitLog(r, db)
 //			rowid, _ := strconv.Atoi(GetParameter(r, "id"))
 			amount, _ := strconv.Atoi(GetParameter(r, "amount"))
 			// 投票编号
@@ -472,11 +472,15 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			stmt, _ := db.Prepare("insert into votes_info (vote_id, vote_from, vote_for) values(?, ?, ?)")
 			defer stmt.Close()
-			_, err = stmt.Exec(vote_id, dt, vf)
-			if err != nil {
-				log.Println(err)
-				panic("投票失败")
+
+			for _, v := range strings.Split(vf, "|") {
+				_, err = stmt.Exec(vote_id, dt, v)
+				if err != nil {
+					log.Println(err)
+					panic("投票失败")
+				}
 			}
+
 			stmt, _ = db.Prepare("update votes_app_user set if_voted = 1 where device_token = ? and vote_id = ?")
 			stmt.Exec(dt, vote_id)
 			return "投票成功", nil

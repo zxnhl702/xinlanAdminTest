@@ -3,66 +3,42 @@ $(function() {
 	var vote_id = _getPar("vote_id");
 	// 图片地址
 	var img_url_root = imgURL + "/vote_" + vote_id + "/";
+
+	// for weixin
+	$.hg_h5app = function(kv) {
+		kv["needSystemInfo"]();
+	};
+	
 	$.hg_h5app({
 		"needSystemInfo":function(d) {
+			// var device_token = _getToken(d, "device_token"),
+			// for weixin
+			var device_token = _getPar("openid");
+
 			var _callAjax = _genCallAjax(ajaxURL);
 			var comments = [];
 			var ifComment = _getPar("comment");
 			var MAX = 10e5;
-			// INIT
-			var init = function(device_token) {
-				_callAjax({
-					"cmd":"auth",
-					"device_token":device_token,
-					"vote_id":vote_id
-				}, function(d) {
-					if(d.success) {
-						$("#candidates-count").text(d.data.itemCount);
-						$("#votes-count").text(parseInt(d.data.voteCount));
-						$("#clicks-count").text(d.data.clickCount);
-						getCandidates(0);
-						getComments(MAX);
-					} else {
-						_toast.show(d.errMsg);
-					}
-					$(".load-container").hide();
-				});
-			}
-			
-//			var device_token = _getToken(d, "device_token");
-			// 取得guid
-			var device_token = _get("guid")
-			// localstorage中没有guid  从后台重新取一个
-			if(false == device_token || "" == device_token || null == device_token) {
-				var _getGuidAjax = _genCallAjax(getGuidURL);
-				_getGuidAjax({
-					
-				}, function(d) {
-					device_token = d.data;
-					_set("guid", d.data);
-					init(device_token);
-				})
-			} else {
-				init(device_token);
-			}
 
 			// FUNCTIONS
 			// 投票
-			var vote_for = function(id) {
+			var vote_for = function(ids) {
 				_callAjax({
 					"cmd":"vote_for",
 					"device_token":device_token,
 					"vote_from": device_token,
-					"vote_for": id,
+					"vote_for": ids,
 					"vote_id": vote_id
 				}, function(d) {
 					_toast.show(d.errMsg);
 					if (d.success) {
-						var cnt = parseInt($("#datu-cnt").text());
-						var liCntElement = $("li[data-id="+id+"]").find(".cnt");
-						if (!!liCntElement) cnt = parseInt(liCntElement.text());
-						$("#datu-cnt").text = cnt+1;
-						liCntElement.text(cnt+1);
+						ids.split("|").forEach(function(id) {
+							var cnt = parseInt($("#datu-cnt").text());
+							var liCntElement = $("li[data-id="+id+"]").find(".cnt");
+							if (!!liCntElement) cnt = parseInt(liCntElement.text());
+							$("#datu-cnt").text = cnt+1;
+							liCntElement.text(cnt+1);
+						});
 					}
 				});
 			};
@@ -73,7 +49,7 @@ $(function() {
 					"cmd":"getCandidates",
 //					"from":parseInt(from)+1,
 					"from":from,
-					"amount":10,
+					"amount":20,
 					"vote_id":vote_id
 				}, function(d) {
 					if (d.success) {
@@ -152,16 +128,30 @@ $(function() {
 								'<div class="name tc ml5 mr5 mb5 bbe g6 pb5">'+r.name+'</div> '+ 
 								'<div class="clearfix pb10"> '+ 
 								'<p class="l orange pct45 f16"><span class="cnt">'+r.cnt+'</span>票</p> '+ 
-								'<a class="vote bg_orange light tc r pct35 mr10 f14 pl5 pr5"><i class="fa fa-heart mr10"></i>投票</a> '+ 
+								// '<a class="vote bg_orange light tc r pct35 mr10 f14 pl5 pr5"><i class="fa fa-heart mr10"></i>投票</a> '+ 
+								'<a class="vote bg_stable light tc r pct35 mr10 f14 pl5 pr5" data-voted=0><i class="fa fa-check mr10"></i>选中</a>' +
 								'</div> </div> </li>';
 					var e = $(str).appendTo(i%2==0?"#left":"#right"); i += 1;
 					e.find(".img").click(function(){
 						showImg(r);
 					});
 					e.find(".vote").click(function() {
-						vote_for(r.id);
+						// vote_for(r.id);
+						setChoice($(this));
 					});
 				});
+			};
+
+			var setChoice = function(e) {
+				// alert(e.html());
+				var is_voted = parseInt(e.attr("data-voted"));
+				// alert(is_voted);
+				e.attr("data-voted", is_voted==0?1:0);
+				if (!is_voted) {
+					e.addClass("active");
+				} else {
+					e.removeClass("active");
+				}
 			};
 
 			// BINDS
@@ -176,10 +166,24 @@ $(function() {
 			});
 
 			$("#more-candidates").click(function(){
+				/*
 				var l_lst = parseInt($("#left li:last").attr("data-id")),
 				r_lst = parseInt($("#right li:last").attr("data-id")),
 				last = l_lst>r_lst?l_lst:r_lst;
 				getCandidates(last);
+				*/
+
+				// 投票
+				var choices = [];;
+				$("#left, #right").children("li").each(function() {
+					var vote_a = $(this).find(".vote");
+					// alert(vote_a.attr("data-voted"));
+					if (!!parseInt(vote_a.attr("data-voted"))) choices.push($(this).attr("data-id"));
+				});
+				var ll = choices.length;
+				// alert(choices);
+				if(ll == 0 || ll > 10) return _toast.show("请选择1-10个候选人");
+				vote_for(choices.join("|"));
 			});
 
 			$(".comment").click(function() {
@@ -225,7 +229,24 @@ $(function() {
 					}
 				})
 			});
-			
+
+			// INIT
+			_callAjax({
+				"cmd":"auth",
+				"device_token":device_token,
+				"vote_id":vote_id
+			}, function(d) {
+				$(".load-container").hide();
+				if(d.success) {
+					$("#candidates-count").text(d.data.itemCount);
+					$("#votes-count").text(parseInt(d.data.voteCount));
+					$("#clicks-count").text(d.data.clickCount);
+					getCandidates(0);
+					getComments(MAX);
+				} else {
+					_toast.show(d.errMsg);
+				}
+			});
 			// 取页面的title
 			_callAjax({
 				"cmd":"getVoteTitleByVoteId",
@@ -240,18 +261,22 @@ $(function() {
 			var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
 			$(bannerImg).appendTo(".banner");
 			// 底栏
-			$("#goIndex").attr("href", "index.html?vote_id=" + vote_id);
-			$("#goProfile").attr("href", "profile.html?vote_id=" + vote_id);
-			$("#goRank").attr("href", "rank.html?vote_id=" + vote_id);
+			var openid = _getPar("openid");
+			$("#goIndex").attr("href", "index.html?vote_id=" + vote_id 
+					+ "&openid=" + openid); // for weixin
+			$("#goProfile").attr("href", "profile.html?vote_id=" + vote_id
+					+ "&openid=" + openid); // for weixin
+			$("#goRank").attr("href", "rank.html?vote_id=" + vote_id
+					+ "&openid=" + openid); // for weixin
 
-			setInterval(function(){
-				emitComment();
-			}, 8000);
-
-			setInterval(function() {
-				if (comments.length == 0) return;
-				getComments(comments[comments.length-1].id);
-			}, 10000);
+//			setInterval(function(){
+//				emitComment();
+//			}, 8000);
+//
+//			setInterval(function() {
+//				if (comments.length == 0) return;
+//				getComments(comments[comments.length-1].id);
+//			}, 10000);
 
 			if (ifComment != '') {
 				$(".comment").click();

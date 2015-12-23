@@ -5,46 +5,11 @@ $(function() {
 	var img_url_root = imgURL + "/vote_" + vote_id + "/";
 	$.hg_h5app({
 		"needSystemInfo":function(d) {
-			var _callAjax = _genCallAjax(ajaxURL);
-			var comments = [];
-			var ifComment = _getPar("comment");
-			var MAX = 10e5;
-			// INIT
-			var init = function(device_token) {
-				_callAjax({
-					"cmd":"auth",
-					"device_token":device_token,
-					"vote_id":vote_id
-				}, function(d) {
-					if(d.success) {
-						$("#candidates-count").text(d.data.itemCount);
-						$("#votes-count").text(parseInt(d.data.voteCount));
-						$("#clicks-count").text(d.data.clickCount);
-						getCandidates(0);
-						getComments(MAX);
-					} else {
-						_toast.show(d.errMsg);
-					}
-					$(".load-container").hide();
-				});
-			}
-			
-//			var device_token = _getToken(d, "device_token");
-			// 取得guid
-			var device_token = _get("guid")
-			// localstorage中没有guid  从后台重新取一个
-			if(false == device_token || "" == device_token || null == device_token) {
-				var _getGuidAjax = _genCallAjax(getGuidURL);
-				_getGuidAjax({
-					
-				}, function(d) {
-					device_token = d.data;
-					_set("guid", d.data);
-					init(device_token);
-				})
-			} else {
-				init(device_token);
-			}
+			var device_token = _getToken(d, "device_token"),
+			_callAjax = _genCallAjax(ajaxURL),
+			comments = [],
+			ifComment = _getPar("comment"),
+			MAX = 10e5;
 
 			// FUNCTIONS
 			// 投票
@@ -225,15 +190,19 @@ $(function() {
 					}
 				})
 			});
-			
-			// 取页面的title
+
+			// INIT
 			_callAjax({
-				"cmd":"getVoteTitleByVoteId",
+				"cmd":"auth",
+				"device_token":device_token,
 				"vote_id":vote_id
 			}, function(d) {
-				if(d.success) {
-					$("#vote-title").text(d.data.title);
-				}
+				$(".load-container").hide();
+				$("#candidates-count").text(d.data.itemCount);
+				$("#votes-count").text(parseInt(d.data.voteCount));
+				$("#clicks-count").text(d.data.clickCount);
+				getCandidates(0);
+				getComments(MAX);
 			});
 			
 			// 头图

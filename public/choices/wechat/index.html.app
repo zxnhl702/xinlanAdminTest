@@ -22,7 +22,7 @@
 		<script src="js/constUtilVotes.js"></script>
 		<script src="js/ref.js"></script>
 		<script src="js/tp.js"></script>
-		<title id="vote-title">投票</title>
+		<title>投票</title>
 		<script type="text/javascript">
 		$(function(){
 			$("body").append("<div class='load-container load6 bg_light' style='position:fixed;width: 100%;height:100%;left:0;top:0;z-index:99'>	<div class='loader'>Loading...</div><a href='#load6' style='display:block;width:100%;text-align: center;color: #666;letter-spacing: 1px;font-size:14px'>投票页面正在加载中......</a><p style='position:absolute;bottom:20%;left:50%;margin-left:-10%;width:20%;text-align:center;border:1px solid #7cc8ff;color:#7cc8ff;border-radius:5px;-webkit-border-radius:5px;font-size:14px;padding:5px 0'>新蓝广科</p></div>")

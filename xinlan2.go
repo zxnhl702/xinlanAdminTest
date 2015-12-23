@@ -77,7 +77,7 @@ func GetGuidHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params
 //	session.Set("guid", guid)
 //	cookie := http.Cookie{Name: "guid", Value: guid}
 //	http.SetCookie(rw, &cookie)
-	rw.Write(GenJsonpResult(r, &Ret{false, "", guid}))
+	rw.Write(GenJsonpResult(r, &Ret{true, "", guid}))
 }
 
 // 上传文件的句柄
@@ -98,7 +98,7 @@ func UploadVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Par
 	// 文件名列表
 	formfiles := r.FormValue("formfile")
 
-	var filename[] string
+	var filename []string
 	for _, formfile := range strings.Split(formfiles, ",") {
 
 		filename = append(filename, UploadFormFile(r, formfile, module))

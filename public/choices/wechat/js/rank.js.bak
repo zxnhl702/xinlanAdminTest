@@ -30,16 +30,6 @@ $(function() {
 				});
 			});
 			
-			// 取页面的title
-			_callAjax({
-				"cmd":"getVoteTitleByVoteId",
-				"vote_id":vote_id
-			}, function(d) {
-				if(d.success) {
-					$("#vote-title").text(d.data.title);
-				}
-			});
-			
 			// 头图
 			var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
 			$(bannerImg).appendTo(".banner");
