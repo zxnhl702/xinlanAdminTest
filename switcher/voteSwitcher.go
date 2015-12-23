@@ -398,7 +398,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			newVoteVisitLog(r, db)
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
-			rows, err := db.Query("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt from votes_candidate vc, votes_info vi where vc.id = vi.vote_for and vc.vote_id = ? and vc.vote_id = vi.vote_id and vc.isOnline = 1 group by id order by cnt desc limit 10", vote_id)
+			rows, err := db.Query("select vc.id, vc.name, vc.work, count(vi.vote_from) as cnt, vc.thumb from votes_candidate vc, votes_info vi where vc.id = vi.vote_for and vc.vote_id = ? and vc.vote_id = vi.vote_id and vc.isOnline = 1 group by id order by cnt desc limit 10", vote_id)
 			defer rows.Close()
 			if err != nil {
 				panic("获取前10个信息失败")
@@ -406,7 +406,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			var candidates []VoteCandidate
 			for rows.Next() {
 				var c VoteCandidate
-				rows.Scan(&c.Id, &c.Name, &c.Work, &c.Cnt)
+				rows.Scan(&c.Id, &c.Name, &c.Work, &c.Cnt, &c.Thumb)
 				candidates = append(candidates, c)
 			}
 			return "获取前10个成功", candidates

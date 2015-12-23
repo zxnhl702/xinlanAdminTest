@@ -28,11 +28,21 @@ $(function() {
 					var rank = i;
 					if (i < 4) rank = '<img src="img/'+rankImg[i-1]+'.png" width="30" class="db m0 auto"/>';
 					str = '<tr class="bbe"> <td width="30%"> '+rank+' </td> '+ 
-							'<td width="40%"><img src="'+img_url_root+'/thumb'+r.id+'.jpg" width="35" height="35" class="mr10 l"/>'+ 
+							'<td width="40%"><img src="'+img_url_root+r.thumb+'" width="35" height="35" class="mr10 l"/>'+ 
 							'<p class="l">'+r.name.substring(0, 4)+'...</p></td> '+ 
 							'<td width="30%" class="orange">'+r.cnt+'</td> </tr> ';
 					$(str).appendTo(".rank-table");
 				});
+			});
+			
+			// 取页面的title
+			_callAjax({
+				"cmd":"getVoteTitleByVoteId",
+				"vote_id":vote_id
+			}, function(d) {
+				if(d.success) {
+					$("#vote-title").text(d.data.title);
+				}
 			});
 			
 			// 头图

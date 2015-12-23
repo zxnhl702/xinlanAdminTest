@@ -45,7 +45,6 @@ $(function() {
 			var getCandidates = function(from) {
 				_callAjax({
 					"cmd":"getCandidates",
-//					"from":parseInt(from)+1,
 					"from":from,
 					"amount":10,
 					"vote_id":vote_id
@@ -107,8 +106,7 @@ $(function() {
 			var showImg = function(r) {
 				$("#datu-work").html('<i class="fa fa-quote-left fa-pull-left fa-2x"></i>'+r.work);
 				$("#datu-cnt").text(r.cnt);
-//				$("#datu-img").attr("src", "candidate/"+r.id+".jpg");
-				$("#datu-img").attr("src", img_url_root+r.id+".jpg");
+				$("#datu-img").attr("src", img_url_root+r.img);
 				$("#datu-info").text(r.id+"号 "+r.name);
 				$("#datu").show().attr("data-id", r.id);
 				$("#datu .list-detail").show();
@@ -121,8 +119,7 @@ $(function() {
 					var str = '<li class="mb20" data-id='+r.id+'> '+ 
 								'<div class="rel bg_light"> '+ 
 								'<i class="number db abs tc light bg_orange n">'+r.id+'</i> '+ 
-//								'<a class="img db"> <img src="candidate/thumb'+r.id+'.jpg" width="100%"> </a> '+ 
-								'<a class="img db"> <img src="'+img_url_root+"thumb"+r.id+'.jpg" width="100%"> </a> '+ 
+								'<a class="img db"> <img src="'+img_url_root+r.thumb+'" width="100%"> </a> '+ 
 								'<div class="name tc ml5 mr5 mb5 bbe g6 pb5">'+r.name+'</div> '+ 
 								'<div class="clearfix pb10"> '+ 
 								'<p class="l orange pct45 f16"><span class="cnt">'+r.cnt+'</span>票</p> '+ 
@@ -217,6 +214,15 @@ $(function() {
 					_toast.show(d.errMsg);
 				}
 			});
+			// 取页面的title
+			_callAjax({
+				"cmd":"getVoteTitleByVoteId",
+				"vote_id":vote_id
+			}, function(d) {
+				if(d.success) {
+					$("#vote-title").text(d.data.title);
+				}
+			});
 			
 			// 头图
 			var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
@@ -230,20 +236,18 @@ $(function() {
 			$("#goRank").attr("href", "rank.html?vote_id=" + vote_id
 					+ "&openid=" + openid); // for weixin
 
-			setInterval(function(){
-				emitComment();
-			}, 8000);
-
-			setInterval(function() {
-				if (comments.length == 0) return;
-				getComments(comments[comments.length-1].id);
-			}, 10000);
+//			setInterval(function(){
+//				emitComment();
+//			}, 8000);
+//
+//			setInterval(function() {
+//				if (comments.length == 0) return;
+//				getComments(comments[comments.length-1].id);
+//			}, 10000);
 
 			if (ifComment != '') {
 				$(".comment").click();
 			}
-
 		}
-
 	});
 });

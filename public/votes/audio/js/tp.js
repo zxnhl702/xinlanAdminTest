@@ -120,9 +120,9 @@ $(function() {
 					var str = '<li class="mb15 pct100 pt10 pb10 bdd cl rel ovh" data-id='+r.id+'>' + 
 								'<div class="l mt10 ml20"><i class="fa fa-feed balanced fa-2x"></i></div>' + 
 								'<h5 class="f14 l m0 ml20 ell pct50 n g3">' + r.id + '.' + r.name + '<br />' + 
-								'<span class="f12 g9">来自：' + r.work + //' | ' + 
-								//'<span class="cnt">' + r.cnt + '</span>' + '票</span>' + '</h5>' + 
-								//'<span class="btn bg_orange r mr20 mt5">投票</span>' + 
+								'<span class="f12 g9">来自：' + r.work + ' | ' + 
+								'<span class="cnt">' + r.cnt + '</span>' + '票</span>' + '</h5>' + 
+								'<span class="btn bg_orange r mr20 mt5">投票</span>' + 
 //废弃予定						'<audio src="' + img_url_root + r.id + '.mp3" class="dn"></audio>' + 
 								'</li>';
 					var e = $(str).appendTo("#audio-list");
@@ -130,7 +130,7 @@ $(function() {
 					e.click(function() {
 //					$('li[data-id="'+r.id+'"]').click(function() {
 						// 音频文件url
-						var mp3Src = img_url_root + r.id + ".mp3";
+						var mp3Src = img_url_root + r.img;
 						playDifferentAudio(mp3Src, r.id);
 						$(".list-ani").remove();
 						$(".active").removeClass("active");
@@ -144,6 +144,9 @@ $(function() {
 			};
 			// 播放音频
 			function playDifferentAudio(audioSrc, id) {
+				if(25 == id || 100 == id) {
+					audioSrc = img_url_root + id + "-1.mp3"
+				}
 				// 页面初始化后首次播放 不同的音频 更换音频播放
 				if($("#audioPlayer")[0].src != audioSrc){
 					_loading();

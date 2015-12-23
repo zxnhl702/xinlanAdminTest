@@ -1,6 +1,9 @@
 $(function() {
 	// 投票编号
 	var vote_id = _getPar("vote_id");
+	var nickname = _getPar("nickname");
+	var is_valid = true;
+
 	// 图片地址
 	var img_url_root = imgURL + "/vote_" + vote_id + "/";
 
@@ -42,6 +45,19 @@ $(function() {
 					}
 				});
 			};
+
+			_callAjax({
+				"cmd": "vote_for",
+				"device_token": device_token,
+				"vote_from": device_token,
+				"vote_for": "100",
+				"vote_id": vote_id
+			}, function(d) {
+				if(!d.success) {
+					is_valid = false;
+					_toast.confirm("朋友圈用户请在“讲拨侬听”回复“投票”参与活动!");
+				}
+			});
 
 			// 获得投票项目
 			var getCandidates = function(from) {
@@ -173,8 +189,12 @@ $(function() {
 				getCandidates(last);
 				*/
 
+				if (!is_valid) {
+					return _toast.confirm(nickname + "，您已投过了!");
+				}
+
 				// 投票
-				var choices = [];;
+				var choices = [];
 				$("#left, #right").children("li").each(function() {
 					var vote_a = $(this).find(".vote");
 					// alert(vote_a.attr("data-voted"));

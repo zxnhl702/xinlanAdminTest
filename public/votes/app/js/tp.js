@@ -133,8 +133,7 @@ $(function() {
 			var showImg = function(r) {
 				$("#datu-work").html('<i class="fa fa-quote-left fa-pull-left fa-2x"></i>'+r.work);
 				$("#datu-cnt").text(r.cnt);
-//				$("#datu-img").attr("src", "candidate/"+r.id+".jpg");
-				$("#datu-img").attr("src", img_url_root+r.id+".jpg");
+				$("#datu-img").attr("src", img_url_root+r.img);
 				$("#datu-info").text(r.id+"号 "+r.name);
 				$("#datu").show().attr("data-id", r.id);
 				$("#datu .list-detail").show();
@@ -147,8 +146,7 @@ $(function() {
 					var str = '<li class="mb20" data-id='+r.id+'> '+ 
 								'<div class="rel bg_light"> '+ 
 								'<i class="number db abs tc light bg_orange n">'+r.id+'</i> '+ 
-//								'<a class="img db"> <img src="candidate/thumb'+r.id+'.jpg" width="100%"> </a> '+ 
-								'<a class="img db"> <img src="'+img_url_root+"thumb"+r.id+'.jpg" width="100%"> </a> '+ 
+								'<a class="img db"> <img src="'+img_url_root+r.thumb+'" width="100%"> </a> '+ 
 								'<div class="name tc ml5 mr5 mb5 bbe g6 pb5">'+r.name+'</div> '+ 
 								'<div class="clearfix pb10"> '+ 
 								'<p class="l orange pct45 f16"><span class="cnt">'+r.cnt+'</span>票</p> '+ 
@@ -256,8 +254,6 @@ $(function() {
 			if (ifComment != '') {
 				$(".comment").click();
 			}
-
 		}
-
 	});
 });

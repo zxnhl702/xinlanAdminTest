@@ -240,12 +240,12 @@ func GenJsonpResult(r *http.Request, rt *Ret) []byte {
 // 根据模块连接数据库
 func GetModuleConnectDB(moduleName string) *sql.DB {
 	switch moduleName {
-		case "votes":
-			return ConnectDB("middle.db")
-		case "quiz":
-			return ConnectDB("middle_quiz.db")
-		default:
-			return ConnectDB("middle.db")
+	case "votes":
+		return ConnectDB("middle.db")
+	case "quiz":
+		return ConnectDB("middle_quiz.db")
+	default:
+		return ConnectDB("middle.db")
 	}
 }
 
@@ -257,7 +257,7 @@ func ConnectDB(dbPath string) *sql.DB {
 	return db
 }
 
-func LogClient(ip string, hot_id string,db *sql.DB) {
+func LogClient(ip string, hot_id string, db *sql.DB) {
 	stmt, err := db.Prepare("insert into clicks(ip, hot_id) values(?,?)")
 	if err != nil {
 		panic(err)
@@ -304,5 +304,5 @@ func generateGuid() string {
 	}
 	h := md5.New()
 	h.Write([]byte(base64.URLEncoding.EncodeToString(b)))
-	return hex.EncodeToString(h.Sum(nil))+time.Now().Format("20060102150405")
+	return hex.EncodeToString(h.Sum(nil)) + time.Now().Format("20060102150405")
 }
