@@ -85,7 +85,7 @@ func UploadVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Par
 
 	// 模块名称
 	module := p.ByName("module")
-	log.Println(module)
+	log.Println("module: " + module)
 
 	defer func() {
 		err := recover()
@@ -100,8 +100,13 @@ func UploadVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Par
 
 	var filename []string
 	for _, formfile := range strings.Split(formfiles, ",") {
-
-		filename = append(filename, UploadFormFile(r, formfile, module))
+		// 上传
+		if "null" != formfile {
+			filename = append(filename, UploadFormFile(r, formfile, module))
+		// 未上传
+		} else {
+			filename = append(filename, formfile)
+		}
 	}
 	
 	rw.Write(formJson(&Ret{true, "上传成功", filename}))
@@ -118,7 +123,7 @@ func UploadFormFile(r *http.Request, formfile string, module string) string {
 	defer file.Close()
 	// 重新命名文件
 	filename := handle.Filename
-	log.Println(filename)
+	log.Println("filename: " + filename)
 //	filename = formfile + strings.ToLower(path.Ext(filename))
 	filename = GetGuid() + strings.ToLower(path.Ext(filename))
 	
@@ -244,6 +249,8 @@ func GetModuleConnectDB(moduleName string) *sql.DB {
 		return ConnectDB("middle.db")
 	case "quiz":
 		return ConnectDB("middle_quiz.db")
+	case "jssdk":
+		return ConnectDB(sw.JSSDK_DB_PATH)
 	default:
 		return ConnectDB("middle.db")
 	}
@@ -278,12 +285,16 @@ func GetParameter(r *http.Request, key string) string {
 func GetModuleSwitcher(moduleName string, db *sql.DB) sw.Dlm {
 	var switcher sw.Dlm
 	switch moduleName {
-		case "votes":
-			switcher = sw.VoteDispatch(db)
-		case "quiz":
-			switcher = sw.QuizDispatch(db)
-		default:
-			switcher = sw.Dispatch(db)
+	case "votes":
+		switcher = sw.VoteDispatch(db)
+		//case "quiz":
+		//	switcher = sw.QuizDispatch(db)
+	case "choices":
+		switcher = sw.VoteDispatch(db)
+	case "jssdk":
+		switcher = sw.JssdkDispatch(db)
+	default:
+		switcher = sw.Dispatch(db)
 	}
 	return switcher
 }

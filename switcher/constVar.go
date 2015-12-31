@@ -1,9 +1,11 @@
 package switcher
 
 import (
+	"log"
+	"math/rand"
 	"net/http"
 	"os"
-	"log"
+	"time"
 )
 
 // 常量部分
@@ -25,6 +27,20 @@ const (
 	
 	// 程序端口号
 	SERVER_PORT = ":11002"
+	
+	// JS-SDK 数据库路径
+	JSSDK_DB_PATH = "/home/zhangxiangnan/Goproject/src/auth/middle.db"
+	
+	// 产生随机字符串用的常量
+	// 需要产生的字符串类型
+	// 纯数字
+	KC_RAND_KIND_NUM   = 0
+	// 小写字母
+	KC_RAND_KIND_LOWER = 1
+	// 大写字母
+	KC_RAND_KIND_UPPER = 2
+	// 数字、大小写字母
+	KC_RAND_KIND_ALL   = 3
 )
 
 // 公共函数部分
@@ -33,8 +49,7 @@ const (
 func moveFile(imgRoot, subfold, filename, newfilename,subId string) error {
 	oldPath := imgRoot + "/" + filename
 	newPath := imgRoot + subfold + subId + "/" + newfilename
-	log.Println(oldPath)
-	log.Println(newPath)
+	log.Printf("old: %s|||new:%s", oldPath, newPath)
 	return os.Rename(oldPath, newPath)
 }
 
@@ -45,4 +60,19 @@ func GetParameter(r *http.Request, key string) string {
 		panic("没有参数" + key)
 	}
 	return s
+}
+
+// 产生随机字符串
+func GenerateRandomString(size int, kind int) []byte {
+	ikind, kinds, result := kind, [][]int{[]int{10, 48}, []int{26, 97}, []int{26, 65}}, make([]byte, size)
+	is_all := kind > 2 || kind < 0
+	rand.Seed(time.Now().UnixNano())
+	for i :=0; i < size; i++ {
+		if is_all { // random ikind
+			ikind = rand.Intn(3)
+		}
+		scope, base := kinds[ikind][0], kinds[ikind][1]
+		result[i] = uint8(base+rand.Intn(scope))
+	}
+	return result
 }

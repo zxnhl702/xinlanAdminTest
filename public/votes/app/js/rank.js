@@ -36,7 +36,7 @@ $(function() {
 				"vote_id":vote_id
 			}, function(d) {
 				if(d.success) {
-					$("#vote-title").text(d.data.title);
+					$("title").html(d.data.title);
 				}
 			});
 			

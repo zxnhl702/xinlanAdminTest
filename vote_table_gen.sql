@@ -32,7 +32,7 @@ create table if not exists votes_info (
 	vote_id integer not null,
 	vote_for integer,
 	vote_from text,
-	vote_datetime default (datetime('now', 'localtime'))
+	vote_datetime datetime default (datetime('now', 'localtime'))
 );
 
 drop table if exists votes_comments;

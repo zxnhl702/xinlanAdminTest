@@ -16,7 +16,7 @@ $(function() {
 		"vote_id":vote_id
 	}, function(d) {
 		if(d.success) {
-			$("#vote-title").text(d.data.title);
+			$("title").html(d.data.title);
 		}
 	});
 	
@@ -35,6 +35,6 @@ $(function() {
 	$("#goRank").attr("href", "rank.html?" + urlSearch);
 	
 	$('.comment').bind("click", function() {
-		location.href = "index.html?comment=1&vote_id="+vote_id;
+		location.href = "index.html?" + urlSearch + "&comment=1";
 	});
 })

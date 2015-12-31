@@ -98,8 +98,8 @@ $(function() {
 						var event_id = r.id;
 						_share({
 							"content":"直播！"+r.title,
-							"content_url":"http://127.0.0.1:11002/hots/share2.html?"+hot_id+","+event_id+",",
-							"pic":"http://127.0.0.1:11002/hots/img/top_img.jpg"
+							"content_url":"http://"+host+"/hots/share2.html?"+hot_id+","+event_id+",",
+							"pic":"http://"+host+"/hots/img/top_img.jpg"
 						});
 					});
 				});
@@ -289,7 +289,7 @@ $(function() {
 			img = _getToken(d, "picurl"),
 			userid = _getToken(d, "userid");
 		if (name == "") name = "";//name = "app用户";
-		if (img == "") img = "http://127.0.0.1:11001/images/xinlanUser/2.jpg";
+		if (img == "") img = userImgURL + "/xinlanUser/2.jpg";
 		if (userid == "") userid = "18";
 
 		/*
@@ -325,18 +325,19 @@ $(function() {
 		getUserinfoCb(name, img, userid);
 
 	};
-	//debug 用
-	var _wxzs = function(o) {
-		o.callback({
-			"username":"",
-			"picurl":"",
-			"userid":"111"
-		},"userid",o._callAjax);
-	}
+
+	// //debug 用
+	// var _wxzs = function(o) {
+	// 	o.callback({
+	// 		"username":"",
+	// 		"picurl":"",
+	// 		"userid":"111"
+	// 	},"userid",o._callAjax);
+	// }
 
 	var only_for_user = true;
 	_wxzs({
 		"callback": h5_cb,
-		"_callAjax": _genCallAjax("http://127.0.0.1:11002/xinlan/")
+		"_callAjax": _genCallAjax(ajaxURL)
 	}, only_for_user);
 });

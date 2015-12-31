@@ -11,7 +11,8 @@ create table if not exists events (
 	status text default '',
 	content	text default '',
 	logdate datetime default (datetime('now', 'localtime')),
-	hot_id integer references hots(id)
+	hot_id integer references hots(id)，
+	userid integer default 0
 );
 
 create table if not exists comments (

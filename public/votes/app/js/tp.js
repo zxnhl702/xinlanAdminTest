@@ -20,10 +20,27 @@ $(function() {
 						$("#candidates-count").text(d.data.itemCount);
 						$("#votes-count").text(parseInt(d.data.voteCount));
 						$("#clicks-count").text(d.data.clickCount);
+						$("title").html(d.data.title);
 						getCandidates(0);
 						getComments(MAX);
+						// 评论
+						$(".comment").click(function() {
+							$(".commentArea").show().parent().show();
+							$(".commentArea textarea").val("");
+						});
+						// 头图
+						var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
+						$(bannerImg).appendTo(".banner");
+						// 底栏
+						$("#goIndex").attr("href", "index.html?vote_id=" + vote_id);
+						$("#goProfile").attr("href", "profile.html?vote_id=" + vote_id);
+						$("#goRank").attr("href", "rank.html?vote_id=" + vote_id);
 					} else {
 						_toast.show(d.errMsg);
+						// 删除超链接
+						$("#goIndex").removeAttr("href");
+						$("#goProfile").removeAttr("href");
+						$("#goRank").removeAttr("href");
 					}
 					$(".load-container").hide();
 				});
@@ -71,7 +88,6 @@ $(function() {
 			var getCandidates = function(from) {
 				_callAjax({
 					"cmd":"getCandidates",
-//					"from":parseInt(from)+1,
 					"from":from,
 					"amount":10,
 					"vote_id":vote_id
@@ -180,11 +196,6 @@ $(function() {
 				getCandidates(last);
 			});
 
-			$(".comment").click(function() {
-				$(".commentArea").show().parent().show();
-				$(".commentArea textarea").val("");
-			});
-
 			$(".commentArea .undo").click(function() {
 				$(".commentArea").hide().parent().hide();
 			});
@@ -224,23 +235,15 @@ $(function() {
 				})
 			});
 			
-			// 取页面的title
-			_callAjax({
-				"cmd":"getVoteTitleByVoteId",
-				"vote_id":vote_id
-			}, function(d) {
-				if(d.success) {
-					$("#vote-title").text(d.data.title);
-				}
-			});
-			
-			// 头图
-			var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
-			$(bannerImg).appendTo(".banner");
-			// 底栏
-			$("#goIndex").attr("href", "index.html?vote_id=" + vote_id);
-			$("#goProfile").attr("href", "profile.html?vote_id=" + vote_id);
-			$("#goRank").attr("href", "rank.html?vote_id=" + vote_id);
+//			// 取页面的title
+//			_callAjax({
+//				"cmd":"getVoteTitleByVoteId",
+//				"vote_id":vote_id
+//			}, function(d) {
+//				if(d.success) {
+//					$("#vote-title").text(d.data.title);
+//				}
+//			});
 
 			setInterval(function(){
 				emitComment();

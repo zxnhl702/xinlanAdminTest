@@ -57,158 +57,202 @@
 				$.get('slider.html', function(data) {
 					$('#page-header').after(data)
 				})
-				 $.getScript('assets/js/minified/aui-production.min.js')
+				$.getScript('assets/js/minified/aui-production.min.js')
 			</script>
 
 			<div id="page-content-wrapper">
 				<div id="page-title">
-					<h3>投票管理<small id="vote_subtitle"> </small></h3>
+					<h3>投票项管理<small id="vote_subtitle"> </small></h3>
 				</div>
-				<div id="page-content">
-					<h3>新增选手</h3>
-					<form action="" id="new-item" class="col-md-12" method="POST" enctype="multipart/form-data">
-						<!-- 
-						<div class="form-row">
-							<div class="form-label col-md-2">
-								<label for="">
-										编号:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<input type="text" id="new-no" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+				<div class="tabs">
+					<ul>
+						<li data-tabname="add-tab">
+							<a href="#add-vote-item-tab" title="新增投票项">
+								<i class="glyph-icon icon-archive float-left opacity-80"></i>新增投票项
+							</a>
+						</li>
+						<li data-tabname="modify-tab">
+							<a href="#modify-vote-item-tab" title="修改投票项">
+								<i class="glyph-icon icon-gears float-left opacity-80"></i>修改投票项
+							</a>
+						</li>
+					</ul>
+					
+					<!-- 新增投票项 -->
+					<div id="add-vote-item-tab">
+						<h3>新增投票项</h3>
+						<form action="" id="new-item" class="col-md-12" method="POST" enctype="multipart/form-data">
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票项目名: <span class="required">* </span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="text" id="new-name" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+									</div>
 								</div>
 							</div>
-						</div>
-						-->
-						<div class="form-row">
-							<div class="form-label col-md-2">
-								<label for="">
-										<span style="color:red">* </span>用户名:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<input type="text" id="new-name" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票项目描述:</label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="text" id="new-work" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-label col-md-2">
-								<label for="">
-										参赛标题:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<input type="text" id="new-work" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+							<div class="form-row" id="row-img">
+								<div class="form-label col-md-2">
+									<label for="">图片: <span class="required">* </span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="file" id="new-img" name="cadidate-img" accept="image/*" />
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-row" id="row-img">
-							<div class="form-label col-md-2">
-								<label for="">
-										<span style="color:red">* </span>图片:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<input type="file" id="new-img" name="cadidate-img" accept="image/*" />
+							<div class="form-row" id="row-thumb">
+								<div class="form-label col-md-2">
+									<label for="">缩略图: <span class="required">* </span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="file" id="new-thumb" name="cadidate-thumb" accept="image/*" />
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-row" id="row-thumb">
-							<div class="form-label col-md-2">
-								<label for="">
-										<span style="color:red">* </span>缩略图:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<input type="file" id="new-thumb" name="cadidate-thumb" accept="image/*" />
-								</div>
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-input float-right">
-								<input type="hidden" name="superhidden" id="superhidden">
-								<div class="form-input col-md-12 clearfix">
-									<a href="javascript:;" class="btn float-right medium primary-bg radius-all-4" id="demo-form-2-valid" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
-										<span class="button-content" id="append-item">
-											上传并添加
-										</span>
-									</a>
-								</div>
-							</div>
-						</div>
-					</form>
-					<div class="divider"></div>
-					<h3 class="bottom-margin">
-						选手列表
-					</h3>
-					<div class="col-md-12">
-						<table class="table table-striped text-center">
-							<thead>
-								<tr>
-									<th class="text-center"></th>
-									<th>用户名</th>
-									<th class="text-center">参赛标题</th>
-									<th class="text-center" id="type">图片</th>
-									<th class="text-center">管理</th>
-								</tr>
-							</thead>
-							<tbody id="items-list">
-<!-- 
-								<tr>
-									<td>1</td>
-									<td class="font-bold text-left">John Clark</td>
-									<td>
-										小小的长凳
-									</td>
-									<td>
-										152
-									</td>
-									<td>
-										<a class="btn medium bg-blue" href="javascript:">
-											<span class="button-content">
-												<i class="glyph-icon font-size-11 icon-remove"></i>
-												删除
-											</span>
+							<div class="form-row">
+								<div class="form-input float-right">
+									<input type="hidden" name="superhidden" id="superhidden">
+									<div class="form-input col-md-12 clearfix">
+										<a href="javascript:;" class="btn float-right medium primary-bg radius-all-4" id="demo-form-2-valid" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
+											<span class="button-content" id="append-item">上传并添加</span>
 										</a>
-									</td>
-								</tr>
- -->
-							</tbody>
-						</table>
-					</div>
-					<div class="col-md-4 center-margin">
-						<div class="button-group center-div">
-							<a href="javascript:;" class="btn large ui-state-default" id="item-left">
-								<i class="glyph-icon icon-chevron-left"></i>
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default items">
-								1
-							</a>
-							<a href="javascript:;" class="btn large disabled ui-state-default items">
-								2
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default items">
-								3
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default items">
-								4
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default items">
-								5
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default" id="item-right">
-								<i class="glyph-icon icon-chevron-right"></i>
-							</a>
+									</div>
+								</div>
+							</div>
+						</form>
+						<div class="divider"></div>
+						<h3 class="bottom-margin">投票项列表</h3>
+						<div class="col-md-12">
+							<table class="table table-striped text-center">
+								<thead>
+									<tr>
+										<th class="text-center"></th>
+										<th>投票项目名</th>
+										<th class="text-center">投票项目描述</th>
+										<th class="text-center">状态</th>
+										<th class="text-center" id="type">图片</th>
+										<th class="text-center">管理</th>
+										</tr>
+								</thead>
+								<tbody id="items-list">
+								</tbody>
+							</table>
 						</div>
+						<div class="col-md-4 center-margin">
+							<div class="button-group center-div">
+								<a href="javascript:;" class="btn large ui-state-default" id="item-left">
+									<i class="glyph-icon icon-chevron-left"></i>
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default items">
+									1
+								</a>
+								<a href="javascript:;" class="btn large disabled ui-state-default items">
+									2
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default items">
+									3
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default items">
+									4
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default items">
+									5
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default" id="item-right">
+									<i class="glyph-icon icon-chevron-right"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 修改投票项 -->
+					<div id="modify-vote-item-tab">
+						<h3>修改投票项</h3>
+						<div class="col-md-12">
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">选择投票项: </label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<select id="select-vote-item-name">
+											<option value="">选择投票项...</option>
+											<option value="1">1 张三</option>
+											<option value="2">2 张三</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="divider"></div>
+						<form action="" id="modify-item" class="col-md-12" method="POST" enctype="multipart/form-data">
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票项目名: </label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12" data-original="">
+										<input type="text" id="modify-name" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票项目描述:</label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12" data-original="">
+										<input type="text" id="modify-work" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+									</div>
+								</div>
+							</div>
+							<div class="form-row" id="row2-img">
+								<div class="form-label col-md-2">
+									<label for="">图片: </label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="file" id="modify-img" name="cadidate-img" accept="image/*" />
+									</div>
+								</div>
+							</div>
+							<div class="form-row" id="row2-thumb">
+								<div class="form-label col-md-2">
+									<label for="">缩略图: </label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="file" id="modify-thumb" name="cadidate-thumb" accept="image/*" />
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-input float-right">
+									<input type="hidden" name="superhidden" id="superhidden">
+									<div class="form-input col-md-12 clearfix">
+										<a href="javascript:;" class="btn float-right medium primary-bg radius-all-4" id="update-item-button" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
+											<span class="button-content" id="update-item">上传并修改</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
-			<!-- #page-content -->
 		</div>
 	</body>
 

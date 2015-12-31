@@ -62,161 +62,216 @@
 
 			<div id="page-content-wrapper">
 				<div id="page-title">
-					<h3>新增投票</h3>
+					<h3>投票活动</h3>
 				</div>
-				<div id="page-content">
-					<h3>新增投票</h3>
-					<form action="" id="new-vote" class="col-md-12" method="POST" enctype="multipart/form-data">
-						<div class="form-row">
-							<div class="form-label col-md-2">
-								<label for="">
-										<span style="color:red">* </span>投票标题:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<input type="text" id="new-title" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+				 <div class="tabs">
+					<ul>
+						<li data-tabname="add-tab">
+							<a href="#add-vote-tab" title="新增投票">
+								<i class="glyph-icon icon-archive float-left opacity-80"></i>新增投票
+							</a>
+						</li>
+						<li data-tabname="modify-tab">
+							<a href="#modify-vote-tab" title="修改投票">
+								<i class="glyph-icon icon-gears float-left opacity-80"></i>修改投票
+							</a>
+						</li>
+						<!-- TODO
+						<li data-tabname="sumary-tab"><a href="#sumary-vote-tab" title="数据统计"><i class="glyph-icon icon-bar-chart float-left opacity-80"></i>数据统计</a></li>
+						 -->
+					</ul>
+		
+					<!-- 新增投票 -->
+					<div id="add-vote-tab">
+					<!-- <div id="page-content"> -->
+						<h3>新增投票</h3>
+						<form action="" id="new-vote" class="col-md-12" method="POST" enctype="multipart/form-data">
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票标题: <span class="required">* </span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="text" id="new-title" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-label col-md-2">
-								<label for="">
-										<span style="color:red">* </span>投票类型:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<select id="new-type">
-										<option value="0" selected="selected">图片投票</option>
-										<option value="1">音频投票</option>
-										<!-- <option value="2">视频投票</option> -->
-									</select>
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票类型: <span class="required">* </span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<select id="new-type">
+											<option value="0" selected="selected">图片投票</option>
+											<option value="1">音频投票</option>
+											<!-- <option value="2">视频投票</option> -->
+										</select>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-label col-md-2">
-								<label for="">
-										<span style="color:red">* </span>投票头图:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<input type="file" id="new-banner" name="banner-img" accept="image/*">
-									<!-- <input type="file" id="new-banner" name="banner-img" accept="image/*"> -->
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票头图: <span class="required">* </span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="file" id="new-banner" name="banner-img" accept="image/*">
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-label col-md-2">
-								<label for="">
-										<span style="color:red">* </span>投票简介图:
-								</label>
-							</div>
-							<div class="form-input col-md-10">
-								<div class="col-md-12">
-									<input type="file" id="new-profile" name="profile-img" accept="image/*"/>
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票简介图: <span class="required">* </span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="file" id="new-profile" name="profile-img" accept="image/*"/>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-input float-right">
-								<input type="hidden" name="superhidden" id="superhidden">
-								<div class="form-input col-md-12 clearfix">
-									<a href="javascript:;" class="btn float-right medium primary-bg radius-all-4" id="demo-form-2-valid" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
-										<span class="button-content" id="append-vote">
-											上传并添加
-										</span>
-									</a>
+							<div class="form-row">
+								<div class="form-input float-right">
+									<input type="hidden" name="superhidden" id="superhidden">
+									<div class="form-input col-md-12 clearfix">
+										<a href="javascript:;" class="btn float-right medium primary-bg radius-all-4" id="demo-form-2-valid" title="上传并添加新投票">
+											<span class="button-content" id="append-vote">上传并添加</span>
+										</a>
+									</div>
 								</div>
 							</div>
+						</form>
+						<div class="divider"></div>
+						<h3 class="bottom-margin">投票列表</h3>
+						<div class="col-md-12">
+							<table class="table table-striped text-center">
+								<thead>
+									<tr>
+										<th class="text-center"></th>
+										<th>投票标题</th>
+										<th>活动状态</th>
+										<th>投票类型</th>
+										<th class="text-center">参赛人数</th>
+										<th class="text-center">投票人次</th>
+										<th class="text-center">访问量</th>
+										<th class="text-center">操作</th>
+									</tr>
+								</thead>
+								<tbody id="votes-list">
+								</tbody>
+							</table>
 						</div>
-					</form>
-					<div class="divider"></div>
-					<h3 class="bottom-margin">
-						投票列表
-					</h3>
-					<div class="col-md-12">
-						<table class="table table-striped text-center">
-							<thead>
-								<tr>
-									<th class="text-center"></th>
-									<th>投票标题</th>
-									<th>投票类型</th>
-									<th class="text-center">参赛人数</th>
-									<th class="text-center">投票人次</th>
-									<th class="text-center">访问量</th>
-									<th class="text-center">操作</th>
-								</tr>
-							</thead>
-							<tbody id="votes-list">
-								<!-- 
-								<tr>
-									<td>1</td>
-									<td class="font-bold text-left">John Clark</td>
-									<td>
-										<div class="label bg-orange">152</div>
-									</td>
-									<td>
-										<div class="label bg-orange">152</div>
-									</td>
-									<td>
-										<div class="label bg-orange">152</div>
-									</td>
-									<td>
-										<div class="dropdown">
-											<a href="javascript:;" title="" class="btn medium bg-blue" data-toggle="dropdown">
-												<span class="button-content">
-													<i class="glyph-icon font-size-11 icon-cog"></i>
-													<i class="glyph-icon font-size-11 icon-chevron-down"></i>
-												</span>
-											</a>
-											<ul class="dropdown-menu float-right">
-												<li>
-													<a href="javascript:;" title="">
-														<i class="glyph-icon icon-gear mrg5R"></i> 管理
-													</a>
-												</li>
-												<li class="divider"></li>
-												<li>
-													<a href="javascript:;" class="font-red" title="">
-														<i class="glyph-icon icon-remove mrg5R"></i> 删除
-													</a>
-												</li>
-											</ul>
-										</div>
-									</td>
-								</tr>
-								 -->
-							</tbody>
-						</table>
-					</div>
-					<div class="col-md-4 center-margin">
-						<div class="button-group center-div">
-							<a href="javascript:;" class="btn large ui-state-default" id="vote-left">
-								<i class="glyph-icon icon-chevron-left"></i>
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default votes">
-								1
-							</a>
-							<a href="javascript:;" class="btn large disabled ui-state-default votes">
-								2
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default votes">
-								3
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default votes">
-								4
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default votes">
-								5
-							</a>
-							<a href="javascript:;" class="btn large ui-state-default" id="vote-right">
-								<i class="glyph-icon icon-chevron-right"></i>
-							</a>
+						<div class="col-md-4 center-margin">
+							<div class="button-group center-div">
+								<a href="javascript:;" class="btn large ui-state-default" id="vote-left">
+									<i class="glyph-icon icon-chevron-left"></i>
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default votes">
+									1
+								</a>
+								<a href="javascript:;" class="btn large disabled ui-state-default votes">
+									2
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default votes">
+									3
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default votes">
+									4
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default votes">
+									5
+								</a>
+								<a href="javascript:;" class="btn large ui-state-default" id="vote-right">
+									<i class="glyph-icon icon-chevron-right"></i>
+								</a>
+							</div>
 						</div>
 					</div>
+					<!-- 修改投票 -->
+					<div id="modify-vote-tab">
+						<h3>修改投票</h3>
+						<div class="col-md-12">
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">选择投票状态: <span class="required">*</span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<select id="select-vote-status">
+											<option value="99" selected="selected">全部</option>
+											<option value="1">准备中</option>
+											<option value="2">进行中</option>
+											<option value="3">已结束</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">选择投票: <span class="required">*</span></label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<select id="select-vote-name">
+											<option value="" selected="selected">请选择...</option>
+											<option value="1">测试投票</option>
+											<option value="2">最没舟山人</option>
+											<option value="3">测试测试投票</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="divider"></div>
+						<form action="" id="modify-vote" class="col-md-12" method="POST" enctype="multipart/form-data">
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票标题:</label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12" data-original="">
+										<input type="text" id="modify-title" name="email" data-type="email" data-trigger="change" data-required="true" class="parsley-validated">
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票头图:</label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="file" id="modify-banner" name="banner-img" accept="image/*">
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-label col-md-2">
+									<label for="">投票简介图:</label>
+								</div>
+								<div class="form-input col-md-10">
+									<div class="col-md-12">
+										<input type="file" id="modify-profile" name="profile-img" accept="image/*"/>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-input float-right">
+									<input type="hidden" name="superhidden" id="superhidden">
+									<div class="form-input col-md-12 clearfix">
+										<a href="javascript:;" class="btn float-right medium primary-bg radius-all-4" id="modify-vote-a" title="上传并添加新投票">
+											<span class="button-content" id="update-vote">上传并修改</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!-- TODO
+					<div id="sumary-vote-tab">
+						<h3>投票统计</h3>
+						<label>to be continued...</label>
+					</div>
+					 -->
 				</div>
 			</div>
 			<!-- #page-content -->

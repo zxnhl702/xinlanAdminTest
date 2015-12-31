@@ -56,7 +56,6 @@ $(function() {
 			var getCandidates = function(from) {
 				_callAjax({
 					"cmd":"getCandidates",
-//					"from":parseInt(from)+1,
 					"from":from,
 					"amount":10,
 					"vote_id":vote_id
@@ -120,15 +119,13 @@ $(function() {
 					var str = '<li class="mb15 pct100 pt10 pb10 bdd cl rel ovh" data-id='+r.id+'>' + 
 								'<div class="l mt10 ml20"><i class="fa fa-feed balanced fa-2x"></i></div>' + 
 								'<h5 class="f14 l m0 ml20 ell pct50 n g3">' + r.id + '.' + r.name + '<br />' + 
-								'<span class="f12 g9">来自：' + r.work + ' | ' + 
-								'<span class="cnt">' + r.cnt + '</span>' + '票</span>' + '</h5>' + 
+								'<span class="f12 g9">来自：' + r.work + '<br />' + 
+								'当前票数：<span class="cnt">' + r.cnt + '</span>' + '票</span>' + '</h5>' + 
 								'<span class="btn bg_orange r mr20 mt5">投票</span>' + 
-//废弃予定						'<audio src="' + img_url_root + r.id + '.mp3" class="dn"></audio>' + 
 								'</li>';
 					var e = $(str).appendTo("#audio-list");
 					// 点击播放
 					e.click(function() {
-//					$('li[data-id="'+r.id+'"]').click(function() {
 						// 音频文件url
 						var mp3Src = img_url_root + r.img;
 						playDifferentAudio(mp3Src, r.id);
@@ -189,11 +186,6 @@ $(function() {
 				getCandidates(last);
 			});
 
-			$(".comment").click(function() {
-				$(".commentArea").show().parent().show();
-				$(".commentArea textarea").val("");
-			});
-
 			$(".commentArea .undo").click(function() {
 				$(".commentArea").hide().parent().hide();
 			});
@@ -246,36 +238,36 @@ $(function() {
 					$("#candidates-count").text(d.data.itemCount);
 					$("#votes-count").text(parseInt(d.data.voteCount));
 					$("#clicks-count").text(d.data.clickCount);
+					$("title").html(d.data.title);
 					getCandidates(0);
 					getComments(MAX);
+					// 评论
+					$(".comment").click(function() {
+						$(".commentArea").show().parent().show();
+						$(".commentArea textarea").val("");
+					});
+					// 头图
+					var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
+					$(bannerImg).appendTo(".banner");
+					// 底栏
+					// 拼url中？之后的部分
+					var urlSearch = "vote_id=" + vote_id;
+					if(weixinLogin) {
+						var openid = _getPar("openid");
+						urlSearch += "&openid=" + openid;
+					}
+					$("#goIndex").attr("href", "index.html?" + urlSearch);
+					$("#goProfile").attr("href", "profile.html?" + urlSearch);
+					$("#goRank").attr("href", "rank.html?" + urlSearch);
 				} else {
 					_toast.show(d.errMsg);
-				}
-			});
-			// 取页面的title
-			_callAjax({
-				"cmd":"getVoteTitleByVoteId",
-				"vote_id":vote_id
-			}, function(d) {
-				if(d.success) {
-					$("#vote-title").text(d.data.title);
+					// 删除超链接
+					$("#goIndex").removeAttr("href");
+					$("#goProfile").removeAttr("href");
+					$("#goRank").removeAttr("href");
 				}
 			});
 			
-			// 头图
-			var bannerImg = '<img src="'+img_url_root+'banner.jpg" width="100%" class="db"/>';
-			$(bannerImg).appendTo(".banner");
-			// 底栏
-			// 拼url中？之后的部分
-			var urlSearch = "vote_id=" + vote_id;
-			if(weixinLogin) {
-				var openid = _getPar("openid");
-				urlSearch += "&openid=" + openid;
-			}
-			$("#goIndex").attr("href", "index.html?" + urlSearch);
-			$("#goProfile").attr("href", "profile.html?" + urlSearch);
-			$("#goRank").attr("href", "rank.html?" + urlSearch);
-
 			setInterval(function(){
 				emitComment();
 			}, 8000);
@@ -288,8 +280,6 @@ $(function() {
 			if (ifComment != '') {
 				$(".comment").click();
 			}
-
 		}
-
 	});
 });

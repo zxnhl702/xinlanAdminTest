@@ -2,7 +2,7 @@
  * 分享页填充内容用js
  */
 $(function() {
-	var _callAjax = _genCallAjax("http://127.0.0.1:11002/xinlan/");
+	var _callAjax = _genCallAjax(ajaxURL);
 
 	var array = document.location.search.substring(1).split(',');
 	var hot_id = array[0];

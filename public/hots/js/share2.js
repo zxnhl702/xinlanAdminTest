@@ -3,9 +3,9 @@
  */
 $(function() {
 	// 后台ajax的URL
-	var _callAjax = _genCallAjax("http://127.0.0.1:11002/xinlan/");
+	var _callAjax = _genCallAjax(ajaxURL);
 	// 左侧小图标的URL
-	var imgsrc = "http://127.0.0.1:11001/images/xinlanUser/";
+	var imgsrc = userImgURL+"/xinlanUser/";
 
 	// 获取热点id和事件id
 	var array = document.location.search.substring(1).split(',');
