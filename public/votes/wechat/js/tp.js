@@ -41,9 +41,12 @@ $(function() {
 					if (d.success) {
 						var cnt = parseInt($("#datu-cnt").text());
 						var liCntElement = $("li[data-id="+id+"]").find(".cnt");
-						if (!!liCntElement) cnt = parseInt(liCntElement.text());
+//						if (!!liCntElement) cnt = parseInt(liCntElement.text());
+						if(!isNaN(parseInt(liCntElement.text()))) {
+							cnt = parseInt(liCntElement.text());
+							liCntElement.text(cnt+1);
+						}
 						$("#datu-cnt").text(cnt+1);
-						liCntElement.text(cnt+1);
 					}
 				});
 			};
