@@ -78,7 +78,7 @@ $(function() {
 						var cnt = parseInt($("#datu-cnt").text());
 						var liCntElement = $("li[data-id="+id+"]").find(".cnt");
 						if (!!liCntElement) cnt = parseInt(liCntElement.text());
-						$("#datu-cnt").text = cnt+1;
+						$("#datu-cnt").text(cnt+1);
 						liCntElement.text(cnt+1);
 					}
 				});
