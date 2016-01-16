@@ -19,7 +19,6 @@ $(function() {
 	var voteType = new Array("图片投票", "音频投票", "视频投票");
 	// 元激活tab
 	var activeTab = "add-tab";
-	//$.getScript('assets/middle/slider.js');
 	/**
 	 * 新增投票tab
 	 */
@@ -74,7 +73,6 @@ $(function() {
 			
 			// 投票活动开始/结束
 			e.find("a:has(.icon-circle)").click(function() {
-				console.log("test");
 				var status = r.status;
 				// 准备中-》进行中 || 进行中-》已结束
 				if(1 == status || 2 == status) {
@@ -129,6 +127,7 @@ $(function() {
 		if (profileImg == '') return _toast.show("请选择投票简介图");
 		if (!_checkImgType(topImg) || !_checkImgType(profileImg)) 
 			return _toast.show("图片格式只能是.gif,jpeg,jpg,png中的一种");
+
 		// 上传图片的表单
 		var uploadForm = jq("#new-vote");
 		var formfiles = "";
@@ -297,8 +296,10 @@ $(function() {
 	
 	// 修改投票按钮按下时
 	$("#update-vote").click(function() {
-		// 上传文件并更新投票信息
-		updateVote();
+		if(!$(this).parent().hasClass("disabled")) {
+			// 上传文件并更新投票信息
+			updateVote();
+		}
 	})
 
 	/**
