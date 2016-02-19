@@ -242,6 +242,17 @@ func VoteDispatch(db *sql.DB) Dlm {
 				// 视频投票
 			} else if "2" == voteType {
 				// TODO
+				// 文字投票
+			} else if "3" == voteType {
+				// 投票项目编号
+				id, err := getVoteItemIdSeq(vote_id, db)
+				if nil != err {
+					panic("获取投票项目编号失败")
+				}
+				err = newVoteItem(strconv.Itoa(id), vote_id, name, work, "null", "null", db)
+				if nil != err {
+					panic("插入投票项目数据失败")
+				}
 			}
 
 			return "插入新投票项目成功", nil
@@ -527,8 +538,6 @@ func VoteDispatch(db *sql.DB) Dlm {
 		"updateVoteStatus": func(r *http.Request) (string, interface{}) {
 			// 投票编号
 			id := GetParameter(r, "id")
-			// 原状态
-			//			originSts := GetParameter(r, "originStatus")
 			// 更新活动状态至
 			changeTo := GetParameter(r, "changeTo")
 			stmt, err := db.Prepare("update votes set isOnline = ? where id =?")

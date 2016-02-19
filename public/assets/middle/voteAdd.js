@@ -16,7 +16,7 @@ $(function() {
 	// 投票类型
 	var voteStatus = new Array("已删除", "准备中", "进行中", "已结束");
 	// 投票类型
-	var voteType = new Array("图片投票", "音频投票", "视频投票");
+	var voteType = new Array("图片投票", "音频投票", "视频投票", "文字投票");
 	// 元激活tab
 	var activeTab = "add-tab";
 	/**

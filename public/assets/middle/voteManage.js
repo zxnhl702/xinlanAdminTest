@@ -63,6 +63,7 @@ $(function() {
 				vote_type= d.data.type;
 				// 根据投票类型的不用修改页面表格的列名
 				$("#type").text(voteText[d.data.type]);
+				// 音频投票
 				if(1 == vote_type) {
 					$("#row-thumb").hide();
 					var img_html = '<div class="form-label col-md-2">' + 
@@ -74,6 +75,21 @@ $(function() {
 									'<input type="file" id="new-img" name="cadidate-img" accept="audio/mp3"/>' + 
 									'</div>' + '</div>';
 					$("#row-img").html(img_html);
+				// 视频投票
+				} else if(2 == vote_type) {
+					// TODO
+				// 文字投票
+				} else if(3 == vote_type) {
+					$("#row-img").hide();
+					$("#row-thumb").hide();
+					$("#row-name-label").html('<label for="">文章作者: <span class="required">* </span></label>');
+					var work_html = '<div class="form-label col-md-2">' + 
+									'<label for="">文章内容: <span style="color:red">* </span></label></div>' + 
+									'<div class="form-input col-md-10">' + 
+									'<div class="col-md-12">' + 
+									'<textarea name="" id="new-work" class="large-textarea"></textarea>' + 
+									'</div>' + '</div>';
+					$("#row-work").html(work_html);
 				}
 			}
 		});
@@ -89,18 +105,24 @@ $(function() {
 			"statusTo": statusTo
 		}, function(d){
 			if (!d.success) return _toast.show(d.errMsg);
+			// 非文字投票
+			if(3 != vote_type) {
+				var index = 0;
+			} else {
+				var index = 1;
+			}
 			// 修改页面按钮和样式
-			var obj = $('tr[data-id="'+ id +'"]').find("a");
+			var obj = $('tr[data-id="'+ id +'"]').find("a").eq(index);
 			$('tr[data-id="'+ id +'"] td:eq(3)').text(voteItemStatus[statusTo]);
 			$('tr[data-id="'+ id +'"]').attr("data-status", statusTo);
 			if(0 == statusTo) {
-				var opButton = '<span class="button-content"><i class="glyph-icon font-size-11 icon-ok"></i>发布</span>';
+				var opButton = '<span class="button-content voteConfig"><i class="glyph-icon font-size-11 icon-ok"></i>发布</span>';
 				obj.removeClass("bg-red");
 				obj.addClass("bg-blue");
 				obj.empty();
 				obj.append(opButton);
 			} else {
-				var opButton = '<span class="button-content"><i class="glyph-icon font-size-11 icon-remove"></i>撤回</span>';
+				var opButton = '<span class="button-content voteConfig"><i class="glyph-icon font-size-11 icon-remove"></i>撤回</span>';
 				obj.removeClass("bg-blue");
 				obj.addClass("bg-red");
 				obj.empty();
@@ -113,30 +135,59 @@ $(function() {
 	updatePage = function(items) {
 		// 填充页面数据
 		items.forEach(function(r) {
-			var str = '<tr data-id="' + r.id + '" data-status=' + r.status + '><td>' + r.id + '</td>' +
-						'<td class="font-bold text-left">' + r.name + '</td>' + 
-						'<td>' + r.work + '</td>' + 
-						'<td>' + voteItemStatus[r.status] + '</td>' + 
-						'<td class="item-list-img" data-dir="' + voteImgRootURL + '/vote_' + vote_id + '/'+ r.img +'">' + r.img+ '</td>' + 
-						'<td>' + 
-						'<a class="btn medium bg-red" href="javascript:">' + 
-						'<span class="button-content"><i class="glyph-icon font-size-11 icon-remove"></i>撤回</span>' + 
-						'</a></td></tr>';
+			// 非文字投票
+			if(3 != vote_type) {
+				var index = 0;
+				var str = '<tr data-id="' + r.id + '" data-status=' + r.status + '><td>' + r.id + '</td>' +
+					'<td class="font-bold text-left">' + r.name + '</td>' + 
+					'<td>' + r.work + '</td>' + 
+					'<td>' + voteItemStatus[r.status] + '</td>' + 
+					'<td class="item-list-img" data-dir="' + voteImgRootURL + '/vote_' + vote_id + '/'+ r.img +'">' + r.img+ '</td>' + 
+					'<td>' + 
+					'<a class="btn medium bg-red" href="javascript:">' + 
+					'<span class="button-content voteConfig"><i class="glyph-icon font-size-11 icon-remove"></i>撤回</span>' + 
+					'</a></td></tr>';
+			// 文字投票
+			} else {
+				if(r.work.length > 20) {
+					var detail = r.work.substring(0, 20) + "......";
+				} else {
+					var detail = r.work;
+				}
+				var index = 1;
+				var str = '<tr data-id="' + r.id + '" data-status=' + r.status + '><td>' + r.id + '</td>' +
+					'<td class="font-bold text-left">' + r.name + '</td>' + 
+					'<td><a href="javascript:" class="black-modal-80">' + detail + '</a></td>' + 
+					'<td>' + voteItemStatus[r.status] + '</td>' + 
+					'<td class="item-list-img" data-dir="' + voteImgRootURL + '/vote_' + vote_id + '/'+ r.img +'">' + r.img+ '</td>' + 
+					'<td>' + 
+					'<a class="btn medium bg-red" href="javascript:">' + 
+					'<span class="button-content voteConfig"><i class="glyph-icon font-size-11 icon-remove"></i>撤回</span>' + 
+					'</a></td></tr>';
+			}
+			
 			var e = $(str).appendTo("#items-list");
 			// 投票项目离线状态 修改操作按钮和页面样式
 			if(0 == r.status) {
-				var opButton = '<span class="button-content"><i class="glyph-icon font-size-11 icon-ok"></i>发布</span>';
-				e.find("a").removeClass("bg-red");
-				e.find("a").addClass("bg-blue");
-				e.find("a").empty();
-				e.find("a").append(opButton);
+				var opButton = '<span class="button-content voteConfig"><i class="glyph-icon font-size-11 icon-ok"></i>发布</span>';
+				e.find("a").eq(index).removeClass("bg-red");
+				e.find("a").eq(index).addClass("bg-blue");
+				e.find("a").eq(index).empty();
+				e.find("a").eq(index).append(opButton);
 			}
 			
 			// 发布/撤回按钮按下时
-			e.find("a").click(function() {
+			e.find("a").eq(index).click(function() {
 				updateVoteItemStatus(r.id, e.attr("data-status") ^ 1);
 			})
 			
+			// 文字投票情况下 点击展开全部文章内容
+			if(3 == vote_type) {
+				e.find("a").eq(0).click(function() {
+					$("#black-modal-80").attr("title", r.name);
+					$(".pad10A").html(r.work);
+				})
+			}
 		});
 		
 		// 图片/音频预览
@@ -160,19 +211,23 @@ $(function() {
 		var name = $("#new-name").val().replace(/\s/g, "");
 		var work = $("#new-work").val().replace(/\s/g, "");
 		var img = $("#new-img").val().replace(/\s/g, "");
-		if (name == '') return "请填写用户名";
-		if (img == '') return "请选择图片";
-		if (thumb == '') return "请选择缩略图";
+		var thumb = $("#new-thumb").val().replace(/\s/g, "");
+		if (name == '') return "请填写投票项目名";
+//		if (img == '') return "请选择图片";
+//		if (thumb == '') return "请选择缩略图";
 		// 图片投票时  额外检测缩略图  检测图片格式
 		if(0 == vote_type) {
-			var thumb = $("#new-thumb").val().replace(/\s/g, "");
+			if (img == '') return "请选择图片";
 			if (thumb == '') return "请选择缩略图";
 			if (!_checkImgType(img) || !_checkImgType(thumb)) 
 				return "图片格式只能是.gif,jpeg,jpg,png中的一种";
 		// 音频投票时  检测音频格式
 		} else if(1 == vote_type) {
+			if (img == '') return "请选择图片";
 			if (!_checkAudioType(img))
 				return "音频格式只能是.mp3";
+		} else if(3 == vote_type) {
+			if(work == '') return "请填写文章内容"
 		}
 		return null;
 	}
@@ -184,17 +239,24 @@ $(function() {
 		if(null != checkValid) return _toast.show(checkValid);
 		// 获取表单数据
 		var name = $("#new-name").val().replace(/\s/g, "");
-		var work = $("#new-work").val().replace(/\s/g, "");
+		var work = $.trim($("#new-work").val());
 		var img = $("#new-img").val().replace(/\s/g, "");
 		var thumb = $("#new-thumb").val().replace(/\s/g, "");
+		if(3 == vote_type) {
+			work = $("#new-work").val().replace(/\n/g, "<br>");
+		}
 		if (work == '') work = "  ";
 		
 		// 上传图片的表单
 		var uploadForm = jq("#new-item");
 		var formfiles = "";
 		uploadForm.find("input[type='file']").each(function(i,r) {
+			// 需要上传文件 真实文件名
 			if("" != r.value) {
 				formfiles = formfiles + ',' + r.name;
+			// 不需要上传文件 设置为null字符串
+			} else {
+				formfiles = formfiles + ',' + "null";
 			}
 		});
 		// input type=file标签中的name组成的字符串
@@ -282,6 +344,22 @@ $(function() {
 							'<input type="file" id="modify-img" name="cadidate-img" accept="audio/mp3"/>' + 
 							'</div>' + '</div>';
 			$("#row2-img").html(img_html);
+		// 2 视频投票
+		} else if(2 == vote_type) {
+			// TODO
+		// 3 文字投票
+		} else if(3 == vote_type) {
+			$("#row2-img").hide();
+			$("#row2-thumb").hide();
+			$("#row2-name-label").html('<label for="">文章作者: </label>');
+			var work_html = '<div class="form-label col-md-2">' + 
+							'<label for="">文章内容:</label>' + 
+							'</div>' + 
+							'<div class="form-input col-md-10">' + 
+							'<div class="col-md-12" data-original="">' + 
+							'<textarea name="" id="modify-work" class="large-textarea"></textarea>' + 
+							'</div>' + '</div>';
+			$('#row2-work').html(work_html);
 		}
 	}
 	
@@ -289,7 +367,7 @@ $(function() {
 	updateVoteItem = function() {
 		// 表单内容检测
 		var name = $("#modify-name").val().replace(/\s/g, "");
-		var work = $("#modify-work").val().replace(/\s/g, "");
+		var work = $.trim($("#modify-work").val());
 		var img = $("#modify-img").val().replace(/\s/g, "");
 		var thumb = $("#modify-thumb").val().replace(/\s/g, "");
 		if(0 == vote_type) {
@@ -301,6 +379,8 @@ $(function() {
 			if("" != img && !_checkAudioType(img)) {
 				return _toast.show("音频格式只能是.mp3");
 			}
+		} else if(3 == vote_type) {
+			work = $("#modify-work").val().replace(/\n/g, "<br>");
 		}
 		if (work == '') work = "  ";
 		// 上传图片的表单

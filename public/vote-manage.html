@@ -82,8 +82,8 @@
 					<div id="add-vote-item-tab">
 						<h3>新增投票项</h3>
 						<form action="" id="new-item" class="col-md-12" method="POST" enctype="multipart/form-data">
-							<div class="form-row">
-								<div class="form-label col-md-2">
+							<div class="form-row" id="row-name">
+								<div class="form-label col-md-2" id="row-name-label">
 									<label for="">投票项目名: <span class="required">* </span></label>
 								</div>
 								<div class="form-input col-md-10">
@@ -92,7 +92,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-row">
+							<div class="form-row" id="row-work">
 								<div class="form-label col-md-2">
 									<label for="">投票项目描述:</label>
 								</div>
@@ -150,6 +150,11 @@
 								<tbody id="items-list">
 								</tbody>
 							</table>
+							<div class="hide" id="black-modal-80" title="Basic dialog title">
+								<div class="pad10A">
+									Dialog content here
+								</div>
+							</div>
 						</div>
 						<div class="col-md-4 center-margin">
 							<div class="button-group center-div">
@@ -199,8 +204,8 @@
 						</div>
 						<div class="divider"></div>
 						<form action="" id="modify-item" class="col-md-12" method="POST" enctype="multipart/form-data">
-							<div class="form-row">
-								<div class="form-label col-md-2">
+							<div class="form-row" id="row2-name">
+								<div class="form-label col-md-2" id="row2-name-label">
 									<label for="">投票项目名: </label>
 								</div>
 								<div class="form-input col-md-10">
@@ -209,7 +214,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-row">
+							<div class="form-row" id="row2-work">
 								<div class="form-label col-md-2">
 									<label for="">投票项目描述:</label>
 								</div>
