@@ -16,6 +16,8 @@ $(function() {
 	// 页面事件id记录
 	var minEvnetId = -1;
 	
+	$("#share-banner").attr("src", "img/top_img"+hot_id+".jpg");
+	
 	// 更新页面事件信息
 	var updateEvents = function(d) {
 		if(d.data == null) {

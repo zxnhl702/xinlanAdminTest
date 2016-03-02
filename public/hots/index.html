@@ -10,7 +10,6 @@
 		<link rel="stylesheet" type="text/css" href="css/reset.min.css" />
 		<title>热点</title>
 		<script src="js/jquery-1.11.1.min.js"></script>
-		<script src="js/damoo.min.js"></script>
 		<script src="js/print.js"></script>
 		<script src="js/viewPC.js"></script>
 		<script src="js/h5app.js"></script>
@@ -20,6 +19,7 @@
 		<script src="js/ref.js"></script>
 		<script src="js/iscroll.js"></script>
 		<script src="js/index.js"></script>
+		<script src="js/damoo.min.js"></script>
 	</head>
 
 	<body class="bgf0">
@@ -30,7 +30,10 @@
 					<span id="pullDown-msg" class="pull-down-msg">下拉刷新</span>
 				</div>
 				<div class="top-img rel">
-					<img src="img/top_img.jpg" width="100%" class="db" />
+					<div id="banner">
+						<img src="http://placehold.it/640x300" width="100%" class="db" />
+					</div>
+					
 					<div id="dm-main" class="abs pct100">
 						<div id="dm-screen"></div>
 					</div>
@@ -43,7 +46,7 @@
 							<span class="r" id="clicks-count"> 人浏览过</span>
 							<!-- <span class="r mr10" id="share">分享</span> -->
 						</div>
-						<div class="share-info g6 bbd" id="share-info"> </div>
+						<div class="share-info g6 bbd dn" id="share-info"> </div>
 					</header>
 					<!-- main content -->
 				</div>

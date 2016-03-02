@@ -7,7 +7,9 @@ $(function() {
 			var currentEventElement;
 			var users = ["admin", "无限舟山", "前方记者"];
 			if (hot_id == '') return;
-
+			
+			$('#banner img').attr('src','img/top_img'+ hot_id+'.jpg')
+			
 			// get random comments from db
 			var getRandomComments = function(limit) {
 				_callAjax({
