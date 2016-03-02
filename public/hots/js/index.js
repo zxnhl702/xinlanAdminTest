@@ -101,7 +101,7 @@ $(function() {
 						_share({
 							"content":"直播！"+r.title,
 							"content_url":"http://"+host+"/hots/share2.html?"+hot_id+","+event_id+",",
-							"pic":"http://"+host+"/hots/img/top_img.jpg"
+							"pic":"http://"+host+"/hots/img/top_img"+ hot_id+".jpg"
 						});
 					});
 				});
