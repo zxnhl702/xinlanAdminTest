@@ -10,6 +10,8 @@ if (t != '') {
 }
 // 热点管理
 $("#hotSpot-manage").attr("href", "hotSpot-manage.html?user_id="+user_id+"&privilege="+t);
+// 热点修改
+$("#hotSpot-modify").attr("href", "hotSpot-modify.html?user_id="+user_id+"&privilege="+t);
 // 新增热点
 $("#hotNews-add").attr("href", "hotNews-add.html?user_id="+user_id+"&privilege="+t);
 // 新增投票

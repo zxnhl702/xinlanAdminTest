@@ -16,7 +16,7 @@ $(function() {
 	// 页面事件id记录
 	var minEvnetId = -1;
 	
-	$("#share-banner").attr("src", "img/top_img"+hot_id+".jpg");
+	$("#share-banner").attr("src", userImgURL+'hots/top_img'+ hot_id+'.jpg');
 	
 	// 更新页面事件信息
 	var updateEvents = function(d) {
@@ -50,6 +50,7 @@ $(function() {
 	}, function(d) {
 		if(d.success) {
 			$("#hot-title").text(d.data.title);
+			$("title").text(d.data.title);
 			$("#events-count").text("报道数："+d.data.eventsCount);
 			$("#clicks-count").text(d.data.clicksCount+" 次浏览量");
 			if(d.data.description != null || d.data.description != "") {

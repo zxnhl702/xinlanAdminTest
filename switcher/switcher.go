@@ -5,6 +5,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
+	"os"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -162,11 +164,84 @@ func Dispatch(db *sql.DB) Dlm {
 		},
 
 		"newHot": func(r *http.Request) (string, interface{}) {
+			// 热点标题
 			title := GetParameter(r, "title")
+			// 热点描述
 			description := GetParameter(r, "description")
-			stmt, _ := db.Prepare("insert into hots(title, description) values (?, ?)")
-			stmt.Exec(title, description)
+			// 热点头图
+			topimg := GetParameter(r, "topimg")
+			// 开始事务
+			tx, err := db.Begin()
+			// 异常情况下回滚
+			perrorWithRollBack(err, "插入新热点失败", tx)
+			// 插入新热点
+			stmt, err := tx.Prepare("insert into hots(title, description) values (?, ?)")
+			perrorWithRollBack(err, "插入新热点失败", tx)
+			result, err := stmt.Exec(title, description)
+			perrorWithRollBack(err, "插入新热点失败", tx)
+			rowid, err := result.LastInsertId()
+			perrorWithRollBack(err, "插入新热点失败", tx)
+			// 重命名头图文件名
+			filename := "top_img" + strconv.FormatInt(rowid, 10) + path.Ext(topimg)
+			err = os.Rename(FILE_DIR + "/" + topimg, FILE_DIR + "/" + filename)
+			perrorWithRollBack(err, "插入新热点失败", tx)
+			// 更新新热点头图文件名
+			stmt, err = tx.Prepare("update hots set topImg = ? where id = ?")
+			perrorWithRollBack(err, "插入新热点失败", tx)
+			_, err = stmt.Exec(filename, strconv.FormatInt(rowid, 10))
+			perrorWithRollBack(err, "插入新热点失败", tx)
+			// 提交事务
+			tx.Commit()
 			return "插入新热点成功", nil
+		},
+		
+		"updateHotById": func(r *http.Request) (string, interface{}) {
+			// 热点编号
+			id := GetParameter(r, "id")
+			// 热点标题
+			title := GetParameter(r, "title")
+			// 热点描述
+			description := GetParameter(r, "description")
+			// 热点头图
+			topimg := GetParameter(r, "topimg")
+			defer func() {
+				err := recover()
+				if nil != err {
+					os.Remove(FILE_DIR + "/" + topimg)
+					panic(err)
+				}
+			}()
+			// 开始事务
+			tx, err := db.Begin()
+			// 异常情况下回滚
+			perrorWithRollBack(err, "更新热点失败", tx)
+			// 拼更新数据的sql语句
+			var updateSql string
+			if "null" != title && "null" != description {
+				updateSql = "update hots set title = '" + title + "', description = '" + description + "' where id = ?"
+			} else if "null" != title && "null" == description {
+				updateSql = "update hots set title = '" + title + "' where id = ?"
+			} else if "null" == title && "null" != description {
+				updateSql = "update hots set description = '" + description + "' where id = ?"
+			} else {
+				updateSql = ""
+			}
+			if "" != updateSql {
+				stmt, err := tx.Prepare(updateSql)
+				defer stmt.Close()
+				perrorWithRollBack(err, "更新热点失败", tx)
+				_, err = stmt.Exec(id)
+				perrorWithRollBack(err, "更新热点失败", tx)
+			}
+			if "null" != topimg {
+				// 重命名头图文件名
+				filename := "top_img" + id + path.Ext(topimg)
+				err = os.Rename(FILE_DIR + "/" + topimg, FILE_DIR + "/" + filename)
+				perrorWithRollBack(err, "插入新热点失败", tx)
+			}
+			// 提交事务
+			tx.Commit()
+			return "更新热点成功", nil
 		},
 
 		"removeHot": func(r *http.Request) (string, interface{}) {

@@ -1,6 +1,7 @@
 package switcher
 
 import (
+	"database/sql"
 	"log"
 	"math/rand"
 	"net/http"
@@ -75,4 +76,21 @@ func GenerateRandomString(size int, kind int) []byte {
 		result[i] = uint8(base+rand.Intn(scope))
 	}
 	return result
+}
+
+// 打印并抛出异常
+func perror(e error, errMsg string) {
+	if e != nil {
+		log.Println(e)
+		panic(errMsg)
+	}
+}
+
+// 打印并抛出异常
+func perrorWithRollBack(e error, errMsg string, tx *sql.Tx) {
+	if e != nil {
+		tx.Rollback()
+		log.Println(e)
+		panic(errMsg)
+	}
 }

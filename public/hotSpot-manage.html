@@ -21,6 +21,12 @@
 		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/common.min.css" />
 		<link rel="stylesheet" type="text/css" href="assets/themes/minified/fides/responsive.min.css" />
 		<link rel="stylesheet" type="text/css" href="assets/css/custom.css"/>
+		<script src="assets/middle/jquery-1.11.1.min.js"></script>
+		<script src="assets/middle/jquery.form.js"></script>
+		<script>
+			// jquery for jquery.form.js only
+			var jq =  jQuery.noConflict();
+		</script>
 		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 		<script src="assets/middle/spin.min.js"></script>
 		<script src="assets/middle/toast.min.js"></script>
@@ -59,7 +65,7 @@
 				</div>
 				<div id="page-content">
 					<h3>新增热点</h3>
-					<form action="" class="col-md-12" method="">
+					<form action="" class="col-md-12" method="" id="new-hot">
 						<div class="form-row">
 							<div class="form-label col-md-2">
 								<label for="">
@@ -85,11 +91,23 @@
 							</div>
 						</div>
 						<div class="form-row">
+							<div class="form-label col-md-2">
+								<label for="">
+										<span style="color:red">*</span>头图:
+								</label>
+							</div>
+							<div class="form-input col-md-12">
+								<div class="col-md-8">
+									<input type="file" id="new-img" name="top-img" accept="image/*" />
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
 							<input type="hidden" name="superhidden" id="superhidden">
 							<div class="form-input col-md-10 ">
-								<a href="javascript:;" class="btn medium primary-bg radius-all-4" id="demo-form-2-valid" onclick="javascript:$('#demo-form-2').parsley( 'validate' );" title="Validate!">
+								<a href="javascript:;" class="btn float-right medium primary-bg radius-all-4" id="demo-form-2-valid" title="Validate!">
 									<span class="button-content" id="append-hot">
-										添加
+										上传并添加
 									</span>
 								</a>
 							</div>

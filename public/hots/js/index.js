@@ -8,7 +8,7 @@ $(function() {
 			var users = ["admin", "无限舟山", "前方记者"];
 			if (hot_id == '') return;
 			
-			$('#banner img').attr('src','img/top_img'+ hot_id+'.jpg')
+			$('#banner img').attr('src', userImgURL+'hots/top_img'+ hot_id+'.jpg')
 			
 			// get random comments from db
 			var getRandomComments = function(limit) {
@@ -265,15 +265,15 @@ $(function() {
 			}();
 
 			// damoo run every 2 seconds
-			setInterval(function(){
-				emitComment();
-			}, 4000);
+			//setInterval(function(){
+			//	emitComment();
+			//}, 4000);
 
 			// get comments every 5 seconds
-			setInterval(function() {
-				if (comments.length == 0) return;
-				getRandomComments(10);
-			}, 6000);
+			//setInterval(function() {
+			//	if (comments.length == 0) return;
+			//	getRandomComments(10);
+			//}, 6000);
 
 		// refresh iscroll every 1.5 seconds
 //	   for(i=0;i<6;i++){

@@ -10,6 +10,9 @@ var imgRootURL = "http://" + domain + ":11001/images";
 // 后台上传图片基准地址
 var fileUploadRootURL = "http://"+host+"/upload";
 
+// 图文直播后台头图上传地址
+var fileUploadHotTopimgURL = fileUploadRootURL + "/hots";
+
 // 投票后台ajax地址
 var ajaxVoteURL = ajaxRootURL + "/votes";
 // 投票后台上传图片地址
