@@ -121,7 +121,7 @@ $(function() {
 								'<h5 class="f14 l m0 ml20 ell pct50 n g3">' + r.id + '.' + r.name + '<br />' + 
 								'<span class="f12 g9">来自：' + r.work + '<br />' + 
 								'当前票数：<span class="cnt">' + r.cnt + '</span>' + '票</span>' + '</h5>' + 
-								'<span class="btn bg_orange r mr20 mt5">投票</span>' + 
+								'<span class="btn bg_orange r mr20 mt5">助力</span>' + 
 								'</li>';
 					var e = $(str).appendTo("#audio-list");
 					// 点击播放

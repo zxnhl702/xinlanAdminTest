@@ -133,7 +133,7 @@ $(function() {
 								'<div class="name tc ml5 mr5 mb5 bbe g6 pb5">'+r.name+'</div> '+ 
 								'<div class="clearfix pb10"> '+ 
 								'<p class="l orange pct45 f16"><span class="cnt">'+r.cnt+'</span>票</p> '+ 
-								'<a class="vote bg_orange light tc r pct35 mr10 f14 pl5 pr5"><i class="fa fa-heart mr10"></i>投票</a> '+ 
+								'<a class="vote bg_orange light tc r pct35 mr10 f14 pl5 pr5"><i class="fa fa-heart mr10"></i>助力</a> '+ 
 								'</div> </div> </li>';
 					var e = $(str).appendTo(i%2==0?"#left":"#right"); i += 1;
 					e.find(".img").click(function(){
