@@ -22,7 +22,10 @@ const (
 	
 	// 问答模块图片存放基准路径
 	QUIZ_IMG_ROOT = IMG_ROOT + "/quiz"
-	
+
+	// 直播模块图片存放基准路径
+	VIDEO_IMG_ROOT = IMG_ROOT + "/videos"
+
 	// 热点模块图片url
 	HOTS_IMG_URL = "http://127.0.0.1:11001/images/hots/"
 	
@@ -31,6 +34,12 @@ const (
 	
 	// JS-SDK 数据库路径
 	JSSDK_DB_PATH = "/home/zhangxiangnan/Goproject/src/auth/middle.db"
+	
+	// mysql定义部分
+	MYSQL_DRIVER = "mysql"
+	MYSQL_USERNAME = "root"
+	MYSQL_PASSWORD = "1988418"
+	MYSQL_DATABASE = "xinlanAdmin"
 	
 	// 产生随机字符串用的常量
 	// 需要产生的字符串类型

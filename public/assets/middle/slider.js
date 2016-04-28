@@ -16,5 +16,7 @@ $("#hotSpot-modify").attr("href", "hotSpot-modify.html?user_id="+user_id+"&privi
 $("#hotNews-add").attr("href", "hotNews-add.html?user_id="+user_id+"&privilege="+t);
 // 新增投票
 $("#vote-manage").attr("href", "vote.html?user_id="+user_id+"&privilege="+t);
+// 直播管理
+$("#video-manage").attr("href", "video.html?user_id="+user_id+"&privilege="+t);
 // 新增问答
 $("#quiz-manage").attr("href", "quiz.html?user_id="+user_id+"&privilege="+t);

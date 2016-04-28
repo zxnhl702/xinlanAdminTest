@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="https://res.wx.qq.com/open/libs/weui/0.4.0/weui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<title id="videotitle"></title>
+	</head>
+
+	<body>
+		<div class="live-content">
+			<!-- header -->
+			<header class="live-header">
+				<span class="live-state live-state-off">打开弹幕</span>
+				<span id="videoname"></span>
+				<span class="live-num"></span>
+			</header>
+			
+			<!-- video -->
+			<video src="" controls class="live-video" id="live-video" webkit-playsinline controls >Your browser does not support the video tag.</video>
+			<div id="dm-main">
+				<div id="dm-screen"></div>
+			</div>
+		</div>
+		<!-- tab -->
+		<div class="weui_tab live-tab">
+			<div class="weui_navbar live-navbar">
+				<a class="weui_navbar_item weui_bar_item_on" id="comment"></a>
+				<a class="weui_navbar_item">简介</a>
+				<a class="weui_navbar_item" href="http://www.xinlantech.com/">技术支持</a>
+			</div>
+			<div class="weui_tab_bd live-tab-bd">
+				<div class="weui-tab-bd-item weui_tab_bd_item_active live-tab-comment">
+					<div class="live-notice">
+						
+					</div>
+					<div id="scroller">
+						<ul>
+						</ul>
+					</div>
+				</div>
+				<div class="weui-tab-bd-item">
+					<img src="http://placeholdit.sinaapp.com/640x960" width="100%"  id="introduction"/>
+				</div>
+			</div>
+		</div>
+		
+		<div class="weui-row live-comment-area">
+			<div class="weui-col-80">
+				<input type="text" maxlength="50" placeholder="请输入评论内容..." class="live-comment-input" id="commentcontent" />
+			</div>
+			<div class="weui-col-20">
+				<a href="javascript:;" class="weui_btn live-comment-btn">发送</a>
+			</div>
+		</div>
+	</body>
+
+</html>
+<script src="//cdn.bootcss.com/zepto/1.1.6/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/damoo.min.js"></script>
+<script src="js/dropload.min.js"></script>
+<script src="http://develop.zsgd.com:11001/assets/layer-m/layer.m.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/print.js"></script>
+<script src="js/viewPC.js"></script>
+<script src="js/h5app.js"></script>
+<script src="js/constUtilVideos.js"></script>
+<script src="js/ref.js"></script>
+<script src="js/index.js"></script>
+

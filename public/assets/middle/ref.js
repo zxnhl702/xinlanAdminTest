@@ -178,6 +178,14 @@ var _checkAudioType = function(filename) {
 		return true;
 	}
 }
+//检查音频格式
+var _checkVideoType = function(filename) {
+	if (!/\.(mp4|MP4)$/.test(filename)) {
+		return false;
+	} else {
+		return true;
+	}
+}
 
 var _genPostAjax = function(url) {
 	return function(data, cb) {
@@ -250,4 +258,9 @@ var _isWeixin = function() {
 	} else {
 		return false;
 	}
+}
+
+var _isNumber = function(str) {
+	var pattern = /^\d+$/;
+	return pattern.test(str)
 }

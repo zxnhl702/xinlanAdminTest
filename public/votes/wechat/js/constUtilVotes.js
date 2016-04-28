@@ -1,8 +1,8 @@
 /**
  * 存放投票模块常量的js
  */
-var host = window.location.host;
 var domain = window.location.hostname;
+var host = domain + ":11002";
 // 后台ajax地址
 var ajaxURL = "http://"+host+"/xinlan/votes";
 // 微信js用初始化ajax地址

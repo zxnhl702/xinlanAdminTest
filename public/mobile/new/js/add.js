@@ -1,5 +1,5 @@
 $(function() {
-	var _callAjax = _genCallAjax("http://develop.zsgd.com:11002/xinlan/"),
+	var _callAjax = _genCallAjax("http://develop.wifizs.cn:11002/xinlan/"),
 			user_id = _getPar("user_id"),
 			privilege = _getPar("privilege"),
 			hot_id = _getPar("hot_id"),
@@ -40,7 +40,7 @@ $(function() {
 					later = content.substring(pos, content.length);
 			if (d.success) $("#editor1").val(former+"\n<img src='img/"+d.data+"'/>\n"+later);
 		},
-		"uploadUrl": "http://develop.zsgd.com:11002/xupload"
+		"uploadUrl": "http://develop.wifizs.cn:11002/xupload"
 	});
 
 	$("#publish-btn").click(function() {
@@ -76,6 +76,6 @@ $(function() {
 				});
 			});
 		}
-		
+
 	});
 });

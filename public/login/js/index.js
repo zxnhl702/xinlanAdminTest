@@ -1,5 +1,6 @@
 $(function() {
-	var host = window.location.host
+	var domain = window.location.hostname;
+	var host = domain + ":11002";
 	// 后台ajax地址
 	var ajaxURL = "http://" + host + "/xinlan/";
 	var _callAjax = _genCallAjax(ajaxURL);

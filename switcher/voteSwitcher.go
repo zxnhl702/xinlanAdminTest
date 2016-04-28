@@ -241,7 +241,31 @@ func VoteDispatch(db *sql.DB) Dlm {
 				moveFile(vote_img_root, vote_sub_fold, img, newImg, vote_id)
 				// 视频投票
 			} else if "2" == voteType {
-				// TODO
+				// 缩略图
+				thumb := GetParameter(r, "thumb")
+				// 投票项目编号
+				id, err := getVoteItemIdSeq(vote_id, db)
+				if nil != err {
+					// 删除已经上传的图片
+					os.Remove(vote_img_root + "/" + img)
+					os.Remove(vote_img_root + "/" + thumb)
+					panic("获取投票项目编号失败")
+				}
+				// 新视频名称
+				newImg := "v" + strconv.Itoa(id) + path.Ext(img)
+				// 新缩略图名称
+				newThumb := vote_item_thumb_prefix + strconv.Itoa(id) + path.Ext(thumb)
+				// 插入投票项目数据
+				err = newVoteItem(strconv.Itoa(id), vote_id, name, work, newImg, newThumb, db)
+				if nil != err {
+					// 删除已经上传的图片
+					os.Remove(vote_img_root + "/" + img)
+					os.Remove(vote_img_root + "/" + thumb)
+					panic("插入投票项目数据失败")
+				}
+				// 图片文件移动至指定文件夹
+				moveFile(vote_img_root, vote_sub_fold, img, newImg, vote_id)
+				moveFile(vote_img_root, vote_sub_fold, thumb, newThumb, vote_id)
 				// 文字投票
 			} else if "3" == voteType {
 				// 投票项目编号
@@ -605,7 +629,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			name := GetParameter(r, "name")
 			// 投票项目描述
 			work := GetParameter(r, "work")
-			// 大图/音频
+			// 大图/视频/音频
 			img := GetParameter(r, "img")
 			// 缩略图
 			thumb := GetParameter(r, "thumb")
@@ -627,13 +651,18 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 如果修改了大图
 			if "null" != img {
 				// 头图移动到对应文件夹
-				newImg := id + path.Ext(img)
+				var newImg string
+				if "2" == voteType {
+					newImg = "v" + id + path.Ext(img)
+				} else {
+					newImg = id + path.Ext(img)
+				}
 				moveFile(vote_img_root, vote_sub_fold, img, newImg, vote_id)
 			}
 			// 图片投票
-			if "0" == voteType {
+			if "0" == voteType || "2" == voteType {
 				// 如果修改了缩略图
-				if "null" != img {
+				if "null" != thumb {
 					// 头图移动到对应文件夹
 					newThumb := vote_item_thumb_prefix + id + path.Ext(thumb)
 					moveFile(vote_img_root, vote_sub_fold, thumb, newThumb, vote_id)

@@ -2,6 +2,8 @@
  * 投票管理页面的javascript
  */
 $(function() {
+	$('#newUploadProgress').hide();
+	$('#modifyUploadProgress').hide();
 	/**
 	 * 常量部分
 	 */
@@ -77,7 +79,8 @@ $(function() {
 					$("#row-img").html(img_html);
 				// 视频投票
 				} else if(2 == vote_type) {
-					// TODO
+					$("#row-img label").html('视频(仅限MP4): <span class="required">* </span>');
+					$("#new-img").attr("accept", "audio/mp4, video/mp4");
 				// 文字投票
 				} else if(3 == vote_type) {
 					$("#row-img").hide();
@@ -198,10 +201,14 @@ $(function() {
 			// 音频投票
 			} else if(1 == vote_type) {
 				$('<div class="audio-hover"><audio src="' + $(this).attr('data-dir')	 + '" display="none" autoplay="autoplay"></audio></div>').appendTo($(this));
+			// 视频投票
+			} else if(2 == vote_type) {
+				$('<div class="video-hover"><video src="' + $(this).attr('data-dir')	 + '"autoplay="autoplay" width="320"></video></div>').appendTo($(this));
 			}
 		},function(){
 			$('.item-list-img-hover').remove();
 			$('.audio-hover').remove();
+			$('.video-hover').remove();
 		})
 	};
 	
@@ -226,6 +233,13 @@ $(function() {
 			if (img == '') return "请选择图片";
 			if (!_checkAudioType(img))
 				return "音频格式只能是.mp3";
+		// 视频投票时 检测视频和缩略图格式
+		} else if(2 == vote_type) {
+			if (img == '') return "请选择视频";
+			if (thumb == '') return "请选择缩略图";
+			if (!_checkVideoType(img)) return "视频格式只能是.mp4";
+			if (!_checkImgType(thumb)) return "缩略图格式只能是.gif,jpeg,jpg,png中的一种";
+		// 文字投票
 		} else if(3 == vote_type) {
 			if(work == '') return "请填写文章内容"
 		}
@@ -269,10 +283,25 @@ $(function() {
 			"data": {
 				formfile: formfiles
 			},
+			"beforeSend": function() {
+				$('#newUploadProgress').show();
+				$('#status').empty();
+				var percentVal = '0%';
+				$('.bar').width(percentVal)
+				$('.percent').html(percentVal);
+			},
+			"uploadProgress": function(event, position, total, percentComplete) {
+				var percentVal = percentComplete + '%';
+				$('.bar').width(percentVal)
+				$('.percent').html(percentVal);
+			},
 			"success": function(d) {
 				if(!d.success) {
 					return _toast.show("上传图片失败，请重试");
 				}
+				var percentVal = '100%';
+				$('.bar').width(percentVal)
+				$('.percent').html(percentVal);
 				var filenames = d.data;
 				// 新增投票项目ajax
 				_callAjax({
@@ -285,6 +314,7 @@ $(function() {
 					"thumb":filenames[1]
 				}, function(d){
 					if (d.success) {
+						setTimeout(function() {$('#newUploadProgress').hide();}, 2000);
 						_toast.show("新增投票项目成功");
 						// 清空表单
 						uploadForm.clearForm();
@@ -346,7 +376,8 @@ $(function() {
 			$("#row2-img").html(img_html);
 		// 2 视频投票
 		} else if(2 == vote_type) {
-			// TODO
+			$("#row2-img label").html('视频(仅限MP4): ');
+			$("#modify-img").attr("accept", "audio/mp4, video/mp4");
 		// 3 文字投票
 		} else if(3 == vote_type) {
 			$("#row2-img").hide();
@@ -379,6 +410,13 @@ $(function() {
 			if("" != img && !_checkAudioType(img)) {
 				return _toast.show("音频格式只能是.mp3");
 			}
+		} else if(2 == vote_type) {
+			if("" != img && !_checkVideoType(img)) {
+				return _toast.show("视频格式只能是.mp4");
+			}
+			if("" != thumb && !_checkImgType(thumb)) {
+				return _toast.show("音频格式只能是.gif,jpeg,jpg,png中的一种");
+			}
 		} else if(3 == vote_type) {
 			work = $("#modify-work").val().replace(/\n/g, "<br>");
 		}
@@ -405,11 +443,25 @@ $(function() {
 			"data": {
 				formfile: formfiles
 			},
+			"beforeSend": function() {
+				$('#modifyUploadProgress').show();
+				$('#status').empty();
+				var percentVal = '0%';
+				$('.bar').width(percentVal)
+				$('.percent').html(percentVal);
+			},
+			"uploadProgress": function(event, position, total, percentComplete) {
+				var percentVal = percentComplete + '%';
+				$('.bar').width(percentVal)
+				$('.percent').html(percentVal);
+			},
 			"success": function(d) {
-				_tell(d);
 				if(false == d.success) {
 					return _toast.show("上传图片失败，请重试");
 				}
+				var percentVal = '100%';
+				$('.bar').width(percentVal)
+				$('.percent').html(percentVal);
 				var filenames = d.data;
 				if(name == $("#modify-name").parent().attr("data-original")) {
 					name = "null";
@@ -430,6 +482,7 @@ $(function() {
 				}, function(d){
 					_toast.show(d.errMsg);
 					if (d.success) {
+						setTimeout(function() {$('#modifyUploadProgress').hide();}, 2000);
 						// 清空表单
 						uploadForm.clearForm();
 						// 初始化投票项选择框数据

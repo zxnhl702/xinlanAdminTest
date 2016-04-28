@@ -11,6 +11,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/mattn/go-sqlite3"
+//	_ "github.com/go-sql-driver/mysql"
 	"io"
 	"io/ioutil"
 	"log"
@@ -244,16 +245,28 @@ func GenJsonpResult(r *http.Request, rt *Ret) []byte {
 
 // 根据模块连接数据库
 func GetModuleConnectDB(moduleName string) *sql.DB {
+//	return ConnectMySql()
 	switch moduleName {
 	case "votes":
 		return ConnectDB("middle.db")
 	case "quiz":
 		return ConnectDB("middle_quiz.db")
+	case "videos":
+		return ConnectDB("middle_video.db")
 	case "jssdk":
 		return ConnectDB(sw.JSSDK_DB_PATH)
 	default:
 		return ConnectDB("middle.db")
 	}
+}
+
+func ConnectMySql() *sql.DB {
+	dbinfo := sw.MYSQL_USERNAME + ":" + sw.MYSQL_PASSWORD + "@/" + sw.MYSQL_DATABASE + "?charset=utf8"
+	db, err := sql.Open(sw.MYSQL_DRIVER, dbinfo)
+	if err != nil {
+		panic(err)
+	}
+	return db
 }
 
 func ConnectDB(dbPath string) *sql.DB {
@@ -293,6 +306,8 @@ func GetModuleSwitcher(moduleName string, db *sql.DB) sw.Dlm {
 		switcher = sw.VoteDispatch(db)
 	case "jssdk":
 		switcher = sw.JssdkDispatch(db)
+	case "videos":
+		switcher = sw.VideoDispatch(db)
 	default:
 		switcher = sw.Dispatch(db)
 	}
