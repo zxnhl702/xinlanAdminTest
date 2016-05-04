@@ -43,7 +43,7 @@ $(function() {
 					"vote_for": id,
 					"vote_id": vote_id
 				}, function(d) {
-					_toast.show(d.errMsg);
+					_toast.confirm(d.errMsg);
 					if (d.success) {
 						var liCntElement = $("li[data-id="+id+"]").find(".cnt");
 						if (!!liCntElement) cnt = parseInt(liCntElement.text());
@@ -235,6 +235,9 @@ $(function() {
 			}, function(d) {
 				$(".load-container").hide();
 				if(d.success) {
+					if(1 == d.data.status) {
+						_toast.show(d.errMsg);
+					}
 					$("#candidates-count").text(d.data.itemCount);
 					$("#votes-count").text(parseInt(d.data.voteCount));
 					$("#clicks-count").text(d.data.clickCount);

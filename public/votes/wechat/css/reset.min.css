@@ -1148,3 +1148,7 @@ footer{
 	-webkit-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
 }
+.tipBox .inner,
+.popBox .inner {
+	font-size:18px
+}

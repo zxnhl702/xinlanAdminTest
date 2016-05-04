@@ -92,6 +92,8 @@ func VoteDispatch(db *sql.DB) Dlm {
 		// 认证&手机页面初始化
 		"auth": func(r *http.Request) (string, interface{}) {
 			newVoteVisitLog(r, db)
+			// 返回消息
+			msg := "验证成功"
 			// device_token
 			device_token := GetParameter(r, "device_token")
 			// 投票编号
@@ -108,7 +110,8 @@ func VoteDispatch(db *sql.DB) Dlm {
 				panic("活动不存在")
 			}
 			if 1 == voteStatus.Int64 {
-				panic("活动还未开始")
+//				panic("活动还未开始")
+				msg = "活动准备中 数据会被清除"
 			}
 			if 3 == voteStatus.Int64 {
 				panic("活动已经结束")
@@ -148,7 +151,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 				log.Println(err)
 				panic("认证失败5")
 			}
-			return "验证成功", v
+			return msg, v
 		},
 
 		// insert
@@ -562,6 +565,8 @@ func VoteDispatch(db *sql.DB) Dlm {
 		"updateVoteStatus": func(r *http.Request) (string, interface{}) {
 			// 投票编号
 			id := GetParameter(r, "id")
+			// 原活动状态
+			originStatus := GetParameter(r, "originStatus")
 			// 更新活动状态至
 			changeTo := GetParameter(r, "changeTo")
 			stmt, err := db.Prepare("update votes set isOnline = ? where id =?")
@@ -574,6 +579,11 @@ func VoteDispatch(db *sql.DB) Dlm {
 			if nil != err {
 				log.Println(err)
 				panic("更新投票活动状态失败2")
+			}
+			// 如果状态从准备中->进行中
+			if(originStatus == "1" && changeTo == "2") {
+				// 清除存在的投票数据
+				clearVoteDataByVoteId(id, db)
 			}
 			return "更新投票活动状态成功", nil
 		},
@@ -740,6 +750,8 @@ func VoteDispatch(db *sql.DB) Dlm {
 			vf := GetParameter(r, "vote_for")
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
+			// 投票活动状态
+			status := getVoteStatus(vote_id, db)
 			// 投票flag
 			var if_voted int
 			err := db.QueryRow("select if_voted from votes_app_user where device_token = ? and vote_id = ?", dt, vote_id).Scan(&if_voted)
@@ -766,7 +778,12 @@ func VoteDispatch(db *sql.DB) Dlm {
 
 			stmt, _ = db.Prepare("update votes_app_user set if_voted = 1 where device_token = ? and vote_id = ?")
 			stmt.Exec(dt, vote_id)
-			return "投票成功", nil
+			// 如果是准备中 提示投票数据会被
+			if 1 == status {
+				return "活动准备中 投票成功", nil
+			} else {
+				return "投票成功", nil
+			}
 		},
 
 		// delete
@@ -817,6 +834,20 @@ func VoteDispatch(db *sql.DB) Dlm {
 			return "删除投票项目成功", nil
 		},
 	}
+}
+
+// select
+// 获取投票状态
+func getVoteStatus(vote_id string, db *sql.DB) int {
+	// 检索sql
+	selectSql := "select isOnline from votes where id = ?"
+	var status int
+	err := db.QueryRow(selectSql, vote_id).Scan(&status)
+	if nil != err {
+		log.Println(err)
+		panic("获取投票状态失败")
+	}
+	return status
 }
 
 // insert
@@ -1002,6 +1033,19 @@ func updateVoteItemInfoById(id, vote_id, name, work string, db *sql.DB) bool {
 }
 
 // delelte
+// 删除投票数据
+func clearVoteDataByVoteId(vote_id string, db *sql.DB) bool {
+	// 投票信息
+	removeVoteInfoByVoteId(vote_id, db)
+	// 投票评论
+	removeVoteCommentsByVoteId(vote_id, db)
+	// 投票用户
+	removeVoteAppUserByVoteId(vote_id, db)
+	// 投票访问记录
+	removeVoteClicksByVoteId(vote_id, db)
+	return true
+}
+
 // 删除投票
 func removeVoteByVoteId(vote_id string, db *sql.DB) bool {
 	stmt, err := db.Prepare("delete from votes where id = ?")
