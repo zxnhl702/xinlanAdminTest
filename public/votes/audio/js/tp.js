@@ -43,7 +43,7 @@ $(function() {
 					"vote_for": id,
 					"vote_id": vote_id
 				}, function(d) {
-					_toast.confirm(d.errMsg);
+					_toast.info(d.errMsg);
 					if (d.success) {
 						var liCntElement = $("li[data-id="+id+"]").find(".cnt");
 						if (!!liCntElement) cnt = parseInt(liCntElement.text());

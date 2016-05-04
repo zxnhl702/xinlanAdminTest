@@ -37,7 +37,7 @@ $(function() {
 					"vote_for": id,
 					"vote_id": vote_id
 				}, function(d) {
-					_toast.confirm(d.errMsg);
+					_toast.info(d.errMsg);
 					if (d.success) {
 						var cnt = parseInt($("#datu-cnt").text());
 						var liCntElement = $("li[data-id="+id+"]").find(".cnt");
