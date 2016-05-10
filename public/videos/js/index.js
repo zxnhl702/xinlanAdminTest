@@ -61,6 +61,7 @@ $(function() {
 					$('#comment').text('评论('+r.commentCount+')');
 					$('#introduction').attr("src", userImgURL+r.introduction);
 					$('.live-video').attr("src", r.videostream);
+					$('.live-video').attr("poster", userImgURL+r.introduction);
 					getAllVideoCommentIdsCheck(video_id);
 					
 				});
