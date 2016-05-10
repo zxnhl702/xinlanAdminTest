@@ -48,6 +48,7 @@ $(function() {
 		var video_id = _getPar("video_id");
 		var allids = [];
 		var comments = [];
+		img = (img == "") ? "http://develop.wifizs.cn:11001/images/videos/default.jpg" : img;
 		
 		_callAjax({
 			"cmd":"getVideosByIds",
