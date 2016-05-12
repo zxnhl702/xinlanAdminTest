@@ -2,7 +2,8 @@ package switcher
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+//	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 	"os"
@@ -175,7 +176,7 @@ func Dispatch(db *sql.DB) Dlm {
 			// 异常情况下回滚
 			perrorWithRollBack(err, "插入新热点失败", tx)
 			// 插入新热点
-			stmt, err := tx.Prepare("insert into hots(title, description) values (?, ?)")
+			stmt, err := tx.Prepare("insert into hots(title, description, logdate) values (?, ?, now())")
 			perrorWithRollBack(err, "插入新热点失败", tx)
 			result, err := stmt.Exec(title, description)
 			perrorWithRollBack(err, "插入新热点失败", tx)
@@ -392,7 +393,7 @@ func Dispatch(db *sql.DB) Dlm {
 			limit := GetParameter(r, "limit")
 			//			log.Println("getRandomComments start", hot_id, limit)
 			var rc []RandomComment
-			rows, err := db.Query("select c.rowid, c.content from comments c, events e where e.id=c.event_id and e.hot_id = ? order by random() limit ?", hot_id, limit)
+			rows, err := db.Query("select c.rowid, c.content from comments c, events e where e.id=c.event_id and e.hot_id = ? order by rand() limit ?", hot_id, limit)
 			if err != nil {
 				panic("获取随机评论失败")
 			}
@@ -485,7 +486,7 @@ func tommorrow() string {
 }
 
 func GetEventsbyHot(hotId string, logBefore string, db *sql.DB) ([]Event, []int) {
-	rows, err := db.Query("select id, title, status, content, strftime('%Y-%m-%d %H:%M:%S', logdate), userid from events where hot_id = ? and logdate < ? order by id desc limit 5", hotId, logBefore)
+	rows, err := db.Query("select id, title, status, content, date_format(logdate, '%Y-%m-%d %H:%i:%s'), userid from events where hot_id = ? and logdate < ? order by id desc limit 5", hotId, logBefore)
 	if err != nil {
 		panic("events没有数据")
 	}
@@ -524,7 +525,7 @@ func GetCommentsIds(eventId string, db *sql.DB) []int {
 }
 
 func GetCommentsByEvent(eventId string, logdate string, db *sql.DB) []Comment {
-	rows, err := db.Query("select id, name, img, content,strftime('%Y-%m-%d, %H:%M:%S', logdate),event_id from comments where event_id = ? and logdate < ? order by id desc limit 5", eventId, logdate)
+	rows, err := db.Query("select id, name, img, content,date_format(logdate, '%Y-%m-%d %H:%i:%s'),event_id from comments where event_id = ? and logdate < ? order by id desc limit 5", eventId, logdate)
 	if err != nil {
 		panic("comments读取失败")
 	}
@@ -544,7 +545,7 @@ func GetCommentsByEvent(eventId string, logdate string, db *sql.DB) []Comment {
 }
 
 func NewEvent(title string, status string, content string, hotId string, userid string, db *sql.DB) {
-	stmt, err := db.Prepare("insert into events(title,status,content,hot_id,userid) values (?,?,?,?,?)")
+	stmt, err := db.Prepare("insert into events(title,status,content,hot_id,userid, logdate) values (?,?,?,?,?, now())")
 	if err != nil {
 		panic("event插入准备失败")
 	}
@@ -556,7 +557,7 @@ func NewEvent(title string, status string, content string, hotId string, userid 
 
 func NewComment(name string, img string, content string, eventId string, db *sql.DB) {
 	log.Print(name+" ", img+" ", content+" ", eventId)
-	stmt, err := db.Prepare("insert into comments(name,img,content,event_id) values(?,?,?,?)")
+	stmt, err := db.Prepare("insert into comments(name,img,content,event_id, logdate) values(?,?,?,?, now())")
 	if err != nil {
 		panic("comment插入准备失败！")
 	}
@@ -619,7 +620,7 @@ func GetEventsIds(hotId string, db *sql.DB) []int {
 func GetEventById(id string, db *sql.DB) EventWithCommentsCountAndZan {
 	log.Println(id)
 	var e EventWithCommentsCountAndZan
-	err := db.QueryRow("select e.id, e.title, e.status, e.content, strftime('%Y-%m-%d %H:%M:%S', e.logdate), e.userid, h.title from events e , hots h where e.id = ? and e.hot_id = h.id", id).Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId, &e.Hot_title)
+	err := db.QueryRow("select e.id, e.title, e.status, e.content, date_format(e.logdate, '%Y-%m-%d %H:%i:%s'), e.userid, h.title from events e , hots h where e.id = ? and e.hot_id = h.id", id).Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId, &e.Hot_title)
 	if err != nil {
 		log.Println(err)
 		panic("读取单条事件失败")
@@ -635,7 +636,7 @@ func GetSharedEventById(hot_id, event_id string, db *sql.DB) []Event {
 	log.Println(hot_id, event_id)
 	var e Event
 	var event[] Event
-	err := db.QueryRow("select e.id, e.title, e.status, e.content, strftime('%Y-%m-%d %H:%M:%S', e.logdate), e.userid from events e where e.hot_id = ? and e.id = ?", hot_id, event_id).Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId)
+	err := db.QueryRow("select e.id, e.title, e.status, e.content,  date_format(e.logdate, '%Y-%m-%d %H:%i:%s'), e.userid from events e where e.hot_id = ? and e.id = ?", hot_id, event_id).Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId)
 	if err != nil {
 		log.Println(err)
 		panic("读取单条事件失败")
@@ -647,7 +648,7 @@ func GetSharedEventById(hot_id, event_id string, db *sql.DB) []Event {
 
 func GetCommentById(id string, db *sql.DB) Comment {
 	var c Comment
-	err := db.QueryRow("select c.id,c.name,c.img,c.content,strftime('%Y-%m-%d %H:%M:%S',c.logdate),c.event_id from comments c where id = ?", id).Scan(&c.Id, &c.Name, &c.Img, &c.Content, &c.Logdate, &c.Event_id)
+	err := db.QueryRow("select c.id,c.name,c.img,c.content, date_format(c.logdate, '%Y-%m-%d %H:%i:%s'),c.event_id from comments c where id = ?", id).Scan(&c.Id, &c.Name, &c.Img, &c.Content, &c.Logdate, &c.Event_id)
 	if err != nil {
 		log.Println(err)
 		panic("获取单条评论失败")
@@ -658,7 +659,7 @@ func GetCommentById(id string, db *sql.DB) Comment {
 func GetHotById(id string, db *sql.DB) Hot {
 	var h Hot
 //	log.Println("GetHotById --> "+id)
-	err := db.QueryRow("select id, title, description, strftime('%Y-%m-%d %H:%M:%S', logdate) from hots where id = ?", id).Scan(&h.Id, &h.Title, &h.Description, &h.Logdate)
+	err := db.QueryRow("select id, title, description, date_format(logdate, '%Y-%m-%d %H:%i:%s') from hots where id = ?", id).Scan(&h.Id, &h.Title, &h.Description, &h.Logdate)
 	if err != nil {
 		log.Println(err)
 		panic("获取单条热点失败")

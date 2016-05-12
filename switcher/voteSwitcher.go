@@ -5,7 +5,8 @@ package switcher
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+//	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 	"os"
@@ -291,7 +292,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			comment := GetParameter(r, "comment")
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
-			_, err := db.Exec("insert into votes_comments(vote_id, comment) values(?, ?)", vote_id, comment)
+			_, err := db.Exec("insert into votes_comments(vote_id, comment, logdate) values(?, ?, now())", vote_id, comment)
 			if err != nil {
 				panic("评论失败")
 			}
@@ -452,7 +453,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
 			//			rows, err := db.Query("select rowid, comment from votes_comments where rowid < ? and vote_id = ? order by rowid desc limit ?", rowid, vote_id, amount)
-			rows, err := db.Query("select rowid, comment from votes_comments where vote_id = ? order by random() limit ?", vote_id, amount)
+			rows, err := db.Query("select comment from votes_comments where vote_id = ? order by rand() limit ?", vote_id, amount)
 			defer rows.Close()
 			if err != nil {
 				log.Println(err)
@@ -461,7 +462,8 @@ func VoteDispatch(db *sql.DB) Dlm {
 			var comments []VoteComment
 			for rows.Next() {
 				var c VoteComment
-				rows.Scan(&c.RowId, &c.Comment)
+				rows.Scan(&c.Comment)
+				c.RowId = 0
 				comments = append(comments, c)
 			}
 			return "获取评论成功", comments
@@ -765,7 +767,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			if "99999" == vf {
 				return "ok", nil
 			}
-			stmt, _ := db.Prepare("insert into votes_info (vote_id, vote_from, vote_for) values(?, ?, ?)")
+			stmt, _ := db.Prepare("insert into votes_info (vote_id, vote_from, vote_for, vote_datetime) values(?, ?, ?, now())")
 			defer stmt.Close()
 
 			for _, v := range strings.Split(vf, "|") {
@@ -785,7 +787,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 				return "投票成功", nil
 			}
 		},
-
+		
 		// delete
 		// 根据编号物理删除投票
 		"removeVoteById": func(r *http.Request) (string, interface{}) {
@@ -853,7 +855,7 @@ func getVoteStatus(vote_id string, db *sql.DB) int {
 // insert
 // 新增投票
 func newVote(title, topImg, profileImg, voteType string, db *sql.DB) sql.Result {
-	stmt, err := db.Prepare("insert into votes (title, topImg, profileImg, voteType) values (?, ?, ?, ?)")
+	stmt, err := db.Prepare("insert into votes (title, topImg, profileImg, voteType, logdate) values (?, ?, ?, ?, now())")
 	defer stmt.Close()
 	if nil != err {
 		log.Println(err)
@@ -908,7 +910,7 @@ func newVoteVisitLog(r *http.Request, db *sql.DB) {
 	ip := r.RemoteAddr
 	// 投票编号
 	vote_id := GetParameter(r, "vote_id")
-	stmt, err := db.Prepare("insert into votes_clicks (ip, vote_id) values (?, ?)")
+	stmt, err := db.Prepare("insert into votes_clicks (ip, vote_id, logdate) values (?, ?, now())")
 	defer stmt.Close()
 	if nil != err {
 		log.Println(err)

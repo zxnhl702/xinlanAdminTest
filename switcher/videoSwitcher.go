@@ -2,13 +2,15 @@ package switcher
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
+//	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Video struct {
@@ -19,26 +21,27 @@ type Video struct {
 	CommentCount int    `json:"commentCount"`
 }
 type VideoComment struct {
-	Id           int    `json:"id"`
-	Video_id     string `json:"videoid"`
-	Comment      string `json:"comment"`
-	Logdate      string `json:"logdate"`
-	User_id      int    `json:"userid"`
-	User_img     string `json:"userimg"`
-	User_name    string `json:"username"`
-	IsChecked    int    `json:"ischecked"`
+	Id        int    `json:"id"`
+	Video_id  string `json:"videoid"`
+	Comment   string `json:"comment"`
+	Logdate   string `json:"logdate"`
+	User_id   int    `json:"userid"`
+	User_img  string `json:"userimg"`
+	User_name string `json:"username"`
+	IsChecked int    `json:"ischecked"`
 }
 type Announcement struct {
 	Video_id     int    `json:"videoid"`
 	Announcement string `json:"announcement"`
 }
 type Reply struct {
-	Comment_id     int `json:"commentid"`
-	Reply          string `json:"reply"`
+	Comment_id int    `json:"commentid"`
+	Reply      string `json:"reply"`
 }
+
 func VideoDispatch(db *sql.DB) Dlm {
 	return Dlm{
-		"addClicks": func(r *http.Request) (string, interface{}) {	
+		"addClicks": func(r *http.Request) (string, interface{}) {
 			flag := false
 			var videoid int64
 			id, err2 := strconv.ParseInt(GetParameter(r, "video_id"), 10, 64)
@@ -83,15 +86,15 @@ func VideoDispatch(db *sql.DB) Dlm {
 		"getVideoIpCount": func(r *http.Request) (string, interface{}) {
 			var count int64
 			var addCount int64
-			err := db.QueryRow("select add_clicks from videos_addclicks where video_id=?",GetParameter(r, "video_id")).Scan(&addCount)
+			err := db.QueryRow("select add_clicks from videos_addclicks where video_id=?", GetParameter(r, "video_id")).Scan(&addCount)
 			if err != nil {
 				panic("获取增加访问量失败")
 			}
-			err = db.QueryRow("select count(*) from videos_clicks where video_id=?",GetParameter(r, "video_id")).Scan(&count)
+			err = db.QueryRow("select count(*) from videos_clicks where video_id=?", GetParameter(r, "video_id")).Scan(&count)
 			if err != nil {
 				panic("获取直播ip失败")
 			}
-			return "获取直播ip成功", addCount+count
+			return "获取直播ip成功", addCount + count
 		},
 		"getVideosIds": func(r *http.Request) (string, interface{}) {
 			rows, err := db.Query("select id from videos order by id desc")
@@ -117,13 +120,13 @@ func VideoDispatch(db *sql.DB) Dlm {
 			}
 			return "按ids获取热点成功", vi
 		},
-        "addComment": func(r *http.Request) (string, interface{}) {
-			stmt, err := db.Prepare("insert into videos_comments(video_id,comment,user_id,user_img,user_name) values(?,?,?,?,?)")
+		"addComment": func(r *http.Request) (string, interface{}) {
+			stmt, err := db.Prepare("insert into videos_comments(video_id,comment,logdate,user_id,user_img,user_name) values(?,?,?,?,?,?)")
 			if err != nil {
 				log.Println(err)
 				panic("插入评论失败")
 			}
-			_, err =stmt.Exec(GetParameter(r, "video_id"),GetParameter(r, "comment"),GetParameter(r, "user_id"),GetParameter(r, "user_img"),GetParameter(r, "user_name"))
+			_, err = stmt.Exec(GetParameter(r, "video_id"), GetParameter(r, "comment"), time.Now().Format("2006-01-02 15:04:05"), GetParameter(r, "user_id"), GetParameter(r, "user_img"), GetParameter(r, "user_name"))
 			defer stmt.Close()
 			if err != nil {
 				log.Println(err)
@@ -131,13 +134,13 @@ func VideoDispatch(db *sql.DB) Dlm {
 			}
 			return "添加评论成功", nil
 		},
-         "addCommentReply": func(r *http.Request) (string, interface{}) {
+		"addCommentReply": func(r *http.Request) (string, interface{}) {
 			stmt, err := db.Prepare("insert into videos_reply(comment_id,reply) values(?,?)")
 			if err != nil {
 				log.Println(err)
 				panic("插入回复失败")
 			}
-			_, err =stmt.Exec(GetParameter(r, "comment_id"),GetParameter(r, "reply"))
+			_, err = stmt.Exec(GetParameter(r, "comment_id"), GetParameter(r, "reply"))
 			defer stmt.Close()
 			if err != nil {
 				log.Println(err)
@@ -197,7 +200,7 @@ func VideoDispatch(db *sql.DB) Dlm {
 		"getVideoCommentByIds": func(r *http.Request) (string, interface{}) {
 			var cs []VideoComment
 			for _, i := range strings.Split(GetParameter(r, "ids"), "|") {
-				
+
 				cs = append(cs, GetVideoCommentById(i, db))
 			}
 			return "按ids取评论成功", cs
@@ -235,7 +238,7 @@ func VideoDispatch(db *sql.DB) Dlm {
 			}
 			for rows.Next() {
 				var r Reply
-				rows.Scan(&r.Comment_id,&r.Reply)
+				rows.Scan(&r.Comment_id, &r.Reply)
 				re = append(re, r)
 			}
 			return "获取公告成功", re
@@ -307,7 +310,7 @@ func VideoDispatch(db *sql.DB) Dlm {
 }*/
 func GetVideoCommentById(id string, db *sql.DB) VideoComment {
 	var c VideoComment
-	err := db.QueryRow("select c.id,c.video_id,c.comment,strftime('%Y-%m-%d %H:%M:%S',c.logdate),c.user_id,c.user_img,c.user_name,c.is_checked from videos_comments c where id = ?", id).Scan(&c.Id, &c.Video_id, &c.Comment, &c.Logdate, &c.User_id, &c.User_img, &c.User_name, &c.IsChecked)
+	err := db.QueryRow("select c.id,c.video_id,c.comment,c.logdate,c.user_id,c.user_img,c.user_name,c.is_checked from videos_comments c where id = ?", id).Scan(&c.Id, &c.Video_id, &c.Comment, &c.Logdate, &c.User_id, &c.User_img, &c.User_name, &c.IsChecked)
 	if err != nil {
 		log.Println(err)
 		panic("获取单条评论失败")
@@ -316,7 +319,7 @@ func GetVideoCommentById(id string, db *sql.DB) VideoComment {
 }
 func GetVideoCommentByIdCheck(id string, db *sql.DB) VideoComment {
 	var c VideoComment
-	err := db.QueryRow("select c.id,c.video_id,c.comment,strftime('%Y-%m-%d %H:%M:%S',c.logdate),c.user_id,c.user_img,c.user_name,c.is_checked from videos_comments c where id = ? and is_checked=1", id).Scan(&c.Id, &c.Video_id, &c.Comment, &c.Logdate, &c.User_id, &c.User_img, &c.User_name, &c.IsChecked)
+	err := db.QueryRow("select c.id,c.video_id,c.comment,c.logdate,c.user_id,c.user_img,c.user_name,c.is_checked from videos_comments c where id = ? and is_checked=1", id).Scan(&c.Id, &c.Video_id, &c.Comment, &c.Logdate, &c.User_id, &c.User_img, &c.User_name, &c.IsChecked)
 	if err != nil {
 		log.Println(err)
 		panic("获取单条评论失败")

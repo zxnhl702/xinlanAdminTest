@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"github.com/codegangsta/negroni"
 	"github.com/julienschmidt/httprouter"
-	_ "github.com/mattn/go-sqlite3"
-//	_ "github.com/go-sql-driver/mysql"
+//	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 	"io"
 	"io/ioutil"
 	"log"
@@ -202,7 +202,8 @@ func DlmVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params
 }
 
 func DlmHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	db := ConnectDB("./middle.db")
+//	db := ConnectDB("./middle.db")
+	db := ConnectMySql()
 
 	defer func() {
 		db.Close()
@@ -245,19 +246,19 @@ func GenJsonpResult(r *http.Request, rt *Ret) []byte {
 
 // 根据模块连接数据库
 func GetModuleConnectDB(moduleName string) *sql.DB {
-//	return ConnectMySql()
-	switch moduleName {
-	case "votes":
-		return ConnectDB("middle.db")
-	case "quiz":
-		return ConnectDB("middle_quiz.db")
-	case "videos":
-		return ConnectDB("middle_video.db")
-	case "jssdk":
-		return ConnectDB(sw.JSSDK_DB_PATH)
-	default:
-		return ConnectDB("middle.db")
-	}
+	return ConnectMySql()
+//	switch moduleName {
+//	case "votes":
+//		return ConnectDB("middle.db")
+//	case "quiz":
+//		return ConnectDB("middle_quiz.db")
+//	case "videos":
+//		return ConnectDB("middle_video.db")
+//	case "jssdk":
+//		return ConnectDB(sw.JSSDK_DB_PATH)
+//	default:
+//		return ConnectDB("middle.db")
+//	}
 }
 
 func ConnectMySql() *sql.DB {
