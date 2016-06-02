@@ -8,6 +8,8 @@
  * 		后台调用的函数入口，包括：
  * 		# getConfig 用于url为http://XXXXX/XX.html?XX=XX
  * 		# getConfig2 用于url为http://XXXXX/XX.html
+ * 		# getConfigWithWXName 用于url为http://XXXXX/XX.html?from=XXX&XX=XX 
+ * 			其中from参数是活动的微信公众号 传到后台的参数除了url外还需要取url上的参数from转到后台
  * 		此处的url均指不带openid等微信代过来的参数情况下的原始url
  * 1.3 url
  * 		页面传到后台的地址，必须是当前页面完整的地址，否则微信验证通不过
