@@ -87,6 +87,13 @@ type VoteComment struct {
 	Comment string `json:"comment"` //评论内容
 }
 
+// 投票评论结构体
+type VoteComments struct {
+	Id      int     `json:"id"`      // 评论编号
+	Comment string `json:"comment"` // 评论内容
+	Logdate string `json:"logdate"` // 登记时间
+}
+
 func VoteDispatch(db *sql.DB) Dlm {
 	return Dlm{
 
@@ -100,9 +107,6 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
 			// 检测投票是否上线
-			//			var voteCount int
-			//			var voteStatus int
-			//			err := db.QueryRow("select count(id), isOnline from votes where id = ? and isOnline > 0", vote_id).Scan(&voteCount, &voteStatus)
 			var voteStatus sql.NullInt64
 			var voteTitle sql.NullString
 			err := db.QueryRow("select title, isOnline from votes where id = ? and isOnline > 0", vote_id).Scan(&voteTitle, &voteStatus)
@@ -561,6 +565,50 @@ func VoteDispatch(db *sql.DB) Dlm {
 			vi := getVoteItemById(id, vote_id, db)
 			return "获得投票项信息成功", vi
 		},
+		
+		// 获取投票评论编号
+		"getVoteCommentsIds": func(r *http.Request) (string, interface{}) {
+			// 投票编号
+			vote_id := GetParameter(r, "vote_id")
+			rows, err := db.Query("select id from votes_comments where vote_id = ? order by id desc", vote_id)
+			defer rows.Close()
+			if nil != err {
+				log.Println(err)
+				panic("获取投票评论编号失败")
+			}
+			var ids []int
+			for rows.Next() {
+				var id int
+				rows.Scan(&id)
+				ids = append(ids, id)
+			}
+			return "获取投票评论编号成功", ids
+		},
+		
+		// 根据编号获取投票评论
+		"getAllVoteCommentsByIds": func(r *http.Request) (string, interface{}) {
+			// 投票编号
+			vote_id := GetParameter(r, "vote_id")
+			// 评论编号
+			ids := GetParameter(r, "ids")
+			idlist := strings.Replace(ids, "|", ",", -1)
+			log.Println(ids)
+			log.Println(idlist)
+			rows, err := db.Query("select id, comment, date_format(logdate, '%Y-%m-%d %H:%i:%S') from votes_comments where vote_id = ? and id in (" + idlist + ")", vote_id)
+			defer rows.Close()
+			if nil != err {
+				log.Println(err)
+				panic("获取评论内容失败")
+			}
+			var vList []VoteComments
+			for rows.Next() {
+				var v VoteComments
+				rows.Scan(&v.Id, &v.Comment, &v.Logdate)
+				vList = append(vList, v)
+			}
+			log.Println(vList)
+			return "获取评论内容成功", vList
+		},
 
 		// update
 		// 更新投票活动状态
@@ -742,7 +790,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "逻辑删除投票项目成功", nil
 		},
-
+		
 		// 投票
 		"vote_for": func(r *http.Request) (string, interface{}) {
 			newVoteVisitLog(r, db)
@@ -834,6 +882,24 @@ func VoteDispatch(db *sql.DB) Dlm {
 				panic("删除投票项目失败2")
 			}
 			return "删除投票项目成功", nil
+		},
+		
+		// 根据评论编号删除投票评论
+		"removeVoteCommentById": func(r *http.Request) (string, interface{}) {
+			// 评论编号
+			id := GetParameter(r, "id")
+			stmt, err := db.Prepare("delete from votes_comments where id = ?")
+			defer stmt.Close()
+			if nil != err {
+				log.Println(err)
+				panic("删除投票评论失败")
+			}
+			_, err = stmt.Exec(id)
+			if nil != err {
+				log.Println(err)
+				panic("删除投票评论失败2")
+			}
+			return "删除投票评论成功", nil
 		},
 	}
 }

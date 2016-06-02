@@ -57,6 +57,7 @@ $(function() {
 						'<a href="javascript:;" title="" class="btn medium bg-blue" data-toggle="dropdown"><span class="button-content"><i class="glyph-icon font-size-11 icon-cog"></i><i class="glyph-icon font-size-11 icon-chevron-down"></i></span></a>' +
 						'<ul class="dropdown-menu float-right">' + 
 						'<li><a href="javascript:;" title=""><i class="glyph-icon icon-gear mrg5R"></i> 投票项管理</a></li>' + 
+						'<li><a href="javascript:;" title=""><i class="glyph-icon icon-comment mrg5R"></i> 评论管理</a></li>' + 
 						'<li ><a href="javascript:;" title=""><i class="glyph-icon icon-circle mrg5R"></i>' + 
 						'<label data-status="' + r.status + '"> ' + voteOpButtonName[r.status] + '<label></a></li>' + 
 						'<li class="divider"></li>' + 
@@ -67,6 +68,13 @@ $(function() {
 			// 跳转到管理投票页面
 			e.find("a:has(.icon-gear)").click(function() {
 				location.href = "vote-manage.html?vote_id=" + r.id + 
+												"&user_id=" + user_id + 
+												"&privilege=" + privilege;
+			});
+			
+			// 跳转到评论管理页面
+			e.find("a:has(.icon-comment)").click(function() {
+				location.href = "vote-comments.html?vote_id=" + r.id + 
 												"&user_id=" + user_id + 
 												"&privilege=" + privilege;
 			});
