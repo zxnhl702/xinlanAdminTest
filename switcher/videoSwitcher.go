@@ -38,6 +38,10 @@ type Reply struct {
 	Comment_id int    `json:"commentid"`
 	Reply      string `json:"reply"`
 }
+type Program struct {
+	Video_id int    `json:"videoid"`
+	Program  string `json:"program"`
+}
 
 func VideoDispatch(db *sql.DB) Dlm {
 	return Dlm{
@@ -293,6 +297,36 @@ func VideoDispatch(db *sql.DB) Dlm {
 			}
 
 			return "更新公告成功", nil
+		},
+		"getProgram": func(r *http.Request) (string, interface{}) {
+			var p Program
+			err := db.QueryRow("select video_id,program from videos_program where video_id=?", GetParameter(r, "video_id")).Scan(&p.Video_id, &p.Program)
+			if err != nil {
+				panic("更新准备失败")
+			}
+			return "获取节目成功", p
+		},
+		"addProgram": func(r *http.Request) (string, interface{}) {
+			stmt, err := db.Prepare("insert into videos_program(video_id,program) values (?,?)")
+			if err != nil {
+				panic("插入准备失败")
+			}
+			_, err = stmt.Exec(GetParameter(r, "video_id"), GetParameter(r, "program"))
+			if err != nil {
+				panic("插入节目失败！")
+			}
+			return "添加节目成功", nil
+		},
+		"updateProgram": func(r *http.Request) (string, interface{}) {
+			stmt, err := db.Prepare("update videos_program set program=? where video_id=?")
+			if err != nil {
+				panic("更新准备失败")
+			}
+			_, err = stmt.Exec(GetParameter(r, "program"), GetParameter(r, "video_id"))
+			if err != nil {
+				panic("更新节目失败！")
+			}
+			return "更新节目成功", nil
 		},
 	}
 }

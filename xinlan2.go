@@ -38,6 +38,7 @@ func main() {
 	rt.GET("/xinlan", DlmHandler)
 	rt.GET("/xinlan/:module", DlmVoteHandler)
 	rt.POST("/upload", UploadHandler)
+	rt.POST("/videosupload", UploadVideosHandler)
 	rt.POST("/upload/:module", UploadVoteHandler)
 	rt.POST("/xupload", xupload.UploadHandler)
 
@@ -171,6 +172,35 @@ func UploadHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params)
 	callback := sw.GetParameter(r, "CKEditorFuncNum")
 	log.Println("callback: " + callback) // ----- TEST
 	fmt.Fprintf(rw, "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction("+callback+",'"+sw.HOTS_IMG_URL+filename+"','')</script>")
+}
+func UploadVideosHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	r.ParseMultipartForm(32 << 20)
+	file, handle, err := r.FormFile("upload")
+	if err != nil {
+		log.Println(err)
+		panic("上传失败")
+	}
+	defer file.Close()
+
+	// filename
+	filename := handle.Filename
+	log.Println(filename)
+	// ext := SubString(filename, strings.LastIndex(filename, "."), 4)
+	filename = GetGuid() + path.Ext(filename)
+
+	// save file
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		panic("读取文件数据失败")
+	}
+	err = ioutil.WriteFile(sw.VIDEO_IMG_ROOT+"/"+filename, data, 0777)
+	if err != nil {
+		log.Println(err)
+		panic("保存文件失败")
+	}
+	callback := sw.GetParameter(r, "CKEditorFuncNum")
+	log.Println("callback: " + callback) // ----- TEST
+	fmt.Fprintf(rw, "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction("+callback+",'"+sw.VIDEOS_IMG_URL+filename+"','')</script>")
 }
 
 // 投票的业务句柄

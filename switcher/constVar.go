@@ -28,7 +28,8 @@ const (
 
 	// 热点模块图片url
 	HOTS_IMG_URL = "http://127.0.0.1:11001/images/hots/"
-	
+	// 直播模块图片url
+	VIDEOS_IMG_URL = "http://127.0.0.1:11001/images/videos/"
 	// 程序端口号
 	SERVER_PORT = ":11002"
 	

@@ -60,14 +60,27 @@ $(function() {
 					$('#videotitle').text(r.title);
 					$('#videoname').text(r.title);
 					$('#comment').text('评论('+r.commentCount+')');
-					$('#introduction').attr("src", userImgURL+r.introduction);
+					//$('#introduction').attr("src", userImgURL+r.introduction);
 					$('.live-video').attr("src", r.videostream);
 					$('.live-video').attr("poster", userImgURL+r.introduction);
+					getProgram();
 					getAllVideoCommentIdsCheck(video_id);
-					
 				});
 			}
 		});
+		 var getProgram = function(){
+			 _callAjax({
+				"cmd":"getProgram",
+				"video_id":video_id
+			}, function(d) {
+		        if(d.success){
+					//alert(d.data.program);
+					$('#program').html(d.data.program);
+				}
+				
+			});
+		}
+		
 		var getAllVideoCommentIdsCheck=function(videoid){
         	_callAjax({
 				"cmd":"getAllVideoCommentIdsCheck",
