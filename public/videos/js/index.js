@@ -269,17 +269,29 @@ $(function() {
 	};
 	
 
-	 //debug 用
-//	 var _wxzs = function(o) {
+	//debug 用
+//	var _wxzs = function(o) {
 //		o.callback({
-//	 		"username":"倪哥",
-//	 		"picurl":"user2.jpg",
+//			"username":"倪哥",
+//			"picurl":"user2.jpg",
 //			"userid":"2"
-//	 	},"userid",o._callAjax);
-//	 }
+//		},"userid",o._callAjax);
+//	}
+	
+	if(_isWeixin()) {
+		var _wxzs1 = function(o) {
+			o.callback({
+				"username":_getPar("nickname"),
+				"picurl":_getPar("headimgurl"),
+				"userid":_getPar("openid")
+			},"userid",o._callAjax);
+		}
+	} else {
+		var _wxzs1 = _wxzs;
+	}
 
 	var only_for_user = true;
-	_wxzs({
+	_wxzs1({
 		"callback": h5_cb,
 		"_callAjax": _genCallAjax(ajaxURL)
 	}, only_for_user);

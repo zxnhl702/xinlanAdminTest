@@ -25,7 +25,7 @@ type VideoComment struct {
 	Video_id  string `json:"videoid"`
 	Comment   string `json:"comment"`
 	Logdate   string `json:"logdate"`
-	User_id   int    `json:"userid"`
+	User_id   string `json:"userid"`
 	User_img  string `json:"userimg"`
 	User_name string `json:"username"`
 	IsChecked int    `json:"ischecked"`
