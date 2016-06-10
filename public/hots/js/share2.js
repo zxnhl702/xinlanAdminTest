@@ -41,6 +41,13 @@ $(function() {
 				minEvnetId = r.id;
 			}
 		});
+		$('.list-main>article>p>video').bind('tap',function() {
+			if($(this)[0].paused) {
+				$(this)[0].play();
+			} else {
+				$(this)[0].pause();
+			}
+		});
 	}
 	
 	//  ajax取热点标题、报道数、访问量、热点描述

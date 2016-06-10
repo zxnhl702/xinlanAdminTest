@@ -20,6 +20,7 @@ import (
 	"strings"
 	"time"
 	sw "xinlanAdminTest/switcher"
+	ue "xinlanAdminTest/ueditor"
 	xupload "xinlanAdminTest/xinlanUpload"
 )
 
@@ -37,6 +38,8 @@ func main() {
 	rt.GET("/getGuid", GetGuidHandler)
 	rt.GET("/xinlan", DlmHandler)
 	rt.GET("/xinlan/:module", DlmVoteHandler)
+	rt.GET("/ueditor/:module", ue.UeditorHandler)
+	rt.POST("/ueditor/:module", ue.UeditorUploadHandler)
 	rt.POST("/upload", UploadHandler)
 	rt.POST("/videosupload", UploadVideosHandler)
 	rt.POST("/upload/:module", UploadVoteHandler)

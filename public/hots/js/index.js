@@ -117,6 +117,13 @@ $(function() {
 						$(this).hide();
 					});
 				});
+				$('.list-main>article>p>video').bind('tap',function() {
+					if($(this)[0].paused) {
+						$(this)[0].play();
+					} else {
+						$(this)[0].pause();
+					}
+				});
 //			$('.list-main img').on('touchstart',function(){
 //				$('.layer').show().find('img').attr('src',$(this).attr('src'))
 //				$('.layer').on('touchstart',function(){

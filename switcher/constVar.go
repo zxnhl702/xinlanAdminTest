@@ -26,15 +26,17 @@ const (
 	// 直播模块图片存放基准路径
 	VIDEO_IMG_ROOT = IMG_ROOT + "/videos"
 
+	// 图片基准url
+	IMG_ROOT_URL = "http://127.0.0.1:11001/images/"
 	// 热点模块图片url
-	HOTS_IMG_URL = "http://127.0.0.1:11001/images/hots/"
+	HOTS_IMG_URL = IMG_ROOT_URL + "hots/"
 	// 直播模块图片url
-	VIDEOS_IMG_URL = "http://127.0.0.1:11001/images/videos/"
+	VIDEOS_IMG_URL = IMG_ROOT_URL + "videos/"
 	// 程序端口号
 	SERVER_PORT = ":11002"
 	
 	// JS-SDK 数据库路径
-	JSSDK_DB_PATH = "/home/zhangxiangnan/Goproject/src/auth/middle.db"
+	JSSDK_DB_PATH = "/home/zhangxiangnan/GoProject/src/auth/middle.db"
 	
 	// mysql定义部分
 	MYSQL_DRIVER = "mysql"

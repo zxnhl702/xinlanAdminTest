@@ -1,13 +1,15 @@
+// ueditor在线编辑器 读取配置文件、上传文件的基准路径（带模块名称——“”部分）
+var ueditorURL = UeditorURL + "/hots";
 $(function() {
 	var _callAjax = _genCallAjax(ajaxRootURL);
-
+	var ue = UE.getEditor('editor');
+	
 	var user_id = _getPar("user_id");
 	var privilege = _getPar("privilege");
 	var hot_id = _getPar("hot_id");
 	var event_id = _getPar("event_id");
 	
 	var ifMobile = $(window).width() < 640;
-
 	if (ifMobile) {
 		var url = "/mobile/new/index.html?user_id="+user_id+"&privilege="+privilege; // MOBILE UPLOAD
 		if (hot_id != '') url += "&hot_id="+hot_id;
@@ -25,7 +27,10 @@ $(function() {
 		$("#status").val(e["status"]);
 		// $("#editor1").html(e.content);
 		if (!ifMobile) {
-			CKEDITOR.instances.editor1.setData(e.content);
+			ue.ready(function() {
+				ue.setContent(e.content);
+			});
+//			CKEDITOR.instances.editor1.setData(e.content);
 		} else {
 			$("#event-content-wrapper").after('<div class="form-label col-md-2 bottom-margin clearfix" id="attachment-btns-wrapper"> <a class="btn medium primary-bg" style=" float: left; " id="file-sel-btn"><span class="button-content">文件</span></a><div style=" float: left; margin: 0px 10px; " id="file-sel-show"></div><a class="btn medium primary-bg" id="upload-btn"><span class="button-content">上传</span></a> </div>');		
 			$("#editor1").html(e.content);
@@ -76,7 +81,8 @@ $(function() {
 				// sts = $("#status").val().replace(/\s/g, ""),
 				sts = "";
 		if (!ifMobile) {
-			var content = CKEDITOR.instances.editor1.getData();
+//			var content = CKEDITOR.instances.editor1.getData();
+			var content = ue.getContent();
 		} else {
 			var content = $("#editor1").val();
 		}

@@ -9,6 +9,8 @@ var ajaxRootURL = "http://"+host+"/xinlan";
 var imgRootURL = "http://" + domain + ":11001/images";
 // 后台上传图片基准地址
 var fileUploadRootURL = "http://"+host+"/upload";
+// Ueditor配置的地址
+var UeditorURL = "http://"+host+"/ueditor";
 
 // 图文直播后台头图上传地址
 var fileUploadHotTopimgURL = fileUploadRootURL + "/hots";
