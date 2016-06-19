@@ -232,7 +232,7 @@ $(function() {
 					var urlSearch = "vote_id=" + vote_id;
 					if(weixinLogin) {
 						var openid = _getPar("openid");
-						urlSearch += "&openid=" + openid;
+						urlSearch += "&openid=" + openid + "&state=" + _getPar("state");
 					}
 					$("#goIndex").attr("href", "index.html?" + urlSearch);
 					$("#goProfile").attr("href", "profile.html?" + urlSearch);

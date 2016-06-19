@@ -474,6 +474,52 @@ func Dispatch(db *sql.DB) Dlm {
 			}
 			return "获取分享页成功", sc
 		},
+		
+		// 获取本次热点直播的评论
+		"getHotComments": func(r *http.Request) (string, interface{}) {
+			// 检索sql
+			selectSql := `select c.id, c.name, c.img, c.content, 
+				date_format(c.logdate, '%Y-%m-%d %H:%i:%s'), c.event_id 
+				from comments c, events e 
+				where c.id > ? and c.event_id = e.id and e.hot_id = ? order by c.id limit ?`
+			hot_id := GetParameter(r, "hot_id")
+			from := GetParameter(r, "from")
+			limit := GetParameter(r, "limit")
+			var cList []Comment
+			rows, err := db.Query(selectSql, from, hot_id, limit)
+			defer rows.Close()
+			if nil != err {
+				log.Println(err)
+				panic("获取本次热点直播评论失败")
+			}
+			for rows.Next() {
+				var c Comment
+				rows.Scan(&c.Id, &c.Name, &c.Img, &c.Content, &c.Logdate, &c.Event_id)
+				cList = append(cList, c)
+			}
+			return "获取本次热点直播评论成功", cList
+		},
+		
+		// 获取本条事件全部评论
+		"getEventComments": func(r *http.Request) (string, interface{}) {
+			var (
+				cs  []Comment
+				ids []int
+			)
+			rows, err := db.Query("select id from comments where event_id = ? and id < ? order by id desc", GetParameter(r, "event_id"), GetParameter(r, "from"))
+			if err != nil {
+				panic("获取本条事件全部评论id失败")
+			}
+			for rows.Next() {
+				var id int
+				rows.Scan(&id)
+				ids = append(ids, id)
+			}
+			for _, i := range ids {
+				cs = append(cs, GetCommentById(strconv.Itoa(i), db))
+			}
+			return "获取本条事件全部评论成功", cs
+		},
 	}
 }
 

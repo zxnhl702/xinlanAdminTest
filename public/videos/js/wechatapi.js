@@ -55,7 +55,7 @@ $(function() {
 			_wechatAjax({
 				"cmd": cmd,
 				"url": url,
-				"weixin": _getPar("state")
+				"state": _getPar("state")
 			}, function(d) {
 				if(d.success) {
 					// 如果分享用链接没有在js文件开头定义，则使用后台传来的参数与常量中的URL模版拼接生成链接

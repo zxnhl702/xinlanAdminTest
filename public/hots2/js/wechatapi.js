@@ -29,7 +29,7 @@
  */
 $(function() {
 	// 是否是微信登陆
-	var weixinLogin = _isWeixin()||debugMod;
+	var weixinLogin = _isWeixin();
 	// 微信登陆的情况下
 	if(weixinLogin) {
 		// ajax后台URL
@@ -43,11 +43,11 @@ $(function() {
 		// 分享用链接
 		var shareURL = "";
 		// 分享用图标
-		var shareImg = imgURL + "/vote_" + _getPar("vote_id") + "/banner.jpg";
+		var shareImg = "http://"+userImgURL+"/images/hots/top_img"+ _getPar("hot_id")+".jpg";
 		// 分享用标题
 		var shareTitle = $("title").text();
 		// 分享用描述
-		var shareDesc = $("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。"
+		var shareDesc = $("title").text();
 		// 加载js文件
 		$.getScript('http://res.wx.qq.com/open/js/jweixin-1.0.0.js', function() {
 			// 微信配置
@@ -115,8 +115,8 @@ $(function() {
 				
 				// 监听“分享给朋友”，按钮点击、自定义分享内容及分享结果接口
 				wx.onMenuShareAppMessage({
-					title: shareTitle,//$("title").text(),
-					desc: shareDesc,//$("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
+					title: $("title").text(),
+					desc: $("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
 					link: shareURL,//'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee6284b0c702c21e&redirect_uri=http%3A%2F%2Fdevelop.zsgd.com%3A11010%2Fauth%3Fcmd%3Dauth%26callback%3Dnil%26token%3DJh2044695&response_type=code&scope=snsapi_userinfo&state=vote11#wechat_redirect',
 					imgUrl: shareImg,//'http://develop.zsgd.com:11001/images/xinlanUser/1.jpg',
 					trigger: function (res) {
@@ -138,8 +138,8 @@ $(function() {
 				
 				// 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
 				wx.onMenuShareTimeline({
-					title: shareTitle,//$("title").text(),
-					desc: shareDesc,//$("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
+					title: $("title").text(),
+					desc: $("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
 					link: shareURL,//'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee6284b0c702c21e&redirect_uri=http%3A%2F%2Fdevelop.zsgd.com%3A11010%2Fauth%3Fcmd%3Dauth%26callback%3Dnil%26token%3DJh2044695&response_type=code&scope=snsapi_userinfo&state=vote11#wechat_redirect',
 					imgUrl: shareImg,//'http://develop.zsgd.com:11001/images/xinlanUser/1.jpg',
 					trigger: function (res) {
@@ -161,8 +161,8 @@ $(function() {
 				
 				// 监听“分享到QQ”按钮点击、自定义分享内容及分享结果接口
 				wx.onMenuShareQQ({
-					title: shareTitle,//$("title").text(),
-					desc: shareDesc,//$("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
+					title: $("title").text(),
+					desc: $("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
 					link: shareURL,//'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee6284b0c702c21e&redirect_uri=http%3A%2F%2Fdevelop.zsgd.com%3A11010%2Fauth%3Fcmd%3Dauth%26callback%3Dnil%26token%3DJh2044695&response_type=code&scope=snsapi_userinfo&state=vote11#wechat_redirect',
 					imgUrl: shareImg,//'http://develop.zsgd.com:11001/images/xinlanUser/1.jpg',
 					trigger: function (res) {
@@ -184,8 +184,8 @@ $(function() {
 				
 				// 监听“分享到微博”按钮点击、自定义分享内容及分享结果接口
 				wx.onMenuShareWeibo({
-					title: shareTitle,//$("title").text(),
-					desc: shareDesc,//$("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
+					title: $("title").text(),
+					desc: $("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
 					link: shareURL,//'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee6284b0c702c21e&redirect_uri=http%3A%2F%2Fdevelop.zsgd.com%3A11010%2Fauth%3Fcmd%3Dauth%26callback%3Dnil%26token%3DJh2044695&response_type=code&scope=snsapi_userinfo&state=vote11#wechat_redirect',
 					imgUrl: shareImg,//'http://develop.zsgd.com:11001/images/xinlanUser/1.jpg',
 					trigger: function (res) {
@@ -207,8 +207,8 @@ $(function() {
 				
 				// 监听“分享到QQ空间”按钮点击、自定义分享内容及分享结果接口
 				wx.onMenuShareQZone({
-					title: shareTitle,//$("title").text(),
-					desc: shareDesc,//$("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
+					title: $("title").text(),
+					desc: $("title").text() + " 活动等你来参加！本活动技术支持：新蓝广科。",
 					link: shareURL,//'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxee6284b0c702c21e&redirect_uri=http%3A%2F%2Fdevelop.zsgd.com%3A11010%2Fauth%3Fcmd%3Dauth%26callback%3Dnil%26token%3DJh2044695&response_type=code&scope=snsapi_userinfo&state=vote11#wechat_redirect',
 					imgUrl: shareImg,//'http://develop.zsgd.com:11001/images/xinlanUser/1.jpg',
 					trigger: function (res) {

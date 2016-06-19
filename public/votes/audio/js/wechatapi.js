@@ -35,7 +35,7 @@ $(function() {
 		// ajax后台URL
 		var callAjaxURL = wxAjaxURL;
 		// 微信js-sdk参数计算的入口
-		var cmd = "getConfig";
+		var cmd = "getConfigWithAuthKey";
 		// 页面地址
 		var url = window.location.href.split("#")[0];
 		// 是否开启微信js-sdk自带的调试
@@ -55,6 +55,7 @@ $(function() {
 			_wechatAjax({
 				"cmd": cmd,
 				"url": url,
+				"state": _getPar("state")
 			}, function(d) {
 				if(d.success) {
 					// 如果分享用链接没有在js文件开头定义，则使用后台传来的参数与常量中的URL模版拼接生成链接

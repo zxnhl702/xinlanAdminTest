@@ -37,8 +37,6 @@ $(function() {
 			var updateEvents = function(d) {
 				if(d.data == null) return _toast.show("全部加载完成，没有更多数据！");
 				d.data.forEach(function(r) {
-							// _tell(users);
-							// _tell(parseInt(_get("xinlan_id"))-1);
 					var str = '<div class="list clearfix mt10 mb5" data-id='+r.id+'> <div class="list-logo l"><img src="http://60.190.176.70:11001/images/xinlanUser/'+r.userid+'.jpg" width="100%"/><p class="tc">'+users[parseInt(r.userid)-1]+'</p></div> <div class="list-main rel r bg_light pct70 p10"> <header> <h6 class="mt1 calm">'+r.title+'<b class="f12 n ml10 assertive" id="share">'+'<img src="img/share.png" width="10">'+' 分享'+'</b></h6> <time class="g9">'+_howLongAgo(r.logdate)+'</time> </header> <article class="mt10 f16">'+r.content+'</article> <div class="list-footer bg_light pct100 clearfix tc pt10 pb5 g6 bte mt10"> <span class="l rel zan">'+r.zan+'</span> <span class="r rel pl10 comment-count" if-shown=0>评论 '+r.commentsCount+'</span> </div> </div> <div class="event-comments bg_light pct70 p10 mt5 r dn" if-shown=0><ul></ul><span class="btn bg_positive pct100 p0 pt5 pb5 comments-more">查看更多</span></div></div>';
 					var e = $(str).appendTo("#events");
 					e.find(".zan").bind('touchstart',function(){
