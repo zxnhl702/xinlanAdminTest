@@ -145,7 +145,7 @@ $(function(){
 						var event_id = r.id;
 						_share({
 							"content":"直播！"+r.title,
-							"content_url":"http://"+host+"/hots/share2.html?"+hot_id+","+event_id+",",
+							"content_url":"http://"+host+"/hots2/share2.html?"+hot_id+","+event_id+",",
 							"pic":"http://"+host+"/hots/img/top_img"+ hot_id+".jpg"
 						});
 					});
