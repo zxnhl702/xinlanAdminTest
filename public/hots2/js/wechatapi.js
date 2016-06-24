@@ -43,7 +43,7 @@ $(function() {
 		// 分享用链接
 		var shareURL = "";
 		// 分享用图标
-		var shareImg = "http://"+userImgURL+"/images/hots/top_img"+ _getPar("hot_id")+".jpg";
+		var shareImg = userImgURL+"/hots/top_img"+ _getPar("hot_id")+".jpg";
 		// 分享用标题
 		var shareTitle = $("title").text();
 		// 分享用描述
