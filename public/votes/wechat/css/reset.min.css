@@ -1117,16 +1117,9 @@ footer{
 #dm-main{position:absolute;top:0;left: 0;height: 200px;width:100%}
 #dm-screen{width:100%;height:230px}
 .layer{height:100%;left: 0;top:0;background: rgba(0,0,0,0.7);}
-.list-detail{left: 50%;margin-left: -46.5%;top:15%;border-radius: 5px;-webkit-border-radius: 5px;height: 60%;}
+.list-detail{left: 50%;margin-left: -46.5%;top:50%;transform:translateY(-50%);-webkit-transform:translateY(-50%);border-radius: 5px;-webkit-border-radius: 5px;}
 .list-detail .img{height: 80%;border-radius: 5px;-webkit-border-radius: 5px;}
 @media only screen and (max-width:375px ) {
-	.list-detail{
-		top:8%;
-		height: 80%;
-	}
-	.list-detail .img{
-		height: 72%;
-	}
 	#dm-screen{
 		height: 170px;
 	}
