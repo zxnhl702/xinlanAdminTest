@@ -32,13 +32,17 @@ type Votes struct {
 	Vote_count      int    `json:"voteCount"`  //投票人次
 	Vote_clicks     int    `json:"clickCount"` //访问量
 	Vote_status     int    `json:"status"`     //投票活动状态
+	Vote_shareurl   string `json:"shareurl"`   // 分享链接
+//	Vote_Freq       int    `json:"freq"`       //投票频率
+//	Vote_Limit      int    `json:"limie"`      //投票数限制
 }
 
 // 投票标题结构体
 type VoteTitle struct {
-	Vote_id    int    `json:"id"`    //投票编号
-	Vote_title string `json:"title"` //投票标题
-	Vote_type  string `json:"type"`  //投票类型
+	Vote_id       int    `json:"id"`       //投票编号
+	Vote_title    string `json:"title"`    //投票标题
+	Vote_type     string `json:"type"`     //投票类型
+	Vote_shareurl string `json:"shareurl"` // 分享链接
 }
 
 // 投票名称列表结构体
@@ -109,7 +113,9 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 检测投票是否上线
 			var voteStatus sql.NullInt64
 			var voteTitle sql.NullString
-			err := db.QueryRow("select title, isOnline from votes where id = ? and isOnline > 0", vote_id).Scan(&voteTitle, &voteStatus)
+			var shareurl sql.NullString
+			err := db.QueryRow("select title, isOnline, shareurl from votes where id = ? and isOnline > 0", vote_id).
+				Scan(&voteTitle, &voteStatus, &shareurl)
 			if nil != err || !voteTitle.Valid {
 				log.Println(err)
 				panic("活动不存在")
@@ -138,6 +144,11 @@ func VoteDispatch(db *sql.DB) Dlm {
 			v.Vote_id, _ = strconv.Atoi(vote_id)
 			v.Vote_title = voteTitle.String
 			v.Vote_status = int(voteStatus.Int64)
+			if shareurl.Valid {
+				v.Vote_shareurl = shareurl.String
+			} else {
+				v.Vote_shareurl = ""
+			}
 			// votes_candidate表  参赛人数
 			err = db.QueryRow("select count(id) from votes_candidate where isOnline = 1 and vote_id = ?", vote_id).Scan(&v.Vote_item_count)
 			if nil != err {
@@ -158,6 +169,66 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return msg, v
 		},
+		
+//		// 认证&手机页面初始化(测试用)
+//		"auth2": func(r *http.Request) (string, interface{}) {
+//			newVoteVisitLog(r, db)
+//			// 返回消息
+//			msg := "验证成功"
+//			// device_token
+//			device_token := GetParameter(r, "device_token")
+//			// 投票编号
+//			vote_id := GetParameter(r, "vote_id")
+//			
+//			// 获取投票基本信息
+//			var v Votes
+//			var voteTitle sql.NullString
+//			selectSqlVotes := "select id, title, isOnline, voteFreq, voteLimit from votes where id = ? and isOnline > 0 limit 1"
+//			err := db.QueryRow(selectSqlVotes, vote_id).Scan(&v.Vote_id, &voteTitle, &v.Vote_status, &v.Vote_Freq, &v.Vote_Limit)
+//			if nil != err || !voteTitle.Valid {
+//				log.Println(err)
+//				panic("活动不存在")
+//			}
+//			v.Vote_title = voteTitle.String
+//			// 检测投票状态
+//			if 1 == v.Vote_status {
+//				msg = "活动准备中 数据会被清除"
+//			}
+//			if 3 == v.Vote_status {
+//				panic("活动已经结束")
+//			}
+//			
+//			// 检测是否已经登记过登陆信息
+//			deviceCount := -1
+//			selectSqlVotesAppUser := "select count(device_token) from votes_app_user " + 
+//						"where device_token = ? and vote_id = ? and date_format(logdate, '%Y-%m-%d') = date_format(now(), '%Y-%m-%d')"
+//			err = db.QueryRow(selectSqlVotesAppUser, device_token, vote_id).Scan(&deviceCount)
+//			if nil != err {
+//				log.Println(err)
+//				panic("认证失败2")
+//			}
+//			// 没有登记过就登记信息
+//			if 0 == deviceCount {
+//				stmt, _ := db.Prepare("insert into votes_app_user(device_token, vote_id, logdate) values(?, ?, now())")
+//				defer stmt.Close()
+//				stmt.Exec(device_token, vote_id)
+//			}
+//			
+//			// votes_candidate表  参赛人数
+//			// votes_info表  投票人次
+//			// votes_clicks表  访问量
+//			selectSql := "select a.*, b.*, c.*" + 
+//						" from" + 
+//						" (select count(id) from votes_candidate where isOnline = 1 and vote_id = ?) a," + 
+//						" (select count(vote_for) from votes_info where vote_id = ?) b," + 
+//						" (select count(ip) from votes_clicks where vote_id = ?) c"
+//			err = db.QueryRow(selectSql, vote_id, vote_id, vote_id,).Scan(&v.Vote_item_count, &v.Vote_count, &v.Vote_clicks)
+//			if nil != err {
+//				log.Println(err)
+//				panic("认证失败3")
+//			}
+//			return msg, v
+//		},
 
 		// insert
 		// 新增投票
@@ -382,16 +453,22 @@ func VoteDispatch(db *sql.DB) Dlm {
 			var vt VoteTitle
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
-			stmt, err := db.Prepare("select id, title, voteType from votes where id = ?")
+			var shareurl sql.NullString
+			stmt, err := db.Prepare("select id, title, voteType, shareurl from votes where id = ?")
 			defer stmt.Close()
 			if nil != err {
 				log.Println(err)
 				panic("获取投票标题失败")
 			}
-			err = stmt.QueryRow(vote_id).Scan(&vt.Vote_id, &vt.Vote_title, &vt.Vote_type)
+			err = stmt.QueryRow(vote_id).Scan(&vt.Vote_id, &vt.Vote_title, &vt.Vote_type, &shareurl)
 			if nil != err {
 				log.Println(err)
 				panic("获取投票标题失败2")
+			}
+			if shareurl.Valid {
+				vt.Vote_shareurl = shareurl.String
+			} else {
+				vt.Vote_shareurl = ""
 			}
 			return "获取投票标题成功", vt
 		},
@@ -609,6 +686,25 @@ func VoteDispatch(db *sql.DB) Dlm {
 			log.Println(vList)
 			return "获取评论内容成功", vList
 		},
+		
+		// 获取投票分享链接
+		"getVoteShareurl": func(r *http.Request) (string, interface{}) {
+			// 投票编号
+			id := GetParameter(r, "id")
+			var shareurl sql.NullString
+			err := db.QueryRow("select shareurl from votes where id = ? limit 1", id).Scan(&shareurl)
+			if nil != err {
+				log.Println(err)
+				panic("获取投票分享链接失败")
+			}
+			var str string 
+			if shareurl.Valid {
+				str = shareurl.String
+			} else {
+				str = ""
+			}
+			return "获取投票分享链接成功", str
+		},
 
 		// update
 		// 更新投票活动状态
@@ -752,6 +848,30 @@ func VoteDispatch(db *sql.DB) Dlm {
 			}
 			return "更新投票项目状态成功", nil
 		},
+		
+		// 更新投票分享链接
+		"updateShareURL": func(r *http.Request) (string, interface{}) {
+			// 更新sql
+			updateSql := `update votes set shareurl = ? where id = ?`
+			// 投票编号
+			id := GetParameter(r, "id")
+			// 分享链接
+			shareurl := GetParameter(r, "shareurl")
+			// 开始事务
+			tx, err := db.Begin()
+			if nil != err {
+				tx.Rollback()
+				panic("更新投票分享链接失败")
+			}
+			_, err = tx.Exec(updateSql, shareurl, id)
+			if nil != err {
+				tx.Rollback()
+				panic("更新投票分享链接失败")
+			}
+			// 提交事务
+			tx.Commit()
+			return "更新投票分享链接成功", nil
+		},
 
 		// 根据投票编号逻辑删除投票
 		"removeVoteLogicallyById": func(r *http.Request) (string, interface{}) {
@@ -834,6 +954,72 @@ func VoteDispatch(db *sql.DB) Dlm {
 			} else {
 				return "投票成功", nil
 			}
+		},
+		
+		// 投票(测试用)
+		"vote_for2": func(r *http.Request) (string, interface{}) {
+			// 用户设备编号
+			dt := GetParameter(r, "device_token")
+			// 投票给
+			vf := GetParameter(r, "vote_for")
+			// 投票编号
+			vote_id := GetParameter(r, "vote_id")
+			// 此用户是否合法
+			var if_voted int
+			selectSql := "select if_voted from votes_app_user" + 
+				" where device_token = ? and vote_id = ? and date_format(logdate, '%Y-%m-%d') = date_format(now(), '%Y-%m-%d')"
+			err := db.QueryRow(selectSql, dt, vote_id).Scan(&if_voted)
+			if err != nil {
+				log.Println(err)
+				panic("非法的app用户")
+			}
+			
+			// 取得规定投票次数
+			selectSqlVote := "select voteFreq, voteLimit from votes where vote_id = ?"
+			var voteFreq int
+			var voteLimit int
+			err = db.QueryRow(selectSqlVote, vote_id).Scan(&voteFreq, &voteLimit)
+			if err != nil {
+				log.Println(err)
+				panic("投票失败")
+			}
+			// 判断当前用户的投票次数
+			var cnt int
+			var msg string
+			// 每日投票
+			if 1 == voteFreq {
+				err = db.QueryRow("select count(*) from votes_info where vote_id = ? and vote_from = ? and date_format(vote_datetime, '%Y-%m-%d') = strftime('%Y-%m-%d', datetime('now', 'localtime'))", vote_id, dt).Scan(cnt)
+				msg = "本日投票次数用完"
+			// 一次性投票
+			} else {
+				err = db.QueryRow("select count(*) from votes_info where vote_id = ? and vote_from = ?", vote_id, dt).Scan(cnt)
+				msg = "您已经投过票了"
+			}
+			if err != nil {
+				log.Println(err)
+				panic("投票失败")
+			}
+			// 投票次数用完
+			votecnt := len(strings.Split(vf, "|"))
+			if voteLimit == cnt + votecnt {
+				panic(msg)
+			}
+			// 投票
+			stmt, _ := db.Prepare("insert into votes_info (vote_id, vote_from, vote_for, vote_datetime) values(?, ?, ?, now())")
+			defer stmt.Close()
+
+			for _, v := range strings.Split(vf, "|") {
+				_, err = stmt.Exec(vote_id, dt, v)
+				if err != nil {
+					log.Println(err)
+					panic("投票失败")
+				}
+			}
+
+			// 更新本日投票次数
+			stmt, _ = db.Prepare("update votes_app_user set if_voted = ? where device_token = ? and vote_id = ?")
+			stmt.Exec(if_voted + votecnt, vote_id)
+			return "投票成功", nil
 		},
 		
 		// delete

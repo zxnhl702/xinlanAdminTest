@@ -46,6 +46,20 @@ $(function() {
 			}, function(d) {
 				if(d.success) {
 					$("title").html(d.data.title);
+					// 分享
+					// 没有设置分享链接或者微信登陆投票页面的情况下隐藏分享按钮
+					if("" == d.data.shareurl || weixinLogin) {
+						$("#doShare").hide();
+					} else {
+						$("#doShare").show();
+						$("#doShare").click(function() {
+							_share({
+								"content":"投票活动！"+d.data.title,
+								"content_url":d.data.shareurl,
+								"pic":img_url_root+ "banner.jpg"
+							});
+						})
+					}
 				}
 			});
 			
@@ -63,7 +77,7 @@ $(function() {
 			$("#goProfile").attr("href", "profile.html?" + urlSearch);
 			$("#goRank").attr("href", "rank.html?" + urlSearch);
 			
-			$('.comment').bind("click", function() {
+			$('#goComment').bind("click", function() {
 				location.href = "index.html?" + urlSearch + "&comment=1";
 			});
 		}

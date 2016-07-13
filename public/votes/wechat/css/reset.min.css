@@ -1098,9 +1098,12 @@ footer{
 	left: 0;
 	bottom:0
 }
+.footer-cloumn{
+	display:table;
+	width:100%
+}
 .footer-cloumn a {
-	width: 25%;
-	float: left;	
+	display:table-cell;
 }
 .rank-header{
 	background-image: linear-gradient(#fff,#eee);

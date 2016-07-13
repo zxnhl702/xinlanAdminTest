@@ -58,6 +58,7 @@ $(function() {
 						'<ul class="dropdown-menu float-right">' + 
 						'<li><a href="javascript:;" title=""><i class="glyph-icon icon-gear mrg5R"></i> 投票项管理</a></li>' + 
 						'<li><a href="javascript:;" title=""><i class="glyph-icon icon-comment mrg5R"></i> 评论管理</a></li>' + 
+						'<li><a href="javascript:;" title=""><i class="glyph-icon icon-share mrg5R"></i> 分享链接管理</a></li>' +
 						'<li ><a href="javascript:;" title=""><i class="glyph-icon icon-circle mrg5R"></i>' + 
 						'<label data-status="' + r.status + '"> ' + voteOpButtonName[r.status] + '<label></a></li>' + 
 						'<li class="divider"></li>' + 
@@ -77,6 +78,30 @@ $(function() {
 				location.href = "vote-comments.html?vote_id=" + r.id + 
 												"&user_id=" + user_id + 
 												"&privilege=" + privilege;
+			});
+			
+			// 添加无限舟山中的分享链接
+			e.find("a:has(.icon-share)").click(function() {
+				_callAjax({
+					"cmd": "getVoteShareurl",
+					"id": r.id
+				}, function(d) {
+					if(d.success) {
+						layer.prompt({title: '请输入分享链接(短链接only)', formType: 0,value:d.data}, function(value, index, elem){
+							if (value=="") return _toast.show("链接不能为空");
+							_callAjax({
+								"cmd": "updateShareURL",
+								"id": r.id,
+								"shareurl": value
+							}, function(d) {
+								_toast.show(d.errMsg);
+								layer.close(index);
+							})
+						});
+					} else {
+						_toast.show("打开失败");
+					}
+				})
 			});
 			
 			// 投票活动开始/结束
