@@ -1051,7 +1051,7 @@ table td {
 	box-shadow: 0 0 6px rgba(0,0,0,.1);
 }
 .list li>div .number {
-	width: 50px;
+	width: 30px;
 	height: 25px;
 	line-height: 25px;
 	position: line-height: 32px;
@@ -1076,11 +1076,11 @@ table td {
 	width: 0;
 	height: 0;
 	position: absolute;
-	top: 25px;
+	top: 30px;
 	right: 0;
 	border-top: 5px solid #ff8a00;
-	border-left: 25px solid transparent;
-	border-right: 25px solid transparent;
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
 }
 .list li p {
 	line-height: 22px;
