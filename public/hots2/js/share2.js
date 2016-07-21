@@ -28,8 +28,10 @@ $(function() {
 			// 拼事件的html
 			var str = '<div class="list clearfix mt10 mb5" data-id='+r.id+'>' + 
 						'<div class="list-logo l">' + 
-						'<img src="' + imgsrc + r.userid + '.jpg" width="100%">' + 
-						'<p class="tc">' + users[parseInt(r.userid)-1] + '</p>' + '</div>' + 
+//						'<img src="' + imgsrc + r.userid + '.jpg" width="100%">' + 
+//						'<p class="tc">' + users[parseInt(r.userid)-1] + '</p>' + '</div>' + 
+						'<img src="' + r.userimg + '" width="100%">' + 
+						'<p class="tc">' + r.username + '</p>' + '</div>' + 
 						'<div class="list-main rel r bg_light pct70 p10">' + 
 						'<header>' + '<h6 class="mt1 calm">' + r.title + '</h6>' + 
 						'<time class="g9">' + _howLongAgo(r.logdate) + '</time>' + '</header>' + 

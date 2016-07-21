@@ -15,6 +15,18 @@ $(function(){
 				}
 				
 			})
+			
+			$('.release-btn').on('click', function() {
+				if(_isWeixin()) {
+					location.href="release.html?hot_id=" + hot_id + "&state=" + _getPar("state") + 
+						"&openid=" + _getPar("openid") + 
+						"&nickname=" + _getPar("nickname") + 
+						"&headimgurl=" + _getPar("headimgurl");
+				} else {
+					if("" == _getToken(d, "username")) return _toast.show("请先登陆无限舟山!");
+					location.href="release.html?hot_id=" + hot_id;
+				}
+			})
 
 			var updateComments = function(e, comments) {
 				var ul = e.find(".list-comment ul");
@@ -33,13 +45,15 @@ $(function(){
 				d.data.forEach(function(r) {
 					var shareBtn = _isWeixin() ? '' : '<span class="list-share-btn"><i class="iconfont icon-0063fenxiang"></i></span>';
 					var str = '<li data-id="' + r.id + '">' + '<header>' +
-						'<img src="http://60.190.176.70:11001/images/xinlanUser/'+r.userid+'.jpg" width="100%"/>' + 
-						'<h5>' + users[parseInt(r.userid)-1] + '</h5>' + 
+//						'<img src="http://60.190.176.70:11001/images/xinlanUser/'+r.userid+'.jpg" width="100%"/>' + 
+//						'<h5>' + users[parseInt(r.userid)-1] + '</h5>' + 
+						'<img src="'+r.userimg+'" width="100%"/>' + 
+						'<h5>' + r.username + '</h5>' + 
 						'<p>' + _howLongAgo(r.logdate) + '</p>' + '</header>' + 
 						'<p><h3>' + r.title + '</h3></p>' + r.content +
 						'<footer class="cl">' + 
 						'<span class="list-zan-btn"><i class="iconfont icon-0008zan"></i> <span>' + r.zan + '</span></span>' + 
-						shareBtn + //'<span class="list-share-btn"><i class="iconfont icon-0063fenxiang"></i></span>' + 
+						shareBtn + 
 						'<span class="list-comment-btn"><i class="iconfont icon-0096pinglun01"></i> <span>' + r.commentsCount + '</span></span>' + 
 						'</footer>' + 
 						'<div class="list-comment" if-shown=0><ul></ul><span class="new-comment-btn">发表评论...</span></div>' + 
@@ -264,8 +278,8 @@ $(function(){
 	// //debug 用
 	// var _wxzs = function(o) {
 	// 	o.callback({
-	// 		"username":"",
-	// 		"picurl":"",
+	// 		"username":"测试",
+	// 		"picurl":"http://develop.wifizs.cn:11001/images/xinlanUser/1.jpg",
 	// 		"userid":"111"
 	// 	},"userid",o._callAjax);
 	// }

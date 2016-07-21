@@ -10,21 +10,19 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 		<title>图文直播</title>
 	</head>
-	<body>
-		<div id="wrapper">
-			<div id="scroller">
-				<div id="scroller-pullDown">
-					<span id="pullDown-msg" class="pull-down-msg">下拉刷新</span>
-				</div>
-				<div id="scroller-content" class="comment-content">
-					<div class="list-comment">
-						<ul>
-						</ul>
-					</div>
-				</div>
-				<div id="scroller-pullUp">
-					<span id="pullUp-msg" class="pull-up-msg">加载完毕</span>
-				</div>
+	<body class="gray-body">
+		<!-- navbar -->
+		<div class="navbar cl">
+			<div class="left" onclick="window.history.go(-1)"><i class="iconfont icon-left"></i></div>
+			<div class="right"><span class="send-btn">发送</span></div>
+		</div>
+		
+		<!--content-->
+		<div class="content">
+			<textarea id="releaseContent" class="release-content" placeholder="这一刻的想法..."></textarea>
+			<div class="release-img">
+				<span><i class="iconfont icon-add2"></i></span>
+				<input type="file" id="releaseImg" class="release-input" accept="image/jpeg"/>
 			</div>
 		</div>
 	</body>
@@ -35,12 +33,11 @@
 	<script src="plugins/h5app.js"></script>
 	<script src="plugins/spin.min.js"></script>
 	<script src="plugins/toast.min.js"></script>
-	<script src="plugins/iscroll/iscroll.js"></script>
+	<script src="plugins/dist/lrz.bundle.js"></script>
 	
 	<script src="js/constUtilHots.js"></script>
 	<script src="js/ref.js"></script>
 	<script src="js/global.js"></script>
-	<script src="js/comment.js"></script>
+	<script src="js/release.js"></script>
 	<script src="js/wechatapi.js"></script>
-	
 </html>

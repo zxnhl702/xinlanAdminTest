@@ -18,13 +18,35 @@
         height: 25px;
         line-height:25px; 
         padding:0 .2rem;
-        font-size:.3rem; 
-        &.icon-0096pinglun01{
-            margin:0 .25rem;
+        font-size:.35rem; 
+        -webkit-text-stroke-width:0;
+        i{
+            font-size: .4rem;
         }
         &.iconfont{
             font-size:.4rem; 
         }
+    }
+}
+
+.release-btn{
+    position: fixed;
+    right: .25rem;
+    bottom: .35rem;
+    z-index: 2;
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    text-align: center;
+    line-height: 1.5rem;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    color: #fff;
+    background-color: rgba(0,153,204,.7);
+    text-decoration: none;
+    i{
+        font-size: .9rem;
+        -webkit-text-stroke-width:0;
     }
 }
 
@@ -219,6 +241,79 @@
             header h5 span{
                 color: #999;
             }
+        }
+    }
+}
+.gray-body{
+    background-color: #f1f1f1;
+}
+.navbar{
+    height: 44px;
+    line-height: 44px;
+    padding: 0 .25rem;
+    background-color: #444;
+    overflow: hidden;
+    .left{
+        float: left;
+        i{
+            padding-right: .25rem;
+            border-right: 1px solid #333;
+            color: #fff;
+            font-size: .5rem;
+        }  
+    }
+    .right{
+        float: right;
+        height: 44px;
+        line-height: 44px;
+        .send-btn{
+            background-color: #00CC00;
+            -webkit-border-radius: 2px;
+            border-radius: 2px;
+            padding: 0 .35rem;
+            height: 30px;
+            line-height: 30px;
+            display: inline-block;
+            color: #fff;
+        }
+    }    
+}
+
+.content{
+    background-color: #fff;
+    .release-content{
+        width: 100%;
+        box-sizing: border-box;
+        padding: .25rem;
+        font-size: .35rem;
+        outline: 0;
+        height: 4rem;
+    }
+    .release-img{
+        padding: .25rem;
+        position: relative;
+        height: 2rem;
+        width: 2rem;
+        span{
+            height: 2rem;
+            width: 2rem;
+            text-align: center;
+            line-height: 2rem;
+            display: inline-block;
+            border:1px solid #ddd;
+            background-size:cover;
+            i{
+                color: #ddd;
+                font-size: .9rem;
+            }
+        }
+        .release-input{
+            position: absolute;
+            left: .25rem;
+            right: .25rem;
+            bottom: .25rem;
+            top: .25rem;
+            opacity: 0;
         }
     }
 }

@@ -15,12 +15,15 @@ import (
 
 type Dlm map[string]func(*http.Request) (string, interface{})
 type Event struct {
-	Id      int    `json:"id"`
-	Title   string `json:"title"`
-	Status  string `json:"status"`
-	Content string `json:"content"`
-	Logdate string `json:"logdate"`
-	UserId  int    `json:"userid"`
+	Id          int    `json:"id"`
+	Title       string `json:"title"`
+	Status      string `json:"status"`
+	Content     string `json:"content"`
+	Logdate     string `json:"logdate"`
+	UserId      string `json:"userid"`
+	Username    string `json:"username"`
+	Userimg     string `json:"userimg"`
+	IsPublished int    `json:"isPublished"`
 }
 type Comment struct {
 	Id       int    `json:"id"`
@@ -333,6 +336,26 @@ func Dispatch(db *sql.DB) Dlm {
 			NewEvent(title, status, content, hotId, userid, db)
 			return "事件添加成功", nil
 		},
+		
+		"newEventFromHTML": func(r *http.Request) (string, interface{}) {
+			// 插入sql
+			insertsql := `insert into events(title,status,content,hot_id,userid, logdate, username, userimg, isPublished) 
+		values (?,' ',?,?,?, now(), ?, ?, 0)`
+			title := " "//GetParameter(r, "title")
+			content := GetParameter(r, "content")
+			hotId := GetParameter(r, "hot_id")
+			userid := GetParameter(r, "userid")
+			username := GetParameter(r, "username")
+			userimg := GetParameter(r, "userimg")
+			// 开始事务
+			tx, err := db.Begin()
+			// 异常情况下回滚
+			perrorWithRollBack(err, "发布失败", tx)
+			_, err =  tx.Exec(insertsql, title, content, hotId, userid, username, userimg)
+			perrorWithRollBack(err, "发布失败", tx)
+			tx.Commit()
+			return "发布成功", nil
+		},
 
 		"deleteEvent": func(r *http.Request) (string, interface{}) {
 			stmt, _ := db.Prepare("delete from events where id = ?")
@@ -406,11 +429,13 @@ func Dispatch(db *sql.DB) Dlm {
 		},
 
 		"getTop5Events": func(r *http.Request) (string, interface{}) {
+			// 检索sql
+			selectSql := `select id from events where hot_id = ? and id < ? and isPublished = true order by id desc limit 5`
 			var (
 				es  []EventWithCommentsCountAndZan
 				ids []int
 			)
-			rows, err := db.Query("select id from events where hot_id = ? and id < ? order by id desc limit 5", GetParameter(r, "hot_id"), GetParameter(r, "from"))
+			rows, err := db.Query(selectSql, GetParameter(r, "hot_id"), GetParameter(r, "from"))
 			if err != nil {
 				panic("查询前五个事件id失败")
 			}
@@ -520,6 +545,21 @@ func Dispatch(db *sql.DB) Dlm {
 			}
 			return "获取本条事件全部评论成功", cs
 		},
+		
+		// 发布/撤回事件
+		"changeEventIsPublished": func(r *http.Request) (string, interface{}) {
+			// 更新sql
+			updateSql := `update events set isPublished = ? where id = ?`
+			// 事件编号
+			eventId  := GetParameter(r, "event_id")
+			// 发布状态修改到
+			changeTo := GetParameter(r, "changeTo")
+			_, err := db.Exec(updateSql, changeTo, eventId)
+			if err != nil {
+				panic("修改发布状态失败")
+			}
+			return "修改发布状态成功", true
+		},
 	}
 }
 
@@ -591,11 +631,23 @@ func GetCommentsByEvent(eventId string, logdate string, db *sql.DB) []Comment {
 }
 
 func NewEvent(title string, status string, content string, hotId string, userid string, db *sql.DB) {
-	stmt, err := db.Prepare("insert into events(title,status,content,hot_id,userid, logdate) values (?,?,?,?,?, now())")
+	var username string
+	var userimg string
+	if "1" == userid || "2" == userid {
+		username = "无限舟山"
+		userimg = "http://develop.wifizs.cn:11001/images/xinlanUser/1.jpg"
+	} else {
+		username = "前方记者"
+		userimg = "http://develop.wifizs.cn:11001/images/xinlanUser/2.jpg"
+	}
+	// 插入sql
+	insertSql := `insert into events(title,status,content,hot_id,userid, logdate, username, userimg, isPublished) 
+		values (?,?,?,?,?, now(), ?, ?, 1)`
+	stmt, err := db.Prepare(insertSql)
 	if err != nil {
 		panic("event插入准备失败")
 	}
-	_, err = stmt.Exec(title, status, content, hotId, userid)
+	_, err = stmt.Exec(title, status, content, hotId, userid, username, userimg)
 	if err != nil {
 		panic("event插入失败！")
 	}
@@ -665,8 +717,13 @@ func GetEventsIds(hotId string, db *sql.DB) []int {
 
 func GetEventById(id string, db *sql.DB) EventWithCommentsCountAndZan {
 	log.Println(id)
+	// 检索sql
+	selectSql := `select e.id, e.title, e.status, e.content, 
+		date_format(e.logdate, '%Y-%m-%d %H:%i:%s'), e.userid, h.title, e.username, e.userimg, e.isPublished 
+		from events e , hots h where e.id = ? and e.hot_id = h.id`
 	var e EventWithCommentsCountAndZan
-	err := db.QueryRow("select e.id, e.title, e.status, e.content, date_format(e.logdate, '%Y-%m-%d %H:%i:%s'), e.userid, h.title from events e , hots h where e.id = ? and e.hot_id = h.id", id).Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId, &e.Hot_title)
+	err := db.QueryRow(selectSql, id).
+		Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId, &e.Hot_title, &e.Username, &e.Userimg, &e.IsPublished)
 	if err != nil {
 		log.Println(err)
 		panic("读取单条事件失败")
@@ -680,9 +737,14 @@ func GetEventById(id string, db *sql.DB) EventWithCommentsCountAndZan {
 // 分享页获取单条事件
 func GetSharedEventById(hot_id, event_id string, db *sql.DB) []Event {
 	log.Println(hot_id, event_id)
+	// 检索sql
+	selectSql := `select e.id, e.title, e.status, e.content, date_format(e.logdate, '%Y-%m-%d %H:%i:%s'), 
+		e.userid, e.username, e.userimg 
+		from events e where e.hot_id = ? and e.id = ?`
 	var e Event
 	var event[] Event
-	err := db.QueryRow("select e.id, e.title, e.status, e.content,  date_format(e.logdate, '%Y-%m-%d %H:%i:%s'), e.userid from events e where e.hot_id = ? and e.id = ?", hot_id, event_id).Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId)
+	err := db.QueryRow(selectSql, hot_id, event_id).
+		Scan(&e.Id, &e.Title, &e.Status, &e.Content, &e.Logdate, &e.UserId, &e.Username, &e.Userimg)
 	if err != nil {
 		log.Println(err)
 		panic("读取单条事件失败")

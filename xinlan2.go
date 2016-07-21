@@ -90,7 +90,7 @@ func UploadVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Par
 
 	// 模块名称
 	module := p.ByName("module")
-	log.Println("module: " + module)
+	log.Println("1module: " + module)
 
 	defer func() {
 		err := recover()
@@ -102,6 +102,7 @@ func UploadVoteHandler(rw http.ResponseWriter, r *http.Request, p httprouter.Par
 	r.ParseMultipartForm(32 << 20)
 	// 文件名列表
 	formfiles := r.FormValue("formfile")
+	log.Println("formfiles:" + formfiles)
 
 	var filename []string
 	for _, formfile := range strings.Split(formfiles, ",") {

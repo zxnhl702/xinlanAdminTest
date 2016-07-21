@@ -93,9 +93,10 @@ type VoteComment struct {
 
 // 投票评论结构体
 type VoteComments struct {
-	Id      int     `json:"id"`      // 评论编号
-	Comment string `json:"comment"` // 评论内容
-	Logdate string `json:"logdate"` // 登记时间
+	Id       int    `json:"id"`       // 评论编号
+	Comment  string `json:"comment"`  // 评论内容
+	Logdate  string `json:"logdate"`  // 登记时间
+	IsOnline int    `json:"isOnline"` // 审核通过否
 }
 
 func VoteDispatch(db *sql.DB) Dlm {
@@ -534,7 +535,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 投票编号
 			vote_id := GetParameter(r, "vote_id")
 			//			rows, err := db.Query("select rowid, comment from votes_comments where rowid < ? and vote_id = ? order by rowid desc limit ?", rowid, vote_id, amount)
-			rows, err := db.Query("select comment from votes_comments where vote_id = ? order by rand() limit ?", vote_id, amount)
+			rows, err := db.Query("select comment from votes_comments where vote_id = ? and isOnline = 1 order by rand() limit ?", vote_id, amount)
 			defer rows.Close()
 			if err != nil {
 				log.Println(err)
@@ -671,7 +672,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			idlist := strings.Replace(ids, "|", ",", -1)
 			log.Println(ids)
 			log.Println(idlist)
-			rows, err := db.Query("select id, comment, date_format(logdate, '%Y-%m-%d %H:%i:%S') from votes_comments where vote_id = ? and id in (" + idlist + ")", vote_id)
+			rows, err := db.Query("select id, comment, date_format(logdate, '%Y-%m-%d %H:%i:%S'), isOnline from votes_comments where vote_id = ? and id in (" + idlist + ")", vote_id)
 			defer rows.Close()
 			if nil != err {
 				log.Println(err)
@@ -680,7 +681,7 @@ func VoteDispatch(db *sql.DB) Dlm {
 			var vList []VoteComments
 			for rows.Next() {
 				var v VoteComments
-				rows.Scan(&v.Id, &v.Comment, &v.Logdate)
+				rows.Scan(&v.Id, &v.Comment, &v.Logdate, &v.IsOnline)
 				vList = append(vList, v)
 			}
 			log.Println(vList)
@@ -871,6 +872,19 @@ func VoteDispatch(db *sql.DB) Dlm {
 			// 提交事务
 			tx.Commit()
 			return "更新投票分享链接成功", nil
+		},
+		
+		// 更新投票评论审核状态
+		"updateVoteCommentStatus": func(r *http.Request) (string, interface{}) {
+			// 更新sql
+			updateSql := `update votes_comments set isOnline = ? where id = ?`
+			// 评论编号
+			id := GetParameter(r, "id")
+			// 修改状态至
+			changeTo := GetParameter(r, "changeTo")
+			_, err := db.Exec(updateSql, changeTo, id)
+			perror(err, "修改审核状态失败")
+			return "修改审核状态成功", nil
 		},
 
 		// 根据投票编号逻辑删除投票

@@ -130,13 +130,34 @@ table {
   height: 25px;
   line-height: 25px;
   padding: 0 .2rem;
-  font-size: .3rem;
+  font-size: .35rem;
+  -webkit-text-stroke-width: 0;
 }
-.tools span.icon-0096pinglun01 {
-  margin: 0 .25rem;
+.tools span i {
+  font-size: .4rem;
 }
 .tools span.iconfont {
   font-size: .4rem;
+}
+.release-btn {
+  position: fixed;
+  right: .25rem;
+  bottom: .35rem;
+  z-index: 2;
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  text-align: center;
+  line-height: 1.5rem;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  color: #fff;
+  background-color: rgba(0, 153, 204, 0.7);
+  text-decoration: none;
+}
+.release-btn i {
+  font-size: .9rem;
+  -webkit-text-stroke-width: 0;
 }
 .banner {
   position: relative;
@@ -228,12 +249,6 @@ table {
   color: #999;
   font-size: .3rem;
 }
-.live-content > ul > li > h3 {
-  font-size: .35rem;
-  color: #2f75bb;
-  font-weight: normal;
-  margin-bottom: .1rem;
-}
 .live-content > ul > li > p {
   font-size: .35rem;
   color: #333;
@@ -241,8 +256,7 @@ table {
 }
 .live-content > ul > li > p img,
 .live-content > ul > li > p video {
-  width: 100%!important;
-  height:auto!important;
+  width: 100%;
   margin-top: .25rem;
 }
 .live-content > ul > li > footer {
@@ -346,6 +360,78 @@ table {
 }
 .comment-content .list-comment ul li header h5 span {
   color: #999;
+}
+.gray-body {
+  background-color: #f1f1f1;
+}
+.navbar {
+  height: 44px;
+  line-height: 44px;
+  padding: 0 .25rem;
+  background-color: #444;
+  overflow: hidden;
+}
+.navbar .left {
+  float: left;
+}
+.navbar .left i {
+  padding-right: .25rem;
+  border-right: 1px solid #333;
+  color: #fff;
+  font-size: .5rem;
+}
+.navbar .right {
+  float: right;
+  height: 44px;
+  line-height: 44px;
+}
+.navbar .right .send-btn {
+  background-color: #00CC00;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  padding: 0 .35rem;
+  height: 30px;
+  line-height: 30px;
+  display: inline-block;
+  color: #fff;
+}
+.content {
+  background-color: #fff;
+}
+.content .release-content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: .25rem;
+  font-size: .35rem;
+  outline: 0;
+  height: 4rem;
+}
+.content .release-img {
+  padding: .25rem;
+  position: relative;
+  height: 2rem;
+  width: 2rem;
+}
+.content .release-img span {
+  height: 2rem;
+  width: 2rem;
+  text-align: center;
+  line-height: 2rem;
+  display: inline-block;
+  border: 1px solid #ddd;
+  background-size: cover;
+}
+.content .release-img span i {
+  color: #ddd;
+  font-size: .9rem;
+}
+.content .release-img .release-input {
+  position: absolute;
+  left: .25rem;
+  right: .25rem;
+  bottom: .25rem;
+  top: .25rem;
+  opacity: 0;
 }
 .mask {
   position: fixed;

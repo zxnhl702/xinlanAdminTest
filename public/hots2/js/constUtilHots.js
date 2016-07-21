@@ -7,6 +7,10 @@ var host = domain + ":11002";
 var ajaxURL = "http://"+host+"/xinlan";
 //用户投票图片地址
 var userImgURL = "http://" + domain + ":11001/images/";
+//后台上传图片地址
+var fileUploadHotURL = "http://"+host+"/upload/hots";
+//上传图片的基准地址
+var hotImgURL = "http://" + domain + ":11001/images/hots/";
 //微信js用初始化ajax地址
 var wxAjaxURL = "http://develop.zsgd.com:11010/auth";
 //微信用URL模版

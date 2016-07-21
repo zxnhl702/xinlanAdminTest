@@ -45,7 +45,8 @@ create table if not exists votes_comments (
 	id integer not null primary key auto_increment,
 	vote_id integer not null,
 	comment text,
-	logdate datetime
+	logdate datetime,
+	isOnline boolean default false
 );
 
 -- 投票访问记录表

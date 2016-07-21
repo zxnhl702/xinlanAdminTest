@@ -27,7 +27,10 @@ create table if not exists events (
 	content text default '',
 	logdate datetime,
 	hot_id integer,
-	userid integer default 0
+	userid text default 0,
+	username text,
+	userimg text,
+	isPublished boolean default false
 );
 
 -- 热点评论表
