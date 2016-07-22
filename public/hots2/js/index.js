@@ -7,6 +7,12 @@ $(function(){
 			var users = ["admin", "无限舟山", "前方记者"];
 			if (hot_id == '') return;
 			
+			// 微信登陆或者ios系统的情况下
+			if(_isWeixin() || _getDev() == "iOS") {
+				// 显示用户发布事件的按钮
+				$('.release-btn').show();
+			}
+			
 			$('#go-comment').on('touchstart',function(){
 				if(_isWeixin()) {
 					location.href="comment.html?hot_id=" + hot_id + "&state=" + _getPar("state") + "&openid=" + _getPar("openid");

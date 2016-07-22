@@ -54,6 +54,12 @@ $(function() {
 				xhr.send(tempImg.formData);
 			}
 			
+			// 检查图片格式
+			var _checkImgType = function(filename) {
+				var pattern = /\.(jpg|png|JPG|PNG)$/;
+				return pattern.test(filename);
+			}
+			
 			// 上传文件之后的回调函数
 			// 生成事件内容
 			genEventContent = function(filename) {
@@ -103,8 +109,16 @@ $(function() {
 					// 恢复页面样式
 					$('.release-img span').removeAttr('style').html('<i class="iconfont icon-add2"></i>');
 				} else {
-					// 压缩图片并显示
-					resizeImg('releaseImg', 640, formfile);
+					// 检查图片格式
+					if(!_checkImgType($('#releaseImg').val())) {
+						// 检查未通过 清空选择图片控件中的内容
+						$('#releaseImg').val('');
+						tempImg = null;
+						return _toast.show("图片格式只能是jpg或者png");
+					} else {
+						// 压缩图片并显示
+						resizeImg('releaseImg', 640, formfile);
+					}
 				}
 			})
 			
