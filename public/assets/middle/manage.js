@@ -109,7 +109,7 @@ $(function() {
 			_toast.show(d.errMsg);
 			if(d.success) {
 				// 修改表格中的发布状态
-				obj.find('td:eq(3)').text(isPublished[published ^ 1]);
+				obj.find('td:eq(4)').text(isPublished[published ^ 1]);
 				// 修改按钮
 				btn.find('a').html('<i class="glyph-icon ' + btnClass[published ^ 1] + ' mrg5R"></i>' + publishBtnName[published ^ 1]);
 				// 修改当前行的发布状态

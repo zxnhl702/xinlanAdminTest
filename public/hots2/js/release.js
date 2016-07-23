@@ -117,7 +117,7 @@ $(function() {
 						return _toast.show("图片格式只能是jpg或者png");
 					} else {
 						// 压缩图片并显示
-						resizeImg('releaseImg', 640, formfile);
+						resizeImg('releaseImg', 320, formfile);
 					}
 				}
 			})

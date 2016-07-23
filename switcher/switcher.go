@@ -635,10 +635,10 @@ func NewEvent(title string, status string, content string, hotId string, userid 
 	var userimg string
 	if "1" == userid || "2" == userid {
 		username = "无限舟山"
-		userimg = "http://develop.wifizs.cn:11001/images/xinlanUser/1.jpg"
+		userimg = "http://develop.wifizs.cn:11001/images/xinlanUser/2.jpg"
 	} else {
 		username = "前方记者"
-		userimg = "http://develop.wifizs.cn:11001/images/xinlanUser/2.jpg"
+		userimg = "http://develop.wifizs.cn:11001/images/xinlanUser/1.jpg"
 	}
 	// 插入sql
 	insertSql := `insert into events(title,status,content,hot_id,userid, logdate, username, userimg, isPublished) 
