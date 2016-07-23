@@ -177,12 +177,12 @@ table {
   background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
 }
 .banner .banner-info h5 {
-  font-size: .4rem;
+  font-size: .45rem;
   font-weight: normal;
   margin-bottom: .15rem;
 }
 .banner .banner-info p {
-  font-size: .3rem;
+  font-size: .35rem;
   color: #eee;
 }
 .banner .banner-info .live-state {
@@ -238,7 +238,7 @@ table {
   top: 0;
 }
 .live-content > ul > li > header h5 {
-  font-size: .35rem;
+  font-size: .4rem;
   font-weight: normal;
   color: #2f75bb;
   height: 25px;
@@ -248,15 +248,34 @@ table {
   color: #999;
   font-size: .3rem;
 }
-.live-content > ul > li > p {
-  font-size: .35rem;
-  color: #333;
-  line-height: .55rem;
+.live-content > ul > li h3 {
+  font-size: .4.5rem;
 }
-.live-content > ul > li > p img,
-.live-content > ul > li > p video {
-  width: 100%;
+.live-content > ul > li article {
+  overflow: hidden;
+  max-height: 5rem;
+}
+.live-content > ul > li article p {
+  font-size: .45rem;
+  color: #333;
+  line-height: .6rem;
+}
+.live-content > ul > li article p img,
+.live-content > ul > li article p video {
+  width: 100%!important;
+  height: 100%!important;
   margin-top: .25rem;
+}
+.live-content > ul > li .toggle-bar {
+  margin: .25rem 0;
+  text-align: center;
+  color: #2F75BB;
+  font-size: .5rem;
+  display: none;
+}
+.live-content > ul > li .toggle-bar i {
+  font-size: .35rem;
+  color: #2f75bb;
 }
 .live-content > ul > li > footer {
   background: #fff;

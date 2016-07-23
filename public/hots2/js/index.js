@@ -50,23 +50,46 @@ $(function(){
 				if(d.data == null) return _toast.show("全部加载完成，没有更多数据！");
 				d.data.forEach(function(r) {
 					var shareBtn = _isWeixin() ? '' : '<span class="list-share-btn"><i class="iconfont icon-0063fenxiang"></i></span>';
-					var str = '<li data-id="' + r.id + '">' + '<header>' +
-//						'<img src="http://60.190.176.70:11001/images/xinlanUser/'+r.userid+'.jpg" width="100%"/>' + 
-//						'<h5>' + users[parseInt(r.userid)-1] + '</h5>' + 
-						'<img src="'+r.userimg+'" width="100%"/>' + 
+//					var str = '<li data-id="' + r.id + '">' + '<header>' +
+//						'<img src="'+r.userimg+'" width="100%"/>' + 
+//						'<h5>' + r.username + '</h5>' + 
+//						'<p>' + _howLongAgo(r.logdate) + '</p>' + '</header>' + 
+//						'<p><h3>' + r.title + '</h3></p>' + r.content +
+//						'<footer class="cl">' + 
+//						'<span class="list-zan-btn"><i class="iconfont icon-0008zan"></i> <span>' + r.zan + '</span></span>' + 
+//						shareBtn + 
+//						'<span class="list-comment-btn"><i class="iconfont icon-0096pinglun01"></i> <span>' + r.commentsCount + '</span></span>' + 
+//						'</footer>' + 
+//						'<div class="list-comment" if-shown=0><ul></ul><span class="new-comment-btn">发表评论...</span></div>' + 
+//						'</li>';
+					var str = '<li data-id="' + r.id + '">' + '<header>' + 
+						'<img src="' + r.userimg + '" width="100%">' + 
 						'<h5>' + r.username + '</h5>' + 
 						'<p>' + _howLongAgo(r.logdate) + '</p>' + '</header>' + 
-						'<p><h3>' + r.title + '</h3></p>' + r.content +
+						'<h3>' + r.title + '</h3>' + '<article>' + r.content + '</article>' + 
+						'<div class="toggle-bar"><i class="iconfont icon-down"></i> 展开</div>' + 
 						'<footer class="cl">' + 
 						'<span class="list-zan-btn"><i class="iconfont icon-0008zan"></i> <span>' + r.zan + '</span></span>' + 
-						shareBtn + 
-						'<span class="list-comment-btn"><i class="iconfont icon-0096pinglun01"></i> <span>' + r.commentsCount + '</span></span>' + 
+						'<span class="list-share-btn"><i class="iconfont icon-0063fenxiang"></i></span><span class="list-comment-btn"><i class="iconfont icon-0096pinglun01"></i> <span>' + r.commentsCount + '</span></span>' + 
 						'</footer>' + 
-						'<div class="list-comment" if-shown=0><ul></ul><span class="new-comment-btn">发表评论...</span></div>' + 
-						'</li>';
+						'<div class="list-comment" if-shown="0">' + 
+						'<ul></ul><span class="new-comment-btn">发表评论...</span>' + 
+						'</div></li>';
 					var e = $(str).appendTo("#events");
 					e.find('img').addClass('live-img');
 					e.find('video').addClass('live-img');
+					// 展开/收起
+					e.find('.toggle-bar').on('touchstart', function() {
+						if($(this).children('i').hasClass('icon-down')){
+							$(this).prev().css('max-height','none');
+							myScroll.refresh();
+							$(this).html('<i class="iconfont icon-up"></i> 收起</div>')
+						}else{
+							$(this).prev().css('max-height','5rem');
+							myScroll.refresh();
+							$(this).html('<i class="iconfont icon-down"></i> 展开</div>')
+						}
+					})
 					// 点赞
 					e.find(".list-zan-btn").bind('touchstart',function(){
 						_callAjax({
@@ -203,14 +226,24 @@ $(function(){
 			}, function(d) {
 				updateEvents(d);
 				
-				$('.live-img').each(function(){
-					var $this = $(this);
-					var interVal = setInterval(function(){
-						if($this.height() > 0){
-							clearInterval(interVal);
-							myScroll.refresh();
+//				$('.live-img').each(function(){
+//					var $this = $(this);
+//					var interVal = setInterval(function(){
+//						if($this.height() > 0){
+//							clearInterval(interVal);
+//							myScroll.refresh();
+//						}
+//					},100)
+//				})
+				var classic = $('html').css('font-size').substring(0,2);
+				var imgLength = $('img').length;
+				$('img').load(function(){
+					myScroll.refresh();
+					$('#events article').each(function(){
+						if($(this).height() >= classic*5){
+							$(this).next().show();
 						}
-					},100)
+					})
 				})
 			});
 			
@@ -255,14 +288,24 @@ $(function(){
 					}, function(d) {
 						updateEvents(d);
 						
-						$('.live-img').each(function(){
-							var $this = $(this);
-							var interVal = setInterval(function(){
-								if($this.height() > 0){
-									clearInterval(interVal);
-									myScroll.refresh();
+//						$('.live-img').each(function(){
+//							var $this = $(this);
+//							var interVal = setInterval(function(){
+//								if($this.height() > 0){
+//									clearInterval(interVal);
+//									myScroll.refresh();
+//								}
+//							},100)
+//						})
+						var classic = $('html').css('font-size').substring(0,2);
+						var imgLength = $('img').length;
+						$('img').load(function(){
+							myScroll.refresh();
+							$('#events article').each(function(){
+								if($(this).height() >= classic*5){
+									$(this).next().show();
 								}
-							},100)
+							})
 						})
 					});
 					$('#pullUp-msg').text('上拉加载');
