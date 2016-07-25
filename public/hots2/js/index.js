@@ -7,11 +7,11 @@ $(function(){
 			var users = ["admin", "无限舟山", "前方记者"];
 			if (hot_id == '') return;
 			
-			// 微信登陆或者ios系统的情况下
-			if(_isWeixin() || _getDev() == "iOS") {
+//			// 微信登陆或者ios系统的情况下
+//			if(_isWeixin() || _getDev() == "iOS") {
 				// 显示用户发布事件的按钮
 				$('.release-btn').show();
-			}
+//			}
 			
 			$('#go-comment').on('touchstart',function(){
 				if(_isWeixin()) {
@@ -70,7 +70,8 @@ $(function(){
 						'<div class="toggle-bar"><i class="iconfont icon-down"></i> 展开</div>' + 
 						'<footer class="cl">' + 
 						'<span class="list-zan-btn"><i class="iconfont icon-0008zan"></i> <span>' + r.zan + '</span></span>' + 
-						'<span class="list-share-btn"><i class="iconfont icon-0063fenxiang"></i></span><span class="list-comment-btn"><i class="iconfont icon-0096pinglun01"></i> <span>' + r.commentsCount + '</span></span>' + 
+						shareBtn + 
+						'<span class="list-comment-btn"><i class="iconfont icon-0096pinglun01"></i> <span>' + r.commentsCount + '</span></span>' + 
 						'</footer>' + 
 						'<div class="list-comment" if-shown="0">' + 
 						'<ul></ul><span class="new-comment-btn">发表评论...</span>' + 
@@ -240,7 +241,7 @@ $(function(){
 				$('img').load(function(){
 					myScroll.refresh();
 					$('#events article').each(function(){
-						if($(this).height() >= classic*5){
+						if(($(this).height()+5) >= classic*5){
 							$(this).next().show();
 						}
 					})
@@ -302,7 +303,7 @@ $(function(){
 						$('img').load(function(){
 							myScroll.refresh();
 							$('#events article').each(function(){
-								if($(this).height() >= classic*5){
+								if(($(this).height()+5) >= classic*5){
 									$(this).next().show();
 								}
 							})

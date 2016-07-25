@@ -6,10 +6,8 @@ $(function() {
 			var tempImg = null;
 			var formfile = "imagefile";
 			
-			// 微信打开 重定向文件上传路径
-			if(_isWeixin()) {
-				fileUploadHotURL = "http://develop.wifizs.cn/xinlanadmin/upload/hots";
-			}
+			// 重定向文件上传路径
+			var fileUploadHotURL = "http://develop.wifizs.cn/xinlanadmin/upload/hots";
 			
 			/** 
 			 * 压缩图片并显示(通过localResizeIMG插件)
@@ -55,22 +53,40 @@ $(function() {
 			}
 			
 			// 检查图片格式
-			var _checkImgType = function(filename) {
+			_checkImgType = function(filename) {
 				var pattern = /\.(jpg|png|JPG|PNG)$/;
 				return pattern.test(filename);
+			}
+			
+			// 返回首页
+			goToIndex = function() {
+				// ios
+				if (/(iPhone|iPad|iPod)/i.test(navigator.userAgent)) {
+					window.location.href = window.document.referrer;
+//					if(_isWeixin()) {
+//						location.href="index.html?hot_id=" + hot_id + "&state=" + _getPar("state") + 
+//							"&openid=" + _getPar("openid") + 
+//							"&nickname=" + _getPar("nickname") + 
+//							"&headimgurl=" + _getPar("headimgurl");
+//					} else {
+//						location.href="index.html?hot_id=" + hot_id;
+//					}
+				// andriod
+				} else {
+					window.history.go(-1);
+				}
 			}
 			
 			// 上传文件之后的回调函数
 			// 生成事件内容
 			genEventContent = function(filename) {
 				var html = "";
-				if(null != filename) {
-					html += '<p><img alt="" src="'+ hotImgURL + filename +'"></p>';
-				}
 				if("" != $("#releaseContent").val()) {
 					html += '<p>' + $("#releaseContent").val().replace(/\n/g, '<br>') + '</p>';
 				}
-				console.log(html, "" == html);
+				if(null != filename) {
+					html += '<p><img alt="" src="'+ hotImgURL + filename +'"></p>';
+				}
 				
 				sendEvent(html);
 			}
@@ -95,7 +111,7 @@ $(function() {
 						// 恢复输入框
 						$("#releaseContent").val("");
 						// 返回主页面
-						window.history.go(-1);
+						goToIndex();
 					}
 				})
 			}
@@ -109,16 +125,16 @@ $(function() {
 					// 恢复页面样式
 					$('.release-img span').removeAttr('style').html('<i class="iconfont icon-add2"></i>');
 				} else {
-					// 检查图片格式
-					if(!_checkImgType($('#releaseImg').val())) {
-						// 检查未通过 清空选择图片控件中的内容
-						$('#releaseImg').val('');
-						tempImg = null;
-						return _toast.show("图片格式只能是jpg或者png");
-					} else {
+//					// 检查图片格式
+//					if(!_checkImgType($('#releaseImg').val())) {
+//						// 检查未通过 清空选择图片控件中的内容
+//						$('#releaseImg').val('');
+//						tempImg = null;
+//						return _toast.show("图片格式只能是jpg或者png");
+//					} else {
 						// 压缩图片并显示
 						resizeImg('releaseImg', 320, formfile);
-					}
+//					}
 				}
 			})
 			
