@@ -49,6 +49,8 @@ $(function() {
 		var allids = [];
 		var comments = [];
 		img = (img == "") ? "http://develop.wifizs.cn:11001/images/videos/default.jpg" : img;
+		// 由于默认显示第二个tab->简介 隐藏评论框
+		$('.live-comment-area').hide();
 		
 		_callAjax({
 			"cmd":"getVideosByIds",
